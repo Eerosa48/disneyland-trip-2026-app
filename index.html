@@ -52,6 +52,11 @@
     }
     .map-info strong { display: block; }
     .map-info small { display: block; color: #4b5563; }
+    /* Mobile: show the map edge-to-edge instead of framing it in white.
+       Keep the optional street mask for desktop displays. */
+    @media (max-width: 900px) {
+      #map-mask { display: none; }
+    }
     @media (max-width: 540px) {
       .map-info { padding: 7px 9px; font-size: 12px; }
       .map-info small { display: none; }
@@ -108,12 +113,12 @@
         [33.8166, -117.9157]
       ),
       california: L.latLngBounds(
-        [33.8035, -117.9238],
-        [33.8095, -117.9155]
+        [33.8042, -117.9225],
+        [33.8093, -117.9169]
       ),
       downtown: L.latLngBounds(
-        [33.8070, -117.9290],
-        [33.8120, -117.9225]
+        [33.8079, -117.9262],
+        [33.8107, -117.9220]
       )
     };
 
@@ -216,47 +221,29 @@
       }
     }
 
-    // Ensure a destination can be truly centered without Leaflet's maxBounds
-    // correction at the end of an animated move ("bounce back").
-    function zoomForCenteredView(center, preferredZoom) {
-      const referenceZoom = 20;
-      const p = map.project(center, referenceZoom);
-      const nw = map.project(streetBounds.getNorthWest(), referenceZoom);
-      const se = map.project(streetBounds.getSouthEast(), referenceZoom);
-      const sideX = Math.min(p.x - nw.x, se.x - p.x);
-      const sideY = Math.min(p.y - nw.y, se.y - p.y);
-      const size = map.getSize();
-      const margin = 24;
-      if (sideX <= 0 || sideY <= 0) return Math.min(20, Math.max(preferredZoom, map.getMinZoom()));
-      const neededX = referenceZoom + Math.log2((size.x / 2 + margin) / sideX);
-      const neededY = referenceZoom + Math.log2((size.y / 2 + margin) / sideY);
-      const requiredZoom = Math.ceil(Math.max(neededX, neededY) * 4) / 4;
-      return Math.min(
-        map.getMaxZoom(),
-        Math.max(map.getMinZoom(), preferredZoom, requiredZoom)
-      );
+    // On iPhone, allow comfortable panning within the downloaded tile area.
+    // The tighter four-street boundary remains in effect on desktop.
+    function configureNavigationBounds() {
+      const mobile = window.matchMedia('(max-width: 900px)').matches;
+      map.setMaxBounds(mobile ? tileBounds : streetBounds);
     }
 
     function focusPark(key) {
       if (key === 'resort') {
         focusResort(true);
-      } else if (key === 'disneyland') {
-        // Keep Disneyland Park's existing, successful framing.
-        map.flyToBounds(parkViews.disneyland, {
-          padding: [24, 24],
-          maxZoom: 19,
-          duration: 0.6
-        });
       } else {
-        // Closer views for DCA and Downtown Disney, centered without bounce.
-        const center = parkViews[key].getCenter();
-        const preferredZoom = key === 'california' ? 18.25 : 18.75;
-        map.flyTo(center, zoomForCenteredView(center, preferredZoom), {
+        // Fit the selected region to the screen instead of forcing a fixed
+        // high zoom. This prevents the over-zoomed CA/Downtown mobile views.
+        // Disneyland's already-approved region is unchanged.
+        map.flyToBounds(parkViews[key], {
+          padding: [24, 24],
+          maxZoom: key === 'disneyland' ? 19 : 18,
           duration: 0.6
         });
       }
     }
 
+    configureNavigationBounds();
     updateMinZoom();
     focusInitialView();
     updateMask();
@@ -326,6 +313,7 @@
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(() => {
         map.invalidateSize({ pan: false });
+        configureNavigationBounds();
         updateMinZoom();
         scheduleMaskUpdate();
       });
