@@ -129,12 +129,12 @@
 
       // Centering dropdown selections
       resort: {
-        center: [33.81078, -117.92203],
+        center: [33.81078, -117.92184],
         zoom: 15.35
       },
 
       disneyland: {
-        center: [33.81270, -117.91925],
+        center: [33.81270, -117.91945],
         zoom: 16.50
       },
 
@@ -145,18 +145,39 @@
 
       downtown: {
         center: [33.80930, -117.92350],
-        zoom: 17.75
+        zoom: 17.55
       }
     };
+	
+	const desktopCameraViews = {
+	  resort: {
+        center: [33.81078, -117.92203],
+        zoom: 16.50
+	  },
+
+	  disneyland: {
+        center: [33.81270, -117.91925],
+        zoom: 17.35
+	  },
+
+	  california: {
+        center: [33.80675, -117.91970],
+        zoom: 17.55
+	  },
+
+	  downtown: {
+        center: [33.80930, -117.92350],
+        zoom: 18.25
+      }
+	};
 
 
     const map = L.map('map', {
       zoomControl: true,
       minZoom: 14, // Allows fitted overview on narrow phone screens.
       maxZoom: 20,
-      zoomSnap: 0.25,
+      zoomSnap: 0.05,
       zoomDelta: 0.5,
-      maxBounds: tileBounds,
       maxBoundsViscosity: 0.5,
       attributionControl: false
     });
@@ -200,14 +221,24 @@
 	  });
 	}
 
+    
+	function configureNavigationBounds() {
+	  const mobile = window.matchMedia('(max-width: 900px)').matches;
 
-    function configureNavigationBounds() {
-      map.setMaxBounds(tileBounds);
-    }
+	  if (mobile) {
+	    map.setMaxBounds(tileBounds);
+	  } else {
+        map.setMaxBounds(null);
+	  }
+	}
 
 
 	function focusPark(key) {
-	  const view = cameraViews[key];
+	  const mobile = window.matchMedia('(max-width: 900px)').matches;
+	  
+	  const view = mobile
+	    ? cameraViews[key]
+		: desktopCameraViews[key];
 
 	  if (!view) return;
 
