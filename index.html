@@ -10,7 +10,11 @@
   <style>
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
     body { font-family: system-ui, -apple-system, sans-serif; }
-    #map { position: fixed; inset: 0; background: #fff; }
+    #map {
+	  position: fixed;
+	  inset: 0;
+	  background: #b8cbb0;
+	}
     .leaflet-control-focus { position: relative; margin-top: 8px; }
     .focus-trigger {
       display: block; padding: 7px 11px; border: 2px solid rgba(0,0,0,.2);
@@ -78,6 +82,13 @@
       xyzToLatLng(coverage.minX, coverage.minY, coverage.z),
       xyzToLatLng(coverage.maxX + 1, coverage.maxY + 1, coverage.z)
     );
+	
+	
+	const artworkBounds = L.latLngBounds(
+      [33.80197, -117.93097], // Southwest trimmed edge
+      [33.81987, -117.91281]  // Northeast trimmed edge
+	);
+
 
     // Approximate street-centered perimeter (including the roads):
     // West: S Walnut St; south: W Katella Ave;
@@ -184,7 +195,7 @@
 	  doubleTouchDragZoom: true,
 	  doubleTouchDragZoomInvert: true,
 	  doubleTouchDragZoomScaleFactor: 100,
-      maxBoundsViscosity: 0.5,
+      maxBoundsViscosity: 0.6,
       attributionControl: false
     });
 	
@@ -228,13 +239,16 @@
 	}
 
     
+	
 	function configureNavigationBounds() {
-	  const mobile = window.matchMedia('(max-width: 900px)').matches;
+	  // Allow a little extra space around the artwork
+	  const padding = 0.10;
 
-	  if (mobile) {
-        map.setMaxBounds(null);
-	  }
+	  map.setMaxBounds(
+        artworkBounds.pad(padding)
+	  );
 	}
+
 
 
 	function focusPark(key) {
