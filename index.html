@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Disneyland Resort — Offline Map</title>
+  <link rel="stylesheet" href="vendor/leaflet.css" />
+  <style>
+    html,body,#map { height:100%; width:100%; margin:0; }
+    #map { background:#dce7d3; }
+    .info { position:absolute;z-index:1000;top:14px;left:55px;background:rgba(255,255,255,.95);padding:9px 12px;border-radius:6px;box-shadow:0 2px 12px #0002;font:13px/1.4 system-ui,sans-serif; }
+    .info strong { display:block; }
+    .info small { color:#4b5563; }
+  </style>
+</head>
+<body>
+  <div id="map" role="region" aria-label="Offline Disneyland map"></div>
+  <div class="info"><strong>Disneyland Resort — Offline Map</strong><small>Original tiles • Zoom 16–20 • Artwork and labels preserved</small></div>
+  <script src="vendor/leaflet.js"></script>
+  <script>
+    // Observed in the map's Network panel on November 11, 2026.
+    // Original 512×512-pixel imagery is DISPLAYED at 256×256 CSS pixels.
+    const coverage = { z:16, minX:11298, maxX:11303, minY:26218, maxY:26222 };
+    function xyzToLatLng(x, y, z) {
+      const n = Math.pow(2, z);
+      const lon = x / n * 360 - 180;
+      const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) * 180 / Math.PI;
+      return [lat, lon];
+    }
+    const bounds = L.latLngBounds(
+      xyzToLatLng(coverage.minX, coverage.minY, coverage.z),
+      xyzToLatLng(coverage.maxX + 1, coverage.maxY + 1, coverage.z)
+    );
+    const map = L.map('map', {
+      zoomControl:true,
+      minZoom:16,
+      maxZoom:20,
+      zoomSnap:1,
+      maxBounds:bounds.pad(0.12),
+      maxBoundsViscosity:0.95,
+      attributionControl:true
+    });
+    L.tileLayer('tiles/{z}/{x}/{y}.jpg', {
+      tileSize:256, // IMPORTANT: 512px source images shown at 256 CSS pixels
+      minZoom:16,
+      maxZoom:20,
+      maxNativeZoom:20,
+      noWrap:true,
+      bounds:bounds,
+      keepBuffer:3,
+      updateWhenIdle:true,
+      attribution:'Map artwork © Disney. Authorized offline copy.'
+    }).addTo(map);
+    map.setView(bounds.getCenter(), 16);
+  </script>
+</body>
+</html>
