@@ -95,7 +95,7 @@
 
     const map = L.map('map', {
       zoomControl: true,
-      minZoom: 16,
+      minZoom: 14, // Allows fitted overview on narrow phone screens.
       maxZoom: 20,
       zoomSnap: 0.25,
       zoomDelta: 0.5,
@@ -106,7 +106,8 @@
 
     L.tileLayer('tiles/{z}/{x}/{y}.jpg', {
       tileSize: 256,
-      minZoom: 16,
+      minZoom: 14,
+      minNativeZoom: 16, // Scale existing zoom-16 tiles down; no new files.
       maxZoom: 20,
       maxNativeZoom: 20,
       noWrap: true,
@@ -117,22 +118,21 @@
     }).addTo(map);
 
     function updateMinZoom() {
-      // At the lowest permitted zoom, aim to keep the *whole viewport* within
-      // the four street limits, rather than showing distant neighborhoods.
-      // Leaflet's inside=true finds the zoom needed to fit the viewport within
-      // the bounds (particularly useful on wide desktop monitors).
-      const requiredZoom = map.getBoundsZoom(streetBounds, true);
-      const minZoom = Math.min(20, Math.max(16, Math.ceil(requiredZoom * 4) / 4));
+      // Fit the full street-bounded area inside the available screen.
+      // Previously inside=true had the opposite effect: it zoomed *in*
+      // until the viewport fit inside the bounds, cropping north/south.
+      const overviewZoom = map.getBoundsZoom(streetBounds, false, L.point(32, 32));
+      const minZoom = Math.max(14, Math.min(20, Math.floor(overviewZoom * 4) / 4));
       map.setMinZoom(minZoom);
     }
 
     function focusResort(animate = false) {
-      const fitZoom = map.getBoundsZoom(resortBounds, false, L.point(40, 40));
-      map.setView(
-        streetBounds.getCenter(),
-        Math.min(20, Math.max(map.getMinZoom(), fitZoom)),
-        { animate }
-      );
+      // fitBounds automatically chooses the correct overview for desktop,
+      // portrait iPhones and landscape iPhones.
+      map.fitBounds(streetBounds, {
+        padding: [16, 16],
+        animate
+      });
     }
 
     updateMinZoom();
