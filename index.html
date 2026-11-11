@@ -213,7 +213,7 @@
         const fillZoom = map.getBoundsZoom(streetBounds, true, L.point(16, 16));
         map.setView(
           streetBounds.getCenter(),
-          Math.min(map.getMaxZoom(), Math.max(map.getMinZoom(), fillZoom + 0.25)),
+          Math.min(map.getMaxZoom(), Math.max(map.getMinZoom(), fillZoom + 0.30)),
           { animate: false }
         );
       } else {
@@ -228,20 +228,27 @@
       map.setMaxBounds(mobile ? tileBounds : streetBounds);
     }
 
-    function focusPark(key) {
-      if (key === 'resort') {
+    
+	function focusPark(key) {
+	  if (key === 'resort') {
         focusResort(true);
-      } else {
-        // Fit the selected region to the screen instead of forcing a fixed
-        // high zoom. This prevents the over-zoomed CA/Downtown mobile views.
-        // Disneyland's already-approved region is unchanged.
+
+	  } else if (key === 'downtown') {
+        map.flyTo(
+          [33.80930, -117.92350],
+          17.75,
+          { duration: 0.6 }
+        );
+
+	  } else {
         map.flyToBounds(parkViews[key], {
           padding: [24, 24],
           maxZoom: key === 'disneyland' ? 19 : 18,
           duration: 0.6
         });
-      }
-    }
+	  }
+	}
+
 
     configureNavigationBounds();
     updateMinZoom();
