@@ -65,7 +65,7 @@
   <script>
     // Full set of locally downloaded tiles. Keep these bounds unchanged so no
     // original artwork is lost (512px source images display at 256 CSS pixels).
-    const coverage = { z: 16, minX: 11298, maxX: 11303, minY: 26218, maxY: 26222 };
+    const coverage = { z: 16, minX: 11299, maxX: 11302, minY: 26219, maxY: 26222 };
 
     function xyzToLatLng(x, y, z) {
       const n = 2 ** z;
@@ -232,8 +232,6 @@
 	  const mobile = window.matchMedia('(max-width: 900px)').matches;
 
 	  if (mobile) {
-	    map.setMaxBounds(tileBounds);
-	  } else {
         map.setMaxBounds(null);
 	  }
 	}

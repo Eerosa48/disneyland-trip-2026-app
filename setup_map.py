@@ -16,8 +16,8 @@ ROOT = pathlib.Path(__file__).resolve().parent
 REVISION = '764741755'
 CDN = f'https://cdn6.parksmedia.wdprapps.disney.com/media/maps/prod/disneyland/{REVISION}'
 BASE_Z = 16
-MIN_X, MAX_X = 11298, 11303
-MIN_Y, MAX_Y = 26218, 26222
+MIN_X, MAX_X = 11299, 11302
+MIN_Y, MAX_Y = 26219, 26222
 LIBRARY = 'https://unpkg.com/leaflet@1.9.4/dist/'
 DEPENDENCIES = {
     'vendor/leaflet.js': LIBRARY + 'leaflet.js',
@@ -85,7 +85,12 @@ def main():
         if state.startswith('ERROR') or state.startswith('HTTP'):
             print('  Could not download a required Leaflet file. Check your connection and rerun.')
             return 1
-    total = sum(30 * 4 ** (z - BASE_Z) for z in range(BASE_Z, args.max_zoom+1))
+    total = sum(
+        (MAX_X - MIN_X + 1) *
+        (MAX_Y - MIN_Y + 1) *
+        4 ** (z - BASE_Z)
+        for z in range(BASE_Z, args.max_zoom + 1)
+    )
     print(f'Preparing {total:,} map tiles, zoom levels 16–{args.max_zoom}.')
     print('Already-downloaded tiles will be skipped. Ctrl+C safely stops; rerun to resume.')
     attempted, problems = 0, 0
