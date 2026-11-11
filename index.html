@@ -3,10 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#e8efe5" />
+  <meta name="theme-color" content="#b8cbb0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Disney Trip" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>Disneyland Resort — Interactive Map</title>
   <link rel="stylesheet" href="vendor/leaflet.css" />
   <link rel="stylesheet" href="vendor/leaflet-double-touch-drag-zoom.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <style>
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
     body { font-family: system-ui, -apple-system, sans-serif; }
@@ -341,5 +347,6 @@
       });
     });
   </script>
+<script src="offline-ui.js"></script>
 </body>
 </html>
