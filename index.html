@@ -129,7 +129,7 @@
     function focusResort(animate = false) {
       const fitZoom = map.getBoundsZoom(resortBounds, false, L.point(40, 40));
       map.setView(
-        resortBounds.getCenter(),
+        streetBounds.getCenter(),
         Math.min(20, Math.max(map.getMinZoom(), fitZoom)),
         { animate }
       );
