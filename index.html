@@ -2,56 +2,162 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Disneyland Resort — Offline Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e8efe5" />
+  <title>Disneyland Resort — Interactive Map</title>
   <link rel="stylesheet" href="vendor/leaflet.css" />
   <style>
-    html,body,#map { height:100%; width:100%; margin:0; }
-    #map { background:#dce7d3; }
-    .info { position:absolute;z-index:1000;top:14px;left:55px;background:rgba(255,255,255,.95);padding:9px 12px;border-radius:6px;box-shadow:0 2px 12px #0002;font:13px/1.4 system-ui,sans-serif; }
-    .info strong { display:block; }
-    .info small { color:#4b5563; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { font-family: system-ui, -apple-system, sans-serif; }
+    #map { position: fixed; inset: 0; background: #dce7d3; }
+    .leaflet-top { top: env(safe-area-inset-top, 0px); }
+    .leaflet-bottom { bottom: env(safe-area-inset-bottom, 0px); }
+    .map-info {
+      position: absolute;
+      z-index: 1000;
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      right: calc(12px + env(safe-area-inset-right, 0px));
+      max-width: min(290px, calc(100vw - 105px));
+      padding: 9px 12px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 2px 12px #0002;
+      font-size: 13px;
+      line-height: 1.35;
+      pointer-events: none;
+    }
+    .map-info strong { display: block; }
+    .map-info small { display: block; color: #4b5563; }
+    .leaflet-control-recenter {
+      display: block;
+      width: 34px;
+      height: 34px;
+      border: 2px solid rgba(0, 0, 0, 0.22);
+      border-radius: 5px;
+      background: #fff;
+      background-clip: padding-box;
+      box-shadow: 0 1px 5px #0005;
+      color: #202932;
+      font-size: 25px;
+      line-height: 28px;
+      text-align: center;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .leaflet-control-recenter:hover,
+    .leaflet-control-recenter:focus-visible { background: #f1f5f9; }
+    @media (max-width: 540px) {
+      .map-info { padding: 7px 9px; font-size: 12px; }
+      .map-info small { display: none; }
+    }
   </style>
 </head>
 <body>
-  <div id="map" role="region" aria-label="Offline Disneyland map"></div>
-  <div class="info"><strong>Disneyland Resort — Offline Map</strong><small>Original tiles • Zoom 16–20 • Artwork and labels preserved</small></div>
+  <div id="map" role="region" aria-label="Disneyland Resort map"></div>
+  <div class="map-info">
+    <strong>Disneyland Resort</strong>
+    <small>Interactive map · Original artwork and labels</small>
+  </div>
   <script src="vendor/leaflet.js"></script>
   <script>
-    // Observed in the map's Network panel on November 11, 2026.
-    // Original 512×512-pixel imagery is DISPLAYED at 256×256 CSS pixels.
-    const coverage = { z:16, minX:11298, maxX:11303, minY:26218, maxY:26222 };
+    // Full set of locally downloaded tiles. Keep these bounds unchanged so no
+    // original artwork is lost (512px source images display at 256 CSS pixels).
+    const coverage = { z: 16, minX: 11298, maxX: 11303, minY: 26218, maxY: 26222 };
+
     function xyzToLatLng(x, y, z) {
-      const n = Math.pow(2, z);
+      const n = 2 ** z;
       const lon = x / n * 360 - 180;
       const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) * 180 / Math.PI;
       return [lat, lon];
     }
-    const bounds = L.latLngBounds(
+
+    const tileBounds = L.latLngBounds(
       xyzToLatLng(coverage.minX, coverage.minY, coverage.z),
       xyzToLatLng(coverage.maxX + 1, coverage.maxY + 1, coverage.z)
     );
+
+    // Initial area of interest: Disneyland Park, California Adventure,
+    // Downtown Disney, the Esplanade, and nearby entrance roads.
+    // Adjust these four values later if we want to fine-tune the framing.
+    const resortBounds = L.latLngBounds(
+      [33.8028, -117.9310], // Southwest
+      [33.8190, -117.9112]  // Northeast
+    );
+
+    // Visitors may explore a little beyond the park while avoiding long pans
+    // into unrelated Anaheim neighborhoods. The map artwork remains intact.
+    const panBounds = resortBounds.pad(0.18);
+
     const map = L.map('map', {
-      zoomControl:true,
-      minZoom:16,
-      maxZoom:20,
-      zoomSnap:1,
-      maxBounds:bounds.pad(0.12),
-      maxBoundsViscosity:0.95,
-      attributionControl:true
+      zoomControl: true,
+      minZoom: 16,
+      maxZoom: 20,
+      zoomSnap: 0.25,
+      zoomDelta: 0.5,
+      maxBounds: panBounds,
+      maxBoundsViscosity: 0.95,
+      attributionControl: true
     });
+
     L.tileLayer('tiles/{z}/{x}/{y}.jpg', {
-      tileSize:256, // IMPORTANT: 512px source images shown at 256 CSS pixels
-      minZoom:16,
-      maxZoom:20,
-      maxNativeZoom:20,
-      noWrap:true,
-      bounds:bounds,
-      keepBuffer:3,
-      updateWhenIdle:true,
-      attribution:'Map artwork © Disney. Authorized offline copy.'
+      tileSize: 256,
+      minZoom: 16,
+      maxZoom: 20,
+      maxNativeZoom: 20,
+      noWrap: true,
+      bounds: tileBounds,
+      keepBuffer: 3,
+      updateWhenIdle: true,
+      attribution: 'Map artwork © Disney. Authorized offline copy.'
     }).addTo(map);
-    map.setView(bounds.getCenter(), 16);
+
+    function updateMinZoom() {
+      // On especially wide displays, zoom in just enough that the viewport
+      // doesn't extend beyond our finite downloaded-tile rectangle.
+      const requiredZoom = map.getBoundsZoom(tileBounds.pad(-0.025), true);
+      const minZoom = Math.min(20, Math.max(16, Math.ceil(requiredZoom * 4) / 4));
+      map.setMinZoom(minZoom);
+    }
+
+    function focusResort(animate = false) {
+      const fitZoom = map.getBoundsZoom(resortBounds, false, L.point(40, 40));
+      map.setView(
+        resortBounds.getCenter(),
+        Math.min(20, Math.max(map.getMinZoom(), fitZoom)),
+        { animate }
+      );
+    }
+
+    updateMinZoom();
+    focusResort();
+
+    // Simple recenter control, below Leaflet's + and - controls.
+    const RecenterControl = L.Control.extend({
+      options: { position: 'topleft' },
+      onAdd() {
+        const button = L.DomUtil.create('button', 'leaflet-control-recenter');
+        button.type = 'button';
+        button.textContent = '⌖';
+        button.title = 'Recenter on Disneyland Resort';
+        button.setAttribute('aria-label', 'Recenter on Disneyland Resort');
+        L.DomEvent.disableClickPropagation(button);
+        L.DomEvent.disableScrollPropagation(button);
+        L.DomEvent.on(button, 'click', () => focusResort(true));
+        return button;
+      }
+    });
+    map.addControl(new RecenterControl());
+
+    // Accommodate rotation and desktop resizing without resetting a view the
+    // user has deliberately panned or zoomed. Recenter remains available.
+    let resizeFrame;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        map.invalidateSize({ pan: false });
+        updateMinZoom();
+      });
+    });
   </script>
 </body>
 </html>
