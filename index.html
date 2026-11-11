@@ -9,7 +9,31 @@
   <style>
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
     body { font-family: system-ui, -apple-system, sans-serif; }
-    #map { position: fixed; inset: 0; background: #dce7d3; }
+    #map { position: fixed; inset: 0; background: #fff; }
+    /* Screen-aligned white mask: hides everything outside the street rectangle
+       without modifying the original artwork or interfering with map controls. */
+    #map-mask { position: absolute; inset: 0; pointer-events: none; z-index: 800; overflow: hidden; }
+    .mask-part { position: absolute; background: #fff; pointer-events: none; }
+    .leaflet-control-focus { position: relative; margin-top: 8px; }
+    .focus-trigger {
+      display: block; padding: 7px 11px; border: 2px solid rgba(0,0,0,.2);
+      border-radius: 6px; box-shadow: 0 1px 5px #0004; background: #fff;
+      font: 600 13px/1.4 system-ui,-apple-system,sans-serif; color: #1f2937;
+      cursor: pointer; touch-action: manipulation;
+    }
+    .focus-trigger:hover, .focus-trigger:focus-visible { background: #f1f5f9; }
+    .focus-menu {
+      position: absolute; left: 0; top: calc(100% + 5px); width: 200px;
+      padding: 5px; border-radius: 8px; background: #fff;
+      box-shadow: 0 3px 16px #0004; border: 1px solid #d1d5db;
+    }
+    .focus-menu[hidden] { display: none; }
+    .focus-option {
+      display: block; width: 100%; box-sizing: border-box; text-align: left;
+      border: 0; border-radius: 5px; background: transparent; padding: 10px;
+      color: #1f2937; font: 14px system-ui,-apple-system,sans-serif; cursor: pointer;
+    }
+    .focus-option:hover, .focus-option:focus-visible { background: #eff6ff; }
     .leaflet-top { top: env(safe-area-inset-top, 0px); }
     .leaflet-bottom { bottom: env(safe-area-inset-bottom, 0px); }
     .map-info {
@@ -28,24 +52,6 @@
     }
     .map-info strong { display: block; }
     .map-info small { display: block; color: #4b5563; }
-    .leaflet-control-recenter {
-      display: block;
-      width: 34px;
-      height: 34px;
-      border: 2px solid rgba(0, 0, 0, 0.22);
-      border-radius: 5px;
-      background: #fff;
-      background-clip: padding-box;
-      box-shadow: 0 1px 5px #0005;
-      color: #202932;
-      font-size: 25px;
-      line-height: 28px;
-      text-align: center;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-    .leaflet-control-recenter:hover,
-    .leaflet-control-recenter:focus-visible { background: #f1f5f9; }
     @media (max-width: 540px) {
       .map-info { padding: 7px 9px; font-size: 12px; }
       .map-info small { display: none; }
@@ -53,7 +59,14 @@
   </style>
 </head>
 <body>
-  <div id="map" role="region" aria-label="Disneyland Resort map"></div>
+  <div id="map" role="region" aria-label="Disneyland Resort map">
+    <div id="map-mask" aria-hidden="true">
+      <div class="mask-part" id="mask-top"></div>
+      <div class="mask-part" id="mask-right"></div>
+      <div class="mask-part" id="mask-bottom"></div>
+      <div class="mask-part" id="mask-left"></div>
+    </div>
+  </div>
   <div class="map-info">
     <strong>Disneyland Resort</strong>
     <small>Interactive map · Original artwork and labels</small>
@@ -87,11 +100,22 @@
       [33.81880, -117.91485]  // Ball Rd / Harbor Blvd vicinity
     );
 
-    // Keep a park-centered opening view. It will be constrained to streetBounds.
-    const resortBounds = L.latLngBounds(
-      [33.8043, -117.9268],
-      [33.8169, -117.9163]
-    );
+    // Approximate regions for the view selector. These do not alter the mask.
+    const parkViews = {
+      resort: streetBounds,
+      disneyland: L.latLngBounds(
+        [33.8088, -117.9228],
+        [33.8166, -117.9157]
+      ),
+      california: L.latLngBounds(
+        [33.8035, -117.9238],
+        [33.8095, -117.9155]
+      ),
+      downtown: L.latLngBounds(
+        [33.8070, -117.9290],
+        [33.8120, -117.9225]
+      )
+    };
 
     const map = L.map('map', {
       zoomControl: true,
@@ -135,25 +159,116 @@
       });
     }
 
+    // A viewport-aligned four-sided white mask. The map and original tile files
+    // continue underneath, but only the area inside streetBounds is visible.
+    const maskParts = {
+      top: document.getElementById('mask-top'),
+      right: document.getElementById('mask-right'),
+      bottom: document.getElementById('mask-bottom'),
+      left: document.getElementById('mask-left')
+    };
+
+    function updateMask() {
+      if (!map._loaded) return;
+      const { x: mapWidth, y: mapHeight } = map.getSize();
+      const nw = map.latLngToContainerPoint(streetBounds.getNorthWest());
+      const se = map.latLngToContainerPoint(streetBounds.getSouthEast());
+      const clamp = (value, limit) => Math.min(limit, Math.max(0, value));
+      const left = clamp(nw.x, mapWidth);
+      const right = clamp(se.x, mapWidth);
+      const top = clamp(nw.y, mapHeight);
+      const bottom = clamp(se.y, mapHeight);
+      const innerHeight = Math.max(0, bottom - top);
+      const setRect = (el, x, y, width, height) => {
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.width = Math.max(0, width) + 'px';
+        el.style.height = Math.max(0, height) + 'px';
+      };
+      setRect(maskParts.top, 0, 0, mapWidth, top);
+      setRect(maskParts.bottom, 0, bottom, mapWidth, mapHeight - bottom);
+      setRect(maskParts.left, 0, top, left, innerHeight);
+      setRect(maskParts.right, right, top, mapWidth - right, innerHeight);
+    }
+
+    let maskFrame;
+    function scheduleMaskUpdate() {
+      if (maskFrame) return;
+      maskFrame = requestAnimationFrame(() => {
+        maskFrame = 0;
+        updateMask();
+      });
+    }
+    map.on('move zoom zoomend moveend resize', scheduleMaskUpdate);
     updateMinZoom();
     focusResort();
+    updateMask();
 
-    // Simple recenter control, below Leaflet's + and - controls.
-    const RecenterControl = L.Control.extend({
+    // Dropdown replaces the old recenter-only control.
+    const FocusControl = L.Control.extend({
       options: { position: 'topleft' },
       onAdd() {
-        const button = L.DomUtil.create('button', 'leaflet-control-recenter');
-        button.type = 'button';
-        button.textContent = '⌖';
-        button.title = 'Recenter on Disneyland Resort';
-        button.setAttribute('aria-label', 'Recenter on Disneyland Resort');
-        L.DomEvent.disableClickPropagation(button);
-        L.DomEvent.disableScrollPropagation(button);
-        L.DomEvent.on(button, 'click', () => focusResort(true));
-        return button;
+        const container = L.DomUtil.create('div', 'leaflet-control-focus');
+        const trigger = L.DomUtil.create('button', 'focus-trigger', container);
+        trigger.type = 'button';
+        trigger.textContent = '⌖  Center map  ▾';
+        trigger.setAttribute('aria-haspopup', 'true');
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-label', 'Choose a map area');
+        const menu = L.DomUtil.create('div', 'focus-menu', container);
+        menu.hidden = true;
+
+        function closeMenu() {
+          menu.hidden = true;
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+        function setMenuOpen(open) {
+          menu.hidden = !open;
+          trigger.setAttribute('aria-expanded', String(open));
+          if (open) menu.querySelector('button')?.focus();
+        }
+
+        const choices = [
+          ['Whole Resort', 'resort'],
+          ['Disneyland Park', 'disneyland'],
+          ['California Adventure', 'california'],
+          ['Downtown Disney', 'downtown']
+        ];
+        for (const [label, key] of choices) {
+          const option = L.DomUtil.create('button', 'focus-option', menu);
+          option.type = 'button';
+          option.textContent = label;
+          option.addEventListener('click', () => {
+            closeMenu();
+            trigger.focus();
+            if (key === 'resort') {
+              focusResort(true);
+            } else {
+              map.flyToBounds(parkViews[key], {
+                padding: [24, 24],
+                maxZoom: 19,
+                duration: 0.6
+              });
+            }
+          });
+        }
+
+        trigger.addEventListener('click', () => setMenuOpen(menu.hidden));
+        container.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeMenu();
+            trigger.focus();
+          }
+        });
+        document.addEventListener('pointerdown', (event) => {
+          if (!container.contains(event.target)) closeMenu();
+        });
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.disableScrollPropagation(container);
+        return container;
       }
     });
-    map.addControl(new RecenterControl());
+    map.addControl(new FocusControl());
 
     // Accommodate rotation and desktop resizing without resetting a view the
     // user has deliberately panned or zoomed. Recenter remains available.
@@ -163,6 +278,7 @@
       resizeFrame = requestAnimationFrame(() => {
         map.invalidateSize({ pan: false });
         updateMinZoom();
+        scheduleMaskUpdate();
       });
     });
   </script>
