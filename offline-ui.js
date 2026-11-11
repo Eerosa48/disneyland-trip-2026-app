@@ -38,7 +38,7 @@
     <div class="offline-panel" hidden>
       <div class="offline-head"><strong>Offline map</strong>
         <button type="button" class="offline-dismiss" aria-label="Close offline map panel">×</button></div>
-      <p>Save the complete trimmed map to this device for use without internet.</p>
+      <p>Save the complete map to this device for use without internet.</p>
       <div class="offline-state" role="status" aria-live="polite">Checking device…</div>
       <progress max="1" value="0" aria-label="Offline download progress"></progress>
       <div class="offline-actions">
@@ -115,7 +115,7 @@
     show(done === tileList.files.length
       ? `All ${done.toLocaleString()} tiles saved. Ready for airplane mode.`
       : `${done.toLocaleString()} of ${tileList.files.length.toLocaleString()} tiles saved.`);
-    downloadButton.textContent = done ? 'Resume download' : 'Download all tiles';
+    downloadButton.textContent = done ? 'Resume download' : 'Download map';
     downloadButton.disabled = false;
   }
 
