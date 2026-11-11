@@ -76,17 +76,22 @@
       xyzToLatLng(coverage.maxX + 1, coverage.maxY + 1, coverage.z)
     );
 
-    // Initial area of interest: Disneyland Park, California Adventure,
-    // Downtown Disney, the Esplanade, and nearby entrance roads.
-    // Adjust these four values later if we want to fine-tune the framing.
-    const resortBounds = L.latLngBounds(
-      [33.8028, -117.9310], // Southwest
-      [33.8190, -117.9112]  // Northeast
+    // Approximate street-centered perimeter (including the roads):
+    // West: S Walnut St; south: W Katella Ave;
+    // East: S Harbor Blvd; north: W Ball Rd.
+    // This restricts navigation only; the original tile files are untouched.
+    // Street alignments are not perfectly rectangular, so these values can be
+    // fine-tuned visually after testing.
+    const streetBounds = L.latLngBounds(
+      [33.80335, -117.92920], // Katella Ave / Walnut St vicinity
+      [33.81810, -117.91485]  // Ball Rd / Harbor Blvd vicinity
     );
 
-    // Visitors may explore a little beyond the park while avoiding long pans
-    // into unrelated Anaheim neighborhoods. The map artwork remains intact.
-    const panBounds = resortBounds.pad(0.18);
+    // Keep a park-centered opening view. It will be constrained to streetBounds.
+    const resortBounds = L.latLngBounds(
+      [33.8043, -117.9268],
+      [33.8169, -117.9163]
+    );
 
     const map = L.map('map', {
       zoomControl: true,
@@ -94,8 +99,8 @@
       maxZoom: 20,
       zoomSnap: 0.25,
       zoomDelta: 0.5,
-      maxBounds: panBounds,
-      maxBoundsViscosity: 0.95,
+      maxBounds: streetBounds,
+      maxBoundsViscosity: 1.0,
       attributionControl: true
     });
 
@@ -112,9 +117,11 @@
     }).addTo(map);
 
     function updateMinZoom() {
-      // On especially wide displays, zoom in just enough that the viewport
-      // doesn't extend beyond our finite downloaded-tile rectangle.
-      const requiredZoom = map.getBoundsZoom(tileBounds.pad(-0.025), true);
+      // At the lowest permitted zoom, aim to keep the *whole viewport* within
+      // the four street limits, rather than showing distant neighborhoods.
+      // Leaflet's inside=true finds the zoom needed to fit the viewport within
+      // the bounds (particularly useful on wide desktop monitors).
+      const requiredZoom = map.getBoundsZoom(streetBounds, true);
       const minZoom = Math.min(20, Math.max(16, Math.ceil(requiredZoom * 4) / 4));
       map.setMinZoom(minZoom);
     }
