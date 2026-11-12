@@ -489,7 +489,88 @@
   });
   window.addEventListener('pageshow', refreshDayIfNeeded);
 
-  launch.addEventListener('click', function () { setOpen(panel.hidden); });
+  // Loading errors should never permanently disable the itinerary. A
+  // transient connection, stale SW response, or malformed JSON can be retried
+  // without reloading the entire map or losing downloaded tile caches.
+  var loadingPromise = null;
+
+  function fetchJsonFile(filename, retry) {
+    return fetch(new URL(filename, document.baseURI), retry ? { cache: 'reload' } : undefined)
+      .then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      })
+      .catch(function (error) {
+        if (!retry) {
+          return new Promise(function (resolve) { setTimeout(resolve, 650); })
+            .then(function () { return fetchJsonFile(filename, true); });
+        }
+        throw new Error(filename + ': ' + (error && error.message ? error.message : String(error)));
+      });
+  }
+
+  function loadItinerary(openAfter) {
+    if (loadingPromise) return loadingPromise;
+    launch.disabled = true;
+    launch.textContent = 'Loading itinerary…';
+    launch.title = '';
+
+    loadingPromise = Promise.all([
+      fetchJsonFile('itinerary-2026.json', false),
+      fetchJsonFile('places.json', false),
+      fetchJsonFile('route-2026.json', false)
+    ]).then(function (results) {
+      var nextItinerary = results[0];
+      var nextRouteData = results[2];
+      if (!nextItinerary || !Array.isArray(nextItinerary.days))
+        throw new Error('itinerary-2026.json: missing days array');
+      if (!nextRouteData || !nextRouteData.routes)
+        throw new Error('route-2026.json: missing routes object');
+      if (!results[1] || !Array.isArray(results[1].places))
+        throw new Error('places.json: missing places array');
+
+      itinerary = nextItinerary;
+      routeData = nextRouteData;
+      placesById = Object.create(null);
+      results[1].places.forEach(function (p) { placesById[p.id] = p; });
+      var today = todayInAnaheim();
+      sessionDate = today;
+      var matchingDay = itinerary.days.findIndex(function (d) { return d.date === today; });
+      if (matchingDay >= 0 && validDates.includes(today)) dayIndex = matchingDay;
+      var saved = readSavedSession(today);
+      if (saved) {
+        var savedIndex = itinerary.days.findIndex(function (d) { return d.date === saved.selectedDate; });
+        if (savedIndex >= 0) dayIndex = savedIndex;
+        routeOn = !!saved.stopsOn && routeStopsForDay(itinerary.days[dayIndex]).length > 0;
+      }
+      if (routeOn) renderRoute(); // Does not auto-fit on restoration.
+      if (saved) restoreMapView(saved);
+      render();
+      sessionReady = true;
+      saveSession();
+      launch.textContent = '▦ Itinerary';
+      launch.disabled = false;
+      launch.title = '';
+      if (openAfter) setOpen(true);
+    }).catch(function (error) {
+      // Reset partial initialization; the button remains operable for retry.
+      sessionReady = false;
+      itinerary = null;
+      routeData = null;
+      launch.disabled = false;
+      launch.textContent = '↻ Retry itinerary';
+      launch.title = 'Could not load itinerary. Tap to try again.';
+      console.warn('Greyson itinerary load failed (tap Retry itinerary to try again):', error);
+    }).finally(function () {
+      loadingPromise = null;
+    });
+    return loadingPromise;
+  }
+
+  launch.addEventListener('click', function () {
+    if (itinerary) setOpen(panel.hidden);
+    else loadItinerary(true);
+  });
   dismiss.addEventListener('click', function () { setOpen(false); });
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && !panel.hidden) setOpen(false);
@@ -501,44 +582,5 @@
     }
   });
 
-  Promise.all([
-    fetch(new URL('itinerary-2026.json', document.baseURI)).then(function (r) {
-      if (!r.ok) throw new Error('Itinerary HTTP ' + r.status);
-      return r.json();
-    }),
-    fetch(new URL('places.json', document.baseURI)).then(function (r) {
-      if (!r.ok) throw new Error('Places HTTP ' + r.status);
-      return r.json();
-    }),
-    fetch(new URL('route-2026.json', document.baseURI)).then(function (r) {
-      if (!r.ok) throw new Error('Routes HTTP ' + r.status);
-      return r.json();
-    })
-  ]).then(function (results) {
-    itinerary = results[0];
-    routeData = results[2];
-    if (!Array.isArray(itinerary.days)) throw new Error('Invalid itinerary days');
-    if (!routeData || !routeData.routes) throw new Error('Invalid itinerary routes');
-    var places = results[1].places || [];
-    places.forEach(function (p) { placesById[p.id] = p; });
-    var today = todayInAnaheim();
-    sessionDate = today;
-    var matchingDay = itinerary.days.findIndex(function (d) { return d.date === today; });
-    if (matchingDay >= 0 && validDates.includes(today)) dayIndex = matchingDay;
-    var saved = readSavedSession(today);
-    if (saved) {
-      var savedIndex = itinerary.days.findIndex(function (d) { return d.date === saved.selectedDate; });
-      if (savedIndex >= 0) dayIndex = savedIndex;
-      routeOn = !!saved.stopsOn && routeStopsForDay(itinerary.days[dayIndex]).length > 0;
-    }
-    if (routeOn) renderRoute(); // Does not auto-fit on restoration.
-    if (saved) restoreMapView(saved);
-    render();
-    sessionReady = true;
-    saveSession();
-  }).catch(function (error) {
-    launch.disabled = true;
-    launch.textContent = 'Itinerary unavailable';
-    console.warn('Greyson itinerary:', error);
-  });
+  loadItinerary(false);
 })();
