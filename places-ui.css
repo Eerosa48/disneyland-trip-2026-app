@@ -1,0 +1,39 @@
+/* Greyson's Disney Trip — compact location search */
+.leaflet-control-place-search { position: relative; margin-top: 8px; font: 13px/1.45 system-ui,-apple-system,sans-serif; color:#243829; }
+.place-search-trigger {
+  display: block; border: 2px solid rgba(0,0,0,.2); background:#fff; color:#1f2937;
+  border-radius:6px; padding:7px 11px; box-shadow:0 1px 5px #0004;
+  font:600 13px/1.4 system-ui,-apple-system,sans-serif; cursor:pointer; touch-action:manipulation;
+}
+.place-search-panel {
+  position:absolute; top:calc(100% + 7px); left:0;
+  width:min(345px,calc(100vw - 24px)); max-height:min(65dvh, 560px);
+  box-sizing:border-box; display:flex; flex-direction:column; padding:12px 11px 8px;
+  background:rgba(255,255,255,.98); box-shadow:0 8px 26px #0004;
+  border:1px solid #b6c6b2; border-radius:12px;
+}
+.place-search-panel[hidden] { display:none; }
+.place-search-head {display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
+.place-search-head strong {font-size:15px;}
+.place-search-dismiss {border:0;background:transparent;color:#374d3b;font-size:23px;cursor:pointer;line-height:1;padding:1px 7px;}
+.place-search-input { box-sizing:border-box;width:100%;padding:10px 11px;border-radius:8px;border:1px solid #a9bca6;
+  font:15px system-ui,-apple-system,sans-serif;outline-offset:2px; }
+.place-search-filters {display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
+.place-search-filters select {box-sizing:border-box;min-width:0;width:100%;padding:8px 5px;border:1px solid #b5c4b1;
+  background:#f8faf7;border-radius:7px;color:#2d4534;font:12px system-ui,-apple-system,sans-serif;}
+.place-search-count {color:#566b56;font-size:11px;margin:9px 2px 6px;}
+.place-search-results {overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;min-height:0;border-top:1px solid #e0e7db;}
+.place-search-result {display:block;text-align:left;width:100%;border:0;border-bottom:1px solid #e7ece4;
+  border-radius:0;background:transparent;color:#233328;padding:10px 5px;cursor:pointer;touch-action:manipulation;}
+.place-search-result:hover,.place-search-result:focus-visible {background:#edf5e9;}
+.place-search-result strong {display:block;font-size:13px;font-weight:650;}
+.place-search-result small {display:block;font-size:11px;color:#58705a;margin-top:2px;}
+.place-search-empty {color:#536654;font-size:12px;padding:14px 6px;}
+.place-search-note {display:block;color:#667a68;font-size:10px;line-height:1.4;margin-top:7px;}
+.place-search-label {background:#fff;border:1px solid #65866c;border-radius:6px;color:#183a22;
+  box-shadow:0 1px 5px #0003;padding:4px 7px;font:600 12px system-ui,-apple-system,sans-serif;}
+.place-search-label::before {border-top-color:#65866c;}
+@media(max-width:540px){
+  .place-search-panel {max-height:min(56dvh,460px);}
+  .place-search-input {font-size:16px;}
+}
