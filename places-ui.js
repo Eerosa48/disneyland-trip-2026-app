@@ -85,7 +85,7 @@
         var root = L.DomUtil.create('div', 'leaflet-control-place-search');
         trigger = L.DomUtil.create('button', 'place-search-trigger', root);
         trigger.type = 'button';
-        trigger.textContent = '⌕  Find places  ▾';
+        trigger.textContent = '⌕  Find Places  ▾';
         trigger.setAttribute('aria-expanded', 'false');
         trigger.setAttribute('aria-haspopup', 'true');
         trigger.setAttribute('aria-label', 'Search Disneyland Resort places');
