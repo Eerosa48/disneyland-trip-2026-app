@@ -460,7 +460,7 @@
     if (!saved || !Array.isArray(saved.center) || saved.center.length !== 2) return;
     var lat = saved.center[0], lon = saved.center[1], zoom = saved.zoom;
     if (![lat, lon, zoom].every(Number.isFinite)) return;
-    if (!map.getMaxBounds() || !map.getMaxBounds().contains([lat, lon])) return;
+    if (map.options.maxBounds && !map.options.maxBounds.contains([lat, lon])) return;
     if (zoom < map.getMinZoom() || zoom > map.getMaxZoom()) return;
     map.setView([lat, lon], zoom, { animate: false });
   }
