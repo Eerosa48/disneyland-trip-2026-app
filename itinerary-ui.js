@@ -149,6 +149,12 @@
       return { index: i + 1, place: p, timeline: timeline, timelineIndex: item.timelineIndex };
     }).filter(Boolean);
   }
+  
+  function stopColorClass(index, total) {
+    var stage = Math.ceil(index * 3 / total);
+    return stage === 1 ? 'is-early' :
+           stage === 2 ? 'is-middle' : 'is-late';
+  }
 
   function clearRoute() {
     routeLayer.clearLayers();
@@ -215,8 +221,7 @@
 
     stops.forEach(function (stop) {
       var p = stop.place;
-      var colorClass = p.park === 'california' ? 'is-dca' :
-        p.park === 'downtown' ? 'is-downtown' : 'is-disneyland';
+      var colorClass = stopColorClass(stop.index, stops.length);
       var icon = L.divIcon({
         className: 'greyson-itinerary-pin-wrap',
         html: '<span class="greyson-itinerary-pin ' + colorClass + '">' + stop.index + '</span>',
@@ -266,6 +271,7 @@
       var row = make('button', 'greyson-itinerary-route-row', content);
       row.type = 'button';
       var num = make('span', 'greyson-itinerary-route-num', row, String(stop.index));
+	  num.classList.add(stopColorClass(stop.index, stops.length));
       var text = make('span', 'greyson-itinerary-route-text', row);
       make('strong', '', text, stop.place.name);
       make('small', '', text, stop.timeline.time + ' · ' + stop.timeline.activity);

@@ -108,8 +108,20 @@
   background:#285d50;color:#fff;align-items:center;justify-content:center;
   box-shadow:0 2px 5px #0006;font:800 11px system-ui,-apple-system,sans-serif;
 }
-.greyson-itinerary-pin.is-dca {background:#a06920;}
-.greyson-itinerary-pin.is-downtown {background:#973e4a;}
+
+/* Chronological stop colors, shared by map and itinerary. */
+.greyson-itinerary-pin.is-early,
+.greyson-itinerary-route-num.is-early {
+  background: #285d50;
+}
+.greyson-itinerary-pin.is-middle,
+.greyson-itinerary-route-num.is-middle {
+  background: #a06920;
+}
+.greyson-itinerary-pin.is-late,
+.greyson-itinerary-route-num.is-late {
+  background: #973e4a;
+}
 .greyson-itinerary-pin-popup {color:#253a30;font:12px/1.4 system-ui,-apple-system,sans-serif;}
 .greyson-itinerary-pin-popup strong {display:block;font-size:13px;margin-bottom:3px;}
 .greyson-itinerary-pin-time {font-weight:700;color:#206b56;margin:3px 0;}
