@@ -58,7 +58,19 @@
   var titleGroup = make('div', 'greyson-itinerary-titlegroup', header);
   make('strong', '', titleGroup, 'Trip itinerary');
   make('small', '', titleGroup, 'November 15–20, 2026 · Anaheim time');
-  var dismiss = make('button', 'greyson-itinerary-close', header, '×');
+  // Keep stop visibility beside the itinerary heading. A future walking
+  // route toggle can be added alongside this button without another redesign.
+  var headActions = make('div', 'greyson-itinerary-head-actions', header);
+  var stopsToggle = make('button', 'greyson-itinerary-stops-toggle', headActions, 'Show Stops');
+  stopsToggle.type = 'button';
+  stopsToggle.setAttribute('aria-pressed', 'false');
+  stopsToggle.addEventListener('click', function () {
+    if (!itinerary || !routeStopsForDay(itinerary.days[dayIndex]).length) return;
+    toggleRoute(!routeOn);
+    render();
+    if (routeOn) setOpen(false); // Let the family see the pins immediately.
+  });
+  var dismiss = make('button', 'greyson-itinerary-close', headActions, '×');
   dismiss.type = 'button';
   dismiss.setAttribute('aria-label', 'Close itinerary');
 
@@ -120,7 +132,7 @@
     var day = itinerary.days[dayIndex];
     var available = routeStopsForDay(day).length > 0;
     routeChip.hidden = !(routeOn && available);
-    if (!routeChip.hidden) routeChip.textContent = 'Route: ' + day.day + '  ×';
+    if (!routeChip.hidden) routeChip.textContent = 'Stops: ' + day.day + '  ×';
   }
 
   function routePopup(stop) {
@@ -199,22 +211,14 @@
     var stops = routeStopsForDay(day);
     if (!stops.length) {
       make('p', 'greyson-itinerary-empty', content,
-        'No resort-map route for this day. Follow the full schedule for any hotel or travel activities.');
+        'No mapped stops for this rest day. See Schedule and Details for the day’s plans.');
       return;
     }
     make('p', 'greyson-itinerary-explainer', content,
       'Stops follow the DOCX order and times. Dotted lines are schematic connectors, NOT walking paths. Park hops are intentionally unconnected. Optional alternatives remain in Schedule.');
-    var controls = make('div', 'greyson-itinerary-route-actions', content);
-    var toggle = make('button', 'greyson-itinerary-route-btn', controls,
-      routeOn ? 'Hide route from map' : 'Show stops on map');
-    toggle.type = 'button';
-    toggle.addEventListener('click', function () {
-      toggleRoute(!routeOn);
-      if (routeOn) setOpen(false);
-      else render();
-    });
     if (routeOn) {
-      var fit = make('button', 'greyson-itinerary-route-btn is-secondary', controls, 'View full route');
+      var controls = make('div', 'greyson-itinerary-route-actions', content);
+      var fit = make('button', 'greyson-itinerary-route-btn is-secondary', controls, 'View all stops');
       fit.type = 'button';
       fit.addEventListener('click', function () { focusRouteBounds(); setOpen(false); });
     }
@@ -308,8 +312,18 @@
   function render() {
     if (!itinerary) return;
     var day = itinerary.days[dayIndex];
+    // The DOCX still retains travel days, but only Nov 16–19 appear in the UI.
+    var hasStops = routeStopsForDay(day).length > 0;
+    stopsToggle.disabled = !hasStops;
+    stopsToggle.classList.toggle('is-active', routeOn && hasStops);
+    stopsToggle.setAttribute('aria-pressed', String(routeOn && hasStops));
+    stopsToggle.title = hasStops
+      ? (routeOn ? 'Hide stops for this day' : 'Show stops for this day')
+      : 'No map stops scheduled for this day';
+
     daysNav.replaceChildren();
     itinerary.days.forEach(function (d, index) {
+      if (d.date === '2026-11-15' || d.date === '2026-11-20') return;
       var b = make('button', 'greyson-itinerary-day', daysNav, d.day);
       b.type = 'button';
       b.setAttribute('aria-pressed', String(index === dayIndex));
@@ -326,17 +340,6 @@
     make('h2', '', daySummary, day.title);
     make('p', 'greyson-itinerary-muted', daySummary, day.subtitle);
     if (day.priority) make('p', 'greyson-itinerary-priority', daySummary, day.priority);
-    if (routeStopsForDay(day).length) {
-      var routeAction = make('button', 'greyson-itinerary-route-btn', daySummary,
-        routeOn ? '✓ Stop route shown on map · Hide' : '⌖ Show this day’s stops on map');
-      routeAction.type = 'button';
-      routeAction.setAttribute('aria-pressed', String(routeOn));
-      routeAction.addEventListener('click', function () {
-        toggleRoute(!routeOn);
-        if (routeOn) setOpen(false);
-        else render();
-      });
-    }
 
     tabsNav.replaceChildren();
     [
@@ -418,7 +421,9 @@
     places.forEach(function (p) { placesById[p.id] = p; });
     var today = todayInAnaheim();
     var matchingDay = itinerary.days.findIndex(function (d) { return d.date === today; });
-    if (matchingDay >= 0) dayIndex = matchingDay;
+    if (matchingDay >= 0 &&
+        itinerary.days[matchingDay].date !== '2026-11-15' &&
+        itinerary.days[matchingDay].date !== '2026-11-20') dayIndex = matchingDay;
     render();
   }).catch(function (error) {
     launch.disabled = true;
