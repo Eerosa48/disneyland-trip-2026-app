@@ -12,35 +12,45 @@
 
   // Brief, non-interactive status messages at the former button's location.
   const style = document.createElement('style');
-  style.textContent = `
-    #disney-offline-toast {
-      position: fixed;
-      left: 12px;
-      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-      z-index: 1650;
-      max-width: min(300px, calc(100vw - 24px));
-      box-sizing: border-box;
-      padding: 8px 12px;
-      border: 1px solid rgba(160, 183, 167, .75);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .94);
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 10px #0002;
-      color: #25493d;
-      font: 650 12px/1.35 system-ui, -apple-system, sans-serif;
-      pointer-events: none;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(6px);
-      transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
-    }
+  style.textContent = `    
+  #disney-offline-toast {
+    position: fixed;
+    left: 14px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    z-index: 1650;
+    max-width: min(300px, calc(100vw - 28px));
+
+    /* Text only — no background or container appearance */
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+
+    /* White lettering with dark outline */
+    color: #ffffff;
+    font: 700 13px/1.4 system-ui, -apple-system, sans-serif;
+    text-shadow:
+      -1px -1px 1px rgba(0,0,0,.9),
+       1px -1px 1px rgba(0,0,0,.9),
+      -1px  1px 1px rgba(0,0,0,.9),
+       1px  1px 1px rgba(0,0,0,.9),
+       0px  2px 4px rgba(0,0,0,.7);
+
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition:
+      opacity 250ms ease,
+      transform 250ms ease,
+      visibility 250ms ease;
+  }
     #disney-offline-toast.is-visible {
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
     }
-    #disney-offline-toast.is-warning { color: #794c23; }
+    #disney-offline-toast.is-warning { color: #ffe6ad; }
     @media (prefers-reduced-motion: reduce) {
       #disney-offline-toast { transition: none; transform: none; }
     }
