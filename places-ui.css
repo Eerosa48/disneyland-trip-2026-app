@@ -71,3 +71,10 @@ button,
 a {
   -webkit-tap-highlight-color: transparent;
 }
+/* Prevent iOS highlighting on Leaflet zoom buttons */
+.leaflet-container .leaflet-control-zoom a {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
