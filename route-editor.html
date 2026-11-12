@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Greyson's Disney Trip — Route Editor (Local Only)</title>
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="route-editor.css">
+</head>
+<body>
+  <main class="editor-shell">
+    <aside class="editor-panel" id="editor-panel">
+      <div class="editor-heading">
+        <div><div class="eyebrow">LOCAL EDITING WORKSPACE</div><h1>Walking route editor</h1><p>Trace the blue route directly over the map's real pathways.</p></div>
+        <button id="collapse" class="collapse-button" type="button" title="Collapse editor panel" aria-label="Collapse editor panel">‹</button>
+      </div>
+      <div id="editor-controls" class="editor-controls">
+        <div class="group">
+          <label for="day-choice">Day</label>
+          <select id="day-choice"><option value="2026-11-16">Mon. November 16</option><option value="2026-11-17">Tues. November 17</option><option value="2026-11-19">Thurs. November 19</option></select>
+        </div>
+        <div class="group"><label for="leg-choice">Route leg (one stop to the next)</label><select id="leg-choice"></select><div id="leg-title" class="leg-title"></div></div>
+        <div class="progress-wrap"><div class="progress-bar"><div id="progress-fill"></div></div><div id="progress-text" class="hint"></div></div>
+        <div class="mode-grid" role="group" aria-label="Route editing mode">
+          <button id="mode-draw" type="button" class="selected">Draw along path</button>
+          <button id="mode-insert" type="button">Insert / refine</button>
+        </div>
+        <div id="mode-help" class="instruction">Click the walkways **in travel order** to add bends. The starting Stop is fixed; each click extends the blue line toward the ending Stop.</div>
+        <div class="button-grid">
+          <button id="undo" type="button">↶ Undo</button><button id="redo" type="button">↷ Redo</button>
+          <button id="remove-last" type="button">Remove last bend</button><button id="fit-leg" type="button">Zoom to leg</button>
+        </div>
+        <div class="button-grid"><button id="clear-leg" type="button" class="subtle-danger">Clear leg</button><button id="complete-leg" type="button" class="complete-button">✓ Finish leg</button></div>
+        <label class="checkbox-row"><input type="checkbox" id="show-all" checked> Show completed legs from the whole day</label>
+        <div class="route-legend"><span class="swatch solid"></span> Traced path <span class="swatch dash"></span> Unfinished connection <span class="swatch stop"></span> Stop anchor</div>
+        <div class="group export-group"><button id="export-route" type="button" class="export-button">Download walking-routes-2026.json</button><button id="import-route" type="button">Import a previously exported route</button><input type="file" id="import-file" accept=".json,application/json" hidden><button id="reset-all" type="button" class="text-danger">Reset all editor work</button></div>
+        <div id="status" class="status" role="status">Loading stops…</div>
+        <p class="fineprint">Your edits autosave **only in this browser**. Download the JSON as your portable backup. This editor does not change the live app or push to GitHub.</p>
+      </div>
+    </aside>
+    <div class="map-panel">
+      <div id="route-map" aria-label="Disneyland Resort illustrated map route editing canvas"></div>
+      <div class="map-help">Zoom in to trace walkways. Drag white edit handles to move bends; right-click a handle to delete.</div>
+    </div>
+  </main>
+  <script src="vendor/leaflet.js"></script>
+  <script src="route-editor.js"></script>
+</body>
+</html>

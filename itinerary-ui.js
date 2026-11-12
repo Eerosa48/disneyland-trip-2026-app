@@ -1,6 +1,6 @@
 /* Greyson's Disney Trip — DOCX v5 itinerary + ordered stop overlay.
  * Timeline timing is always read from itinerary-2026.json, never recalculated.
- * The dashed segments are schematic stop connectors, NOT walkable paths.
+ * Route overlays are visual only; Stops and Route remain independent.
  */
 (function () {
   'use strict';
@@ -14,6 +14,14 @@
   var routeData = null;
   var routeOn = false;
   var routeLayer = L.layerGroup();
+  // Walking overlays are separate from the numbered Stops layer and itinerary data.
+  // Traced paths exist for all three park days. Rest day has no map route.
+  var WALKING_DATES = ['2026-11-16', '2026-11-17', '2026-11-19'];
+  var walkingOn = false;
+  var walkingLayer = L.layerGroup();
+  var walkingData = null;
+  var walkingFetch = null;
+  var walkingLoadError = false;
   // Persist only local UI state; no GPS positions or server sync.
   var SESSION_KEY = 'greyson-disney-map-session-v1';
   var sessionReady = false;
@@ -54,7 +62,7 @@
   launch.setAttribute('aria-controls', 'greyson-itinerary-panel');
   launch.setAttribute('aria-expanded', 'false');
   // The fixed top banner reflects the same selected day as the panel.
-  // Route stays disabled until actual walkable path geometry is developed.
+  // The Route control is available for the Nov 16 pilot; other days remain disabled.
   var dayBanner = make('div', 'greyson-active-day', document.body);
   dayBanner.setAttribute('aria-label', 'Selected itinerary day and map overlays');
   var dayBannerDate = make('strong', 'greyson-active-day-date', dayBanner, 'Mon. 11/16');
@@ -72,9 +80,10 @@
   var bannerWalking = make('button', 'greyson-active-day-toggle', dayBannerControls, 'Route');
   bannerWalking.type = 'button';
   bannerWalking.disabled = true;
-  bannerWalking.title = 'Walking routes are coming in a later phase';
-  bannerWalking.setAttribute('aria-label', 'Walking route not available yet');
+  bannerWalking.title = 'Show this day’s visual walking route';
+  bannerWalking.setAttribute('aria-label', 'Show walking route preview');
   bannerWalking.setAttribute('aria-pressed', 'false');
+  bannerWalking.addEventListener('click', toggleWalking);
 
   var panel = make('section', 'greyson-itinerary-panel', root);
   panel.id = 'greyson-itinerary-panel';
@@ -149,7 +158,7 @@
       return { index: i + 1, place: p, timeline: timeline, timelineIndex: item.timelineIndex };
     }).filter(Boolean);
   }
-  
+
   function stopColorClass(index, total) {
     var stage = Math.ceil(index * 3 / total);
     return stage === 1 ? 'is-early' :
@@ -178,6 +187,17 @@
     });
     bannerStops.setAttribute('aria-label', pressed
       ? 'Hide itinerary stops on map' : 'Show itinerary stops on map');
+
+    var walkingAvailable = WALKING_DATES.includes(day.date);
+    bannerWalking.disabled = !walkingAvailable || !!walkingFetch;
+    bannerWalking.classList.toggle('is-active', walkingOn && walkingAvailable);
+    bannerWalking.setAttribute('aria-pressed', String(walkingOn && walkingAvailable));
+    bannerWalking.setAttribute('aria-label', walkingOn
+      ? 'Hide walking route preview' : 'Show walking route preview');
+    bannerWalking.title = !walkingAvailable
+      ? 'No walking route planned for this day'
+      : walkingLoadError ? 'Route failed to load; tap to retry'
+      : (walkingOn ? 'Hide the visual route' : 'Show the visual route');
   }
 
   function routePopup(stop) {
@@ -198,27 +218,8 @@
     var stops = routeStopsForDay(day);
     if (!stops.length) { routeOn = false; updateRouteButtons(); return; }
 
-    // Do not draw a connector across park boundaries. Lines within a park
-    // indicate stop ORDER only; they do NOT follow real pedestrian paths.
-    var run = [];
-    function flushRun() {
-      if (run.length > 1) {
-        L.polyline(run, {
-          color: '#167b79', weight: 3, opacity: 0.58,
-          dashArray: '2 9', lineCap: 'round', interactive: false
-        }).addTo(routeLayer);
-      }
-      run = [];
-    }
-    var previousPark = null;
-    stops.forEach(function (stop) {
-      var p = stop.place;
-      if (p.park !== previousPark) flushRun();
-      run.push([p.lat, p.lon]);
-      previousPark = p.park;
-    });
-    flushRun();
-
+    // Stops toggles show numbered destination pins only. Walking lines belong
+    // exclusively to the independent Route toggle.
     stops.forEach(function (stop) {
       var p = stop.place;
       var colorClass = stopColorClass(stop.index, stops.length);
@@ -252,6 +253,93 @@
     saveSession();
   }
 
+
+  function renderWalking() {
+    walkingLayer.clearLayers();
+    if (map.hasLayer(walkingLayer)) map.removeLayer(walkingLayer);
+    if (!walkingOn || !itinerary || !walkingData) return;
+    var day = itinerary.days[dayIndex];
+    var entry = walkingData.routes && walkingData.routes[day.date];
+    if (!entry || !Array.isArray(entry.segments)) return;
+
+    entry.segments.forEach(function (segment) {
+      var coords = segment.points;
+      if (!Array.isArray(coords) || coords.length < 2) return;
+      // White casing helps distinguish the walking line from the artwork.
+      L.polyline(coords, {
+        color: '#fff', opacity: 0.96, weight: 8, lineCap: 'round',
+        lineJoin: 'round', interactive: false
+      }).addTo(walkingLayer);
+      L.polyline(coords, {
+        color: '#1b77b5', opacity: 0.98, weight: 4.5,
+        lineCap: 'round', lineJoin: 'round',
+        dashArray: segment.kind === 'park-hop' ? '8 9' : null,
+        interactive: false
+      }).addTo(walkingLayer);
+    });
+    walkingLayer.addTo(map);
+  }
+
+  function loadWalkingData() {
+    if (walkingData) return Promise.resolve(walkingData);
+    if (walkingFetch) return walkingFetch;
+    walkingLoadError = false;
+    walkingFetch = fetch(new URL('walking-routes-2026.json', document.baseURI))
+      .then(function (r) {
+        if (!r.ok) throw new Error('walking-routes-2026.json HTTP ' + r.status);
+        return r.json();
+      }).then(function (data) {
+        var invalidDays = WALKING_DATES.filter(function (date) {
+          var row = data && data.routes && data.routes[date];
+          return !row || !Array.isArray(row.segments) || !row.segments.length ||
+            !row.segments.every(function (segment) {
+              return Array.isArray(segment.points) && segment.points.length >= 2 &&
+                segment.points.every(function (coords) {
+                  return Array.isArray(coords) && coords.length === 2 &&
+                    coords.every(Number.isFinite);
+                });
+            });
+        });
+        if (invalidDays.length) {
+          throw new Error('Invalid walking route geometry for ' + invalidDays.join(', '));
+        }
+        walkingData = data;
+        walkingLoadError = false;
+        return data;
+      }).finally(function () {
+        walkingFetch = null;
+        updateRouteButtons();
+      });
+    updateRouteButtons();
+    return walkingFetch;
+  }
+
+  function toggleWalking() {
+    if (!itinerary || !WALKING_DATES.includes(itinerary.days[dayIndex].date)) return;
+    if (walkingOn) {
+      walkingOn = false;
+      renderWalking();
+      updateRouteButtons();
+      saveSession();
+      return;
+    }
+    walkingOn = true;
+    updateRouteButtons();
+    saveSession();
+    loadWalkingData().then(function () {
+      // A day switch while loading must never display the wrong day's path.
+      renderWalking();
+      updateRouteButtons();
+    }).catch(function (err) {
+      walkingOn = false;
+      walkingLoadError = true;
+      renderWalking();
+      updateRouteButtons();
+      saveSession();
+      console.warn('Greyson walking route unavailable (tap Route to retry):', err);
+    });
+  }
+
   function renderRouteList(day) {
     var stops = routeStopsForDay(day);
     if (!stops.length) {
@@ -260,7 +348,7 @@
       return;
     }
     make('p', 'greyson-itinerary-explainer', content,
-      'Stops follow the DOCX order and times. Dotted lines are schematic connectors, NOT walking paths. Park hops are intentionally unconnected. Optional alternatives remain in Schedule.');
+      'Stops follow the DOCX order and times. Use the separate Route toggle for the traced walking-path overlay. Optional alternatives remain in Schedule.');
     if (routeOn) {
       var controls = make('div', 'greyson-itinerary-route-actions', content);
       var fit = make('button', 'greyson-itinerary-route-btn is-secondary', controls, 'View all stops');
@@ -271,7 +359,7 @@
       var row = make('button', 'greyson-itinerary-route-row', content);
       row.type = 'button';
       var num = make('span', 'greyson-itinerary-route-num', row, String(stop.index));
-	  num.classList.add(stopColorClass(stop.index, stops.length));
+      num.classList.add(stopColorClass(stop.index, stops.length));
       var text = make('span', 'greyson-itinerary-route-text', row);
       make('strong', '', text, stop.place.name);
       make('small', '', text, stop.timeline.time + ' · ' + stop.timeline.activity);
@@ -372,6 +460,8 @@
         dayIndex = index;
         currentTab = 'schedule';
         if (routeOn) renderRoute();
+        if (walkingOn && !WALKING_DATES.includes(d.date)) walkingOn = false;
+        renderWalking();
         render();
         saveSession();
       });
@@ -425,7 +515,7 @@
     } else {
       renderDetails(day);
     }
-    foot.textContent = 'DOCX v5 · Anaheim (PST) · Schematic stop order only, NOT walking directions.';
+    foot.textContent = 'DOCX v5 · Anaheim (PST) · Route is a visual draft, NOT turn-by-turn navigation.';
   }
 
   // Save map center/zoom and overlay state after the user finishes panning,
@@ -446,7 +536,8 @@
         selectedDate: chosenDay.date,
         center: [center.lat, center.lng],
         zoom: map.getZoom(),
-        stopsOn: !!routeOn
+        stopsOn: !!routeOn,
+        walkingOn: !!walkingOn
       }));
     } catch (_) { /* Blocked/full storage: app remains functional without persistence. */ }
   }
@@ -481,6 +572,8 @@
     if (matchingDay >= 0 && validDates.includes(today)) dayIndex = matchingDay;
     else dayIndex = 1; // Preview day outside the four itinerary dates.
     routeOn = false;
+    walkingOn = false;
+    renderWalking();
     currentTab = 'schedule';
     if (highlight) { map.removeLayer(highlight); highlight = null; }
     renderRoute();
@@ -548,12 +641,23 @@
         var savedIndex = itinerary.days.findIndex(function (d) { return d.date === saved.selectedDate; });
         if (savedIndex >= 0) dayIndex = savedIndex;
         routeOn = !!saved.stopsOn && routeStopsForDay(itinerary.days[dayIndex]).length > 0;
+        walkingOn = !!saved.walkingOn && WALKING_DATES.includes(itinerary.days[dayIndex].date);
       }
       if (routeOn) renderRoute(); // Does not auto-fit on restoration.
       if (saved) restoreMapView(saved);
       render();
       sessionReady = true;
       saveSession();
+      if (walkingOn) {
+        loadWalkingData().then(function () { renderWalking(); updateRouteButtons(); })
+          .catch(function (error) {
+            walkingOn = false;
+            walkingLoadError = true;
+            updateRouteButtons();
+            saveSession();
+            console.warn('Greyson walking route restoration failed:', error);
+          });
+      }
       launch.textContent = '▦ Itinerary';
       launch.disabled = false;
       launch.title = '';
