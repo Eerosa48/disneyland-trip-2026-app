@@ -37,10 +37,3 @@
 .greyson-wait-credit {
   display: none;
 }
-
-/* Keep expanded dropdowns above other map controls */
-.leaflet-control-focus:has(.focus-menu:not([hidden])),
-.leaflet-control-place-search:has(.place-search-panel:not([hidden])) {
-  position: relative;
-  z-index: 2000;
-}
