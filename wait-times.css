@@ -4,10 +4,11 @@
   background: rgba(255,255,255,.96); box-shadow: 0 1px 5px #0003;
   color: #253b2b; font: 12px/1.3 system-ui,-apple-system,sans-serif;
 }
-.greyson-wait-toggle {
-  display: block; cursor: pointer; touch-action: manipulation;
-  padding: 6px 7px; border: 1px solid #9ab29a; border-radius: 6px;
-  background: #eaf3e9; color: #21432b; font: 650 12px system-ui,-apple-system,sans-serif;
+.greyson-wait-title {
+  display: block;
+  padding:2px 3px;
+  color: #21432b;
+  font: 700 12px/1.4 system-ui, -apple-system, sans-serif;
 }
 .greyson-wait-note, .greyson-wait-credit { display: block; margin: 4px 2px 0; font-size: 10px; }
 .greyson-wait-note { color: #526453; }
@@ -31,5 +32,15 @@
 .greyson-wait-popup small { display: block; color: #647368; font-size: 10px; margin-top: 3px; }
 @media(max-width:540px) {
   .leaflet-control-greyson-wait { max-width: 162px; }
-  .greyson-wait-toggle { font-size: 11px; }
+  .greyson-wait-title { font-size: 11px; }
+}
+.greyson-wait-credit {
+  display: none;
+}
+
+/* Keep expanded dropdowns above other map controls */
+.leaflet-control-focus:has(.focus-menu:not([hidden])),
+.leaflet-control-place-search:has(.place-search-panel:not([hidden])) {
+  position: relative;
+  z-index: 2000;
 }

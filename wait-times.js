@@ -11,11 +11,10 @@
     disneyland: '7340550b-c14d-4def-80bb-acdb51d49a66',
     california: '832fcd51-ea19-4e77-85c7-75d5843b127c'
   };
-  var REFRESH_MS = 5 * 60 * 1000;
+  var REFRESH_MS = 1 * 60 * 1000;
   var MIN_ZOOM = 17;
-  var enabled = true;
   var markers = L.layerGroup();
-  var button, note, places = [], latest = {}, lastCheck = 0;
+  var heading, note, places = [], latest = {}, lastCheck = 0;
   var pending = false, errors = 0;
 
   function normalize(s) {
@@ -80,17 +79,29 @@
   }
 
   function updateVisibility() {
-    var shouldShow = enabled && navigator.onLine && map.getZoom() >= MIN_ZOOM;
-    if (shouldShow && !map.hasLayer(markers)) markers.addTo(map);
-    if (!shouldShow && map.hasLayer(markers)) map.removeLayer(markers);
-    if (!button) return;
-    button.setAttribute('aria-pressed', String(enabled));
-    if (!enabled) button.textContent = '◷ Wait times: Off';
-    else if (!navigator.onLine) button.textContent = '◷ Waits: offline';
-    else if (pending) button.textContent = '◷ Waits: loading';
-    else if (errors === 2) button.textContent = '◷ Waits: unavailable';
-    else if (map.getZoom() < MIN_ZOOM) button.textContent = '◷ Waits: zoom in';
-    else button.textContent = errors ? '◷ Waits: partial' : '◷ Wait times: On';
+    var shouldShow = navigator.onLine && map.getZoom() >= MIN_ZOOM;
+
+    if (shouldShow && !map.hasLayer(markers)) {
+      markers.addTo(map);
+    }
+
+    if (!shouldShow && map.hasLayer(markers)) {
+      map.removeLayer(markers);
+    }
+
+    if (!heading) return;
+
+    if (!navigator.onLine) {
+      heading.textContent = 'Wait Times unavailable offline';
+    } else if (map.getZoom() < MIN_ZOOM) {
+      heading.textContent = 'Zoom to see Wait Times';
+    } else if (pending && !lastCheck) {
+      heading.textContent = 'Loading Wait Times…';
+    } else if (errors === 2) {
+      heading.textContent = 'Wait Times unavailable';
+    } else {
+      heading.textContent = 'Wait Times';
+    }
   }
 
   function paint() {
@@ -115,8 +126,15 @@
         .addTo(markers);
     });
     if (note) {
-      note.textContent = matched + ' rides with reports' + (lastCheck ? ' · checked ' + clockTime(new Date(lastCheck).toISOString()) : '');
-      if (errors) note.textContent += ' · partial feed';
+      note.textContent = lastCheck
+	    ? 'Last checked: ' + clockTime(new Date(lastCheck).toISOString())
+		: 'Waiting for first update…';
+		
+	  if (errors) {
+		note.textContent += errors === 2
+		  ? ' · unavailable'
+		  : ' · partial feed';
+	  }
     }
     // Browser console diagnostics: API entities do not always use Disney's published names.
     window.greysonWaitDebug = { matched: matched, unmatched: missing, feedErrors: errors };
@@ -130,7 +148,7 @@
   }
 
   async function refresh() {
-    if (pending || !enabled || !navigator.onLine) return;
+    if (pending || !navigator.onLine) return;
     pending = true;
     updateVisibility();
     var checks = await Promise.allSettled(Object.keys(PARK_IDS).map(async function (park) {
@@ -144,7 +162,7 @@
       if (result.status === 'fulfilled') latest[result.value.park] = result.value.rows;
       else {
         errors += 1;
-        console.warn('Greyson wait times: ' + Object.keys(PARK_IDS)[i], result.reason);
+        console.warn('Greyson Wait Times: ' + Object.keys(PARK_IDS)[i], result.reason);
       }
     });
     lastCheck = Date.now();
@@ -152,33 +170,53 @@
     paint();
   }
 
+
   function makeControl() {
     var WaitControl = L.Control.extend({
       options: { position: 'topleft' },
+
       onAdd: function () {
-        var root = L.DomUtil.create('div', 'leaflet-control-greyson-wait');
-        button = L.DomUtil.create('button', 'greyson-wait-toggle', root);
-        button.type = 'button';
-        button.textContent = '◷ Waits: loading';
-        button.setAttribute('aria-label', 'Toggle live attraction wait times');
-        note = L.DomUtil.create('small', 'greyson-wait-note', root);
-        note.textContent = 'Attractions only · refresh every 5 min';
-        var credit = L.DomUtil.create('a', 'greyson-wait-credit', root);
+        var root = L.DomUtil.create(
+          'div',
+          'leaflet-control-greyson-wait'
+        );
+
+        // Static informational heading
+        heading = L.DomUtil.create(
+          'div',
+          'greyson-wait-title',
+          root
+        );
+        heading.textContent = 'Loading Wait Times…';
+
+        // Last checked timestamp
+        note = L.DomUtil.create(
+          'small',
+          'greyson-wait-note',
+          root
+        );
+        note.textContent = 'Waiting for first update…';
+
+        // Required API attribution
+        var credit = L.DomUtil.create(
+          'a',
+          'greyson-wait-credit',
+          root
+        );
         credit.href = 'https://www.themeparks.wiki/api';
         credit.target = '_blank';
         credit.rel = 'noopener noreferrer';
         credit.textContent = 'Powered by ThemeParks.wiki';
-        button.addEventListener('click', function () {
-          enabled = !enabled;
-          updateVisibility();
-          if (enabled && (errors || !lastCheck || Date.now() - lastCheck >= REFRESH_MS)) refresh();
-        });
+
         L.DomEvent.disableClickPropagation(root);
         L.DomEvent.disableScrollPropagation(root);
+
         return root;
       }
     });
+
     map.addControl(new WaitControl());
+    updateVisibility();
   }
 
   makeControl();
@@ -210,6 +248,6 @@
       pending = false;
       if (note) note.textContent = 'Attraction directory unavailable';
       updateVisibility();
-      console.warn('Greyson wait times:', error);
+      console.warn('Greyson Wait Times:', error);
     });
 })();
