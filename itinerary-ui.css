@@ -1,0 +1,110 @@
+/* Greyson's Disney Trip — preliminary, DOCX-faithful itinerary panel.
+   Designed as a temporary UI pending the unified bottom toolbar. */
+.greyson-itinerary-app {
+  position: fixed; z-index: 1500;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  left: 50%; transform: translateX(-50%);
+  width: min(440px, calc(100vw - 24px));
+  font: 13px/1.45 system-ui, -apple-system, sans-serif; color: #25382f;
+  pointer-events: none;
+}
+.greyson-itinerary-app button {font: inherit; cursor: pointer; touch-action: manipulation;}
+.greyson-itinerary-launch {
+  display: block; margin: 0 auto; pointer-events: auto;
+  min-width: 103px; min-height: 43px; padding: 8px 14px;
+  border: 1px solid #a8bdae; border-radius: 999px;
+  background: rgba(255,255,255,.96); color: #1c473e;
+  box-shadow: 0 2px 10px #0003; font-weight: 700 !important;
+}
+.greyson-itinerary-launch:disabled {opacity: .65;}
+.greyson-itinerary-panel {
+  position: absolute; width: 100%; bottom: calc(100% + 11px);
+  height: min(72dvh, 670px); box-sizing: border-box;
+  display: flex; flex-direction: column;
+  overflow: hidden; border: 1px solid #b5c8ba;
+  border-radius: 15px; background: rgba(255,255,255,.98);
+  box-shadow: 0 7px 26px #0004; pointer-events: auto;
+}
+.greyson-itinerary-panel[hidden] {display:none;}
+.greyson-itinerary-head {display:flex;justify-content:space-between;align-items:center; padding:11px 14px 7px;gap:10px;}
+.greyson-itinerary-titlegroup {display:flex;flex-direction:column;gap:1px;}
+.greyson-itinerary-titlegroup strong {font-size:15px;}
+.greyson-itinerary-titlegroup small {font-size:10px;color:#617365;}
+.greyson-itinerary-close {flex:none;border:0;background:transparent;font-size:24px !important;color:#44584b;min-width:35px;min-height:35px;}
+.greyson-itinerary-days {display:flex;gap:5px;overflow-x:auto;padding:4px 10px 9px;flex:none;scrollbar-width:thin;}
+.greyson-itinerary-day {white-space:nowrap;flex:1 0 auto;padding:7px 9px;border:1px solid #d0ded1;border-radius:8px;background:#f7faf6;color:#34503d;font-size:11px !important;}
+.greyson-itinerary-day.is-selected {background:#285947;color:#fff;border-color:#285947;font-weight:700;}
+.greyson-itinerary-summary {padding:3px 13px 10px;border-bottom:1px solid #e5ece4;flex:none;}
+.greyson-itinerary-summary h2 {margin:0;font-size:15px;line-height:1.3;}
+.greyson-itinerary-summary p {margin:5px 0 0;}
+.greyson-itinerary-muted {color:#5c7060;font-size:11px;}
+.greyson-itinerary-priority {font-size:11px;color:#345044;line-height:1.4;max-height:62px;overflow:auto;}
+.greyson-itinerary-tabs {display:flex;gap:3px;padding:7px 10px 6px;border-bottom:1px solid #e4eae3;}
+.greyson-itinerary-tab {flex:1;min-height:34px;padding:6px 2px;border:0;border-radius:7px;background:transparent;color:#476053;font-size:12px !important;}
+.greyson-itinerary-tab.is-selected {background:#e8f0e8;color:#194735;font-weight:700;}
+.greyson-itinerary-content {flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:7px 12px 12px;-webkit-overflow-scrolling:touch;}
+.greyson-itinerary-entry {display:grid;grid-template-columns:92px minmax(0,1fr);gap:8px;padding:10px 2px;border-bottom:1px solid #e4ebe2;}
+.greyson-itinerary-time {font-size:11px;font-weight:750;color:#246653;line-height:1.35;}
+.greyson-itinerary-activity {font-size:12px;color:#213c2e;line-height:1.4;}
+.greyson-itinerary-note {font-size:11px;line-height:1.45;color:#657566;margin:4px 0 0;}
+.greyson-itinerary-maplinks {display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+.greyson-itinerary-maplink {padding:4px 7px;max-width:100%;font-size:10px !important;border:1px solid #b8d0bc;border-radius:7px;background:#f1f8f1;color:#205944;line-height:1.2;}
+.greyson-itinerary-maplink:hover,.greyson-itinerary-maplink:focus-visible {background:#dcece0;}
+.greyson-itinerary-explainer {margin:6px 0 10px;padding:8px 9px;border-radius:6px;background:#f2f5ef;color:#4b6750;font-size:11px;}
+.greyson-itinerary-empty {padding:16px 8px;color:#607165;font-size:12px;}
+.greyson-itinerary-subhead {font-size:12px;margin:16px 0 7px;color:#1f5844;}
+.greyson-itinerary-detail-copy {margin:8px 0 12px;font-size:11px;color:#495b50;line-height:1.55;}
+.greyson-itinerary-detail-item {display:flex;flex-direction:column;gap:3px;padding:8px 0;border-bottom:1px solid #e3eae2;font-size:11px;}
+.greyson-itinerary-foot {flex:none;border-top:1px solid #edf0e8;padding:7px 12px;font-size:9px;color:#657a6a;}
+@media (max-width:540px) {
+  .greyson-itinerary-app {width:min(400px,calc(100vw - 18px));bottom:calc(8px + env(safe-area-inset-bottom, 0px));}
+  .greyson-itinerary-panel {height:min(76dvh, 690px);}
+  .greyson-itinerary-entry {grid-template-columns:86px minmax(0,1fr);}
+  .greyson-itinerary-launch {min-height:40px;}
+}
+
+/* Phase 2: small stop-order overlay, intentionally not pedestrian navigation. */
+.greyson-itinerary-summary .greyson-itinerary-route-btn { margin-top: 8px; }
+.greyson-itinerary-route-btn {
+  border: 1px solid #b1cbbd; border-radius: 8px;
+  background: #e7f4ee; color: #1e5945; padding: 7px 10px;
+  font: 700 11px/1.4 system-ui,-apple-system,sans-serif !important;
+  min-height: 34px;
+}
+.greyson-itinerary-route-btn.is-secondary { background: #fff; color: #376b5c; }
+.greyson-itinerary-route-actions { display:flex;flex-wrap:wrap;gap:7px;margin:3px 0 10px; }
+.greyson-itinerary-route-row {
+  display: flex; width: 100%; text-align: left; align-items: center; gap: 10px;
+  border: 0; border-bottom: 1px solid #e2eae1;
+  background: transparent; padding: 10px 3px; color: #223e31;
+}
+.greyson-itinerary-route-row:hover, .greyson-itinerary-route-row:focus-visible {background:#f3f8f4;}
+.greyson-itinerary-route-num {
+  display: inline-flex; flex: 0 0 24px; width:24px; height:24px;
+  border-radius: 50%; background:#285d50; color:white;
+  align-items:center;justify-content:center; font-weight:800; font-size:11px;
+}
+.greyson-itinerary-route-text { display:flex;flex-direction:column;gap:2px;min-width:0; }
+.greyson-itinerary-route-text strong {font-size:12px;}
+.greyson-itinerary-route-text small {font-size:10px;color:#596c61;}
+.greyson-itinerary-routechip {
+  position: absolute; bottom: calc(100% + 9px); left: 50%;transform:translateX(-50%);
+  padding:6px 10px; min-height:30px; white-space:nowrap;
+  background:rgba(255,255,255,.96);color:#235244;
+  border:1px solid #a6c7b4;border-radius:999px;box-shadow:0 1px 5px #0002;
+  pointer-events:auto;font-size:11px !important;font-weight:700;
+}
+.greyson-itinerary-routechip[hidden] {display:none;}
+.greyson-itinerary-pin-wrap {background:transparent;border:0;}
+.greyson-itinerary-pin {
+  display:flex;width:27px;height:27px;border-radius:15px;
+  border:2px solid #fff;box-sizing:border-box;
+  background:#285d50;color:#fff;align-items:center;justify-content:center;
+  box-shadow:0 2px 5px #0006;font:800 11px system-ui,-apple-system,sans-serif;
+}
+.greyson-itinerary-pin.is-dca {background:#a06920;}
+.greyson-itinerary-pin.is-downtown {background:#973e4a;}
+.greyson-itinerary-pin-popup {color:#253a30;font:12px/1.4 system-ui,-apple-system,sans-serif;}
+.greyson-itinerary-pin-popup strong {display:block;font-size:13px;margin-bottom:3px;}
+.greyson-itinerary-pin-time {font-weight:700;color:#206b56;margin:3px 0;}
+.greyson-itinerary-pin-popup small {display:block;margin-top:5px;color:#647568;}

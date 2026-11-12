@@ -1,0 +1,914 @@
+{
+  "source": "2026 Disneyland Itinerary v5.docx",
+  "sourceVersion": "v5",
+  "dates": "2026-11-15 to 2026-11-20",
+  "timeZone": "America/Los_Angeles",
+  "displayTimeRule": "All time strings are exact DOCX table values, preserving approximation and After/By/During qualifiers. No estimated or calculated showtimes.",
+  "atAGlance": [
+    {
+      "date": "Sun, Nov 15",
+      "plan": "Travel Arizona → Anaheim; settle into Travelodge",
+      "people": "Travel party"
+    },
+    {
+      "date": "Mon, Nov 16",
+      "plan": "Cars, Jungle Cruise, Pirates, droid build; Naples 4 PM",
+      "people": "8 incl. Greyson"
+    },
+    {
+      "date": "Tue, Nov 17",
+      "plan": "Dumbo, Haunted Mansion, adult thrill rides; Lamplight 5 PM",
+      "people": "6 incl. Greyson"
+    },
+    {
+      "date": "Wed, Nov 18",
+      "plan": "Rest day: Goofy’s Kitchen 11:20 AM; Great Maple 6 PM",
+      "people": "10–12 at brunch"
+    },
+    {
+      "date": "Thu, Nov 19",
+      "plan": "Cars, Guardians, Pixar Pier, Indiana Jones; Céntrico 5 PM",
+      "people": "6 incl. Greyson"
+    },
+    {
+      "date": "Fri, Nov 20",
+      "plan": "Travel Anaheim → Arizona",
+      "people": "Travel party"
+    }
+  ],
+  "mealReservations": [
+    {
+      "when": "Mon 11/16 • 4:00 PM",
+      "reservation": "Naples Ristorante e Bar",
+      "notes": "Downtown Disney • party of 8"
+    },
+    {
+      "when": "Tue 11/17 • 5:00 PM",
+      "reservation": "Lamplight Lounge",
+      "notes": "California Adventure / Pixar Pier • party of 6"
+    },
+    {
+      "when": "Wed 11/18 • 11:20 AM",
+      "reservation": "Goofy’s Kitchen",
+      "notes": "Disneyland Hotel • 10 confirmed, 2 possible"
+    },
+    {
+      "when": "Wed 11/18 • 6:00 PM",
+      "reservation": "Great Maple",
+      "notes": "Pixar Place Hotel • verify reservation party size"
+    },
+    {
+      "when": "Thu 11/19 • 5:00 PM",
+      "reservation": "Céntrico",
+      "notes": "Downtown Disney • party of 6"
+    }
+  ],
+  "coffeeStops": [
+    {
+      "day": "Mon 16",
+      "venue": "Harbour Galley • New Orleans Square",
+      "drink": "Brown Butter Maple Cold Brew"
+    },
+    {
+      "day": "Mon 16",
+      "venue": "Hungry Bear • Bayou Country",
+      "drink": "Grizzly Pumpkin Cold Brew Latte"
+    },
+    {
+      "day": "Tue 17",
+      "venue": "Jolly Holiday • Main Street",
+      "drink": "Peppermint Mocha Cold Brew"
+    },
+    {
+      "day": "Tue 17",
+      "venue": "Red Rose Taverne • Fantasyland",
+      "drink": "French Toast Cold Brew"
+    },
+    {
+      "day": "Thu 19",
+      "venue": "Bengal Barbecue • Adventureland",
+      "drink": "Vietnamese Iced Coffee"
+    },
+    {
+      "day": "Thu 19",
+      "venue": "Rancho del Zocalo • Frontierland",
+      "drink": "Hot Chocolate Cafe"
+    }
+  ],
+  "coffeeOrderingNote": "Check locations and available pickup windows in the Disneyland app 20–30 minutes ahead. It is completely fine to skip a drink if no one wants it.",
+  "generalNotes": {
+    "pacing": [
+      "Greyson usually naps 1–2 hours starting between 11 AM and 1 PM. Keep the stroller available; do not plan around waking him for a ride.",
+      "Use a “watch first, ride second” strategy for new rides and loud attractions.",
+      "Expect 5–10 minutes extra for stroller parking, changing diapers, organizing the group, and getting everyone walking again.",
+      "Choose someone to monitor Disneyland app return windows.",
+      "Adult-only rides require Rider Switch; Indiana Jones requires 46 in., and Haunted Mansion/Pirates may be frightening even though they have no height limit.",
+      "Rain might cancel outdoor entertainment and close attractions. Have a rain cover, layers and a sheltered alternative."
+    ],
+    "lightningLaneCoordination": "One app coordinator selects every participating rider together (7 ticketed adults Nov 16; 5 on Nov 17/19), shares each confirmed return window and the app’s next eligibility time, and sets a reminder. Speak with a Cast Member before splitting into Rider Switch groups.",
+    "indoorAlternatives": [
+      {
+        "area": "Disneyland • Main Street",
+        "suggestion": "Shop, take sheltered breaks, browse displays."
+      },
+      {
+        "area": "Disneyland • Fantasyland",
+        "suggestion": "“it’s a small world” Holiday if operating; gentle options."
+      },
+      {
+        "area": "Disneyland • Bayou Country",
+        "suggestion": "Winnie the Pooh; food stop and stroller rest."
+      },
+      {
+        "area": "Disneyland • Galaxy’s Edge",
+        "suggestion": "Browse indoor shops; keep the droid build if queue fits."
+      },
+      {
+        "area": "California Adventure • Hollywood Land",
+        "suggestion": "Disney Animation Building / Turtle Talk with Crush."
+      },
+      {
+        "area": "California Adventure • Paradise Gardens",
+        "suggestion": "The Little Mermaid ride if operating; indoor rest at dining venues."
+      }
+    ]
+  },
+  "days": [
+    {
+      "date": "2026-11-15",
+      "day": "Sun 15",
+      "title": "Travel to Anaheim",
+      "subtitle": "Arizona → Anaheim • Travel day",
+      "priority": "Travel Arizona → Anaheim; settle into Travelodge",
+      "timeline": [],
+      "lightningLane": [],
+      "routeable": false,
+      "coffeeStops": [],
+      "mealReservations": []
+    },
+    {
+      "date": "2026-11-16",
+      "day": "Mon 16",
+      "title": "Happy 2nd Birthday, Greyson!",
+      "subtitle": "Starting park: Disney California Adventure  •  Park hop after 11 AM  •  Family of 8",
+      "priority": "Cars Land, Jungle Cruise, Pirates and Droid Depot are planned before Naples at 4 PM. Keep two coffees and a decent lunch. If queues run long, trim rides before the droid build or dinner.",
+      "timeline": [
+        {
+          "time": "6:45–8:15",
+          "activity": "Leave hotel; security; enter California Adventure",
+          "notes": "Start early, but no pressure if opening lines are long.",
+          "mapIds": [
+            "cal-landmark-california-adventure-main-entrance"
+          ]
+        },
+        {
+          "time": "8:15–9:10",
+          "activity": "Cars Land: Mater + Luigi rides",
+          "notes": "Each requires 32 in.; allow 15–30 min per ride including queue.",
+          "mapIds": [
+            "dca-315",
+            "dca-13961"
+          ]
+        },
+        {
+          "time": "9:10–10:25",
+          "activity": "Lightning McQueen / Mater, shops & photos",
+          "notes": "Let Greyson look around; a repeat ride is optional.",
+          "mapIds": [
+            "cal-experience-meet-the-residents-of-radiator-springs-in-cars-land",
+            "cal-landmark-cars-land"
+          ]
+        },
+        {
+          "time": "10:25–11:25",
+          "activity": "Park hop; walk to Adventureland",
+          "notes": "Disneyland entry after 11 AM; castle photos are now optional.",
+          "mapIds": [
+            "dis-landmark-disneyland-park-main-entrance",
+            "dis-landmark-adventureland"
+          ]
+        },
+        {
+          "time": "11:25–11:55",
+          "activity": "Jungle Cruise",
+          "notes": "Any height; ~10–25 min standby, plus boat ride.",
+          "mapIds": [
+            "dl-296"
+          ]
+        },
+        {
+          "time": "11:55–12:35",
+          "activity": "Pirates of the Caribbean",
+          "notes": "Any height; dark scenes, cannon fire and small drops.",
+          "mapIds": [
+            "dl-289"
+          ]
+        },
+        {
+          "time": "12:35–1:25",
+          "activity": "Harbour Galley + Hungry Bear coffees; light lunch",
+          "notes": "Two nearby stops; Greyson might nap in stroller between rides.",
+          "mapIds": [
+            "dis-dining-harbour-galley",
+            "dis-dining-hungry-bear-barbecue-jamboree"
+          ]
+        },
+        {
+          "time": "1:25–1:40",
+          "activity": "Walk to Galaxy’s Edge",
+          "notes": "Browse marketplace if time allows.",
+          "mapIds": [
+            "dis-landmark-star-wars-galaxy-s-edge"
+          ]
+        },
+        {
+          "time": "1:40–2:30",
+          "activity": "Droid Depot: custom R-series build",
+          "notes": "Adult registered builder; queue may extend this; may just buy pre-built.",
+          "mapIds": [
+            "dl-droid-depot"
+          ]
+        },
+        {
+          "time": "2:30–2:45",
+          "activity": "Lightsabers + Millennium Falcon photo",
+          "notes": "Short optional Star Wars finale.",
+          "mapIds": [
+            "dl-6339"
+          ]
+        },
+        {
+          "time": "2:45–3:45",
+          "activity": "Leave via Frontierland; walk to Naples",
+          "notes": "Protect the 4 PM reservation; early arrival if possible.",
+          "mapIds": [
+            "dow-dining-naples-ristorante-e-bar"
+          ]
+        },
+        {
+          "time": "4:00–5:20",
+          "activity": "Naples birthday dinner (8 guests)",
+          "notes": "Dinner reservation.",
+          "mapIds": [
+            "dow-dining-naples-ristorante-e-bar"
+          ]
+        },
+        {
+          "time": "After 5:20",
+          "activity": "Optional holiday lights / hotel",
+          "notes": "Only if Greyson has energy; fireworks very late.",
+          "mapIds": []
+        }
+      ],
+      "lightningLane": [
+        {
+          "time": "8:00 AM",
+          "activity": "OPTIONAL · Toy Story Midway Mania!",
+          "notes": "Target 9:30–10:15 AM only if the group wants to shorten Cars Land. Otherwise skip; Greyson’s birthday morning takes priority."
+        },
+        {
+          "time": "By 10:00 AM",
+          "activity": "Eligibility / next selection",
+          "notes": "Check after redemption, or 2 hours after an 8:00 booking. Book only if a return fits before the park hop."
+        },
+        {
+          "time": "11:25 AM",
+          "activity": "Jungle Cruise + Pirates",
+          "notes": "Standby only; neither offers Multi Pass. Check live waits and protect the droid-building window."
+        },
+        {
+          "time": "1:40–2:45 PM",
+          "activity": "Droid Depot / Galaxy’s Edge",
+          "notes": "No Lightning Lane needed. Avoid selections that conflict with the 4:00 PM Naples dinner."
+        },
+        {
+          "time": "After 5:20 PM",
+          "activity": "OPTIONAL · Buzz Lightyear",
+          "notes": "Only if returning to Disneyland; check for a convenient 6:00–7:00 PM return. No obligation to use another pass."
+        }
+      ],
+      "walking": "Walking blocks: Cars Land→DCA exit 12–18 min; park-gate switch 10–20 min including entry; Disneyland gate→Jungle Cruise 10–15 min; Jungle→Pirates 5–8 min; Pirates→Harbour 5–8 min; Hungry Bear→Galaxy’s Edge 5–10 min; Galaxy’s Edge→exit 20–25 min; exit→Naples 10–15 min. These are group allowances, not measured navigation times.",
+      "ridePlanning": [
+        {
+          "item": "Mater’s Jingle Jamboree",
+          "detail": "Yes • 32 in. minimum",
+          "plan": "5–25 min"
+        },
+        {
+          "item": "Luigi’s Joy to the Whirl",
+          "detail": "Yes • 32 in. minimum",
+          "plan": "10–30 min"
+        },
+        {
+          "item": "Jungle Cruise / Pirates",
+          "detail": "Yes • any height",
+          "plan": "10–35 / 15–45 min"
+        },
+        {
+          "item": "Radiator Springs Racers",
+          "detail": "No • 40 in. minimum",
+          "plan": "45–90+ min"
+        }
+      ],
+      "skipFirst": "Skip castle photos, extended shopping, then a long Pirates/Jungle queue before sacrificing Cars Land, the droid build or Naples. Pirates is dark/loud with small drops; an adult can stay with Greyson if he’s uncomfortable.",
+      "extraNotes": [
+        "Budget approximately $119.99 + tax for one droid; accessories cost extra. Edward or Danielle should be the registered builder; the building area permits the builder plus two guests, and only the builder assembles the droid. Greyson can watch, pick colors, and try the remote.",
+        "Plan ~50 minutes at Droid Depot, but walk-in waits may exceed this. Keep a firm 2:45 PM departure goal. If Pirates has >25 minutes posted standby or Jungle Cruise runs late, skip the extra ride, not the droid stuff or 4 PM dinner."
+      ],
+      "routeable": true,
+      "coffeeStops": [
+        {
+          "day": "Mon 16",
+          "venue": "Harbour Galley • New Orleans Square",
+          "drink": "Brown Butter Maple Cold Brew"
+        },
+        {
+          "day": "Mon 16",
+          "venue": "Hungry Bear • Bayou Country",
+          "drink": "Grizzly Pumpkin Cold Brew Latte"
+        }
+      ],
+      "mealReservations": [
+        {
+          "when": "Mon 11/16 • 4:00 PM",
+          "reservation": "Naples Ristorante e Bar",
+          "notes": "Downtown Disney • party of 8"
+        }
+      ],
+      "lightningLaneBookingRule": "BOOKING RULE  Check the app after redeeming a selection or 2 hours after booking; actual return windows vary. The times above are reminders to check, not confirmed bookings."
+    },
+    {
+      "date": "2026-11-17",
+      "day": "Tue 17",
+      "title": "Classic Disneyland",
+      "subtitle": "Starting park: Disneyland  •  Family of 6  •  Lamplight Lounge at 5 PM",
+      "priority": "Dumbo is a definite must-do. Adults get Space Mountain and Tiana’s Bayou Adventure; whole family can do Haunted Mansion Holiday. Danielle’s two coffees and the 5 PM dinner.",
+      "timeline": [
+        {
+          "time": "7:00–8:00",
+          "activity": "Leave hotel; enter Disneyland",
+          "notes": "Aim for opening; first Lightning Lane after scanning in.",
+          "mapIds": [
+            "dis-landmark-disneyland-park-main-entrance"
+          ]
+        },
+        {
+          "time": "8:00–8:25",
+          "activity": "Jolly Holiday • Peppermint Mocha Cold Brew",
+          "notes": "Grab breakfast; coffee #3.",
+          "mapIds": [
+            "dis-dining-jolly-holiday-bakery-cafe"
+          ]
+        },
+        {
+          "time": "8:25–9:30",
+          "activity": "Tomorrowland: Space Mountain + Buzz Astro Blasters",
+          "notes": "Adult Rider Switch; Greyson can ride Buzz (no height minimum).",
+          "mapIds": [
+            "dl-284",
+            "dl-273"
+          ]
+        },
+        {
+          "time": "9:30–10:05",
+          "activity": "Autopia",
+          "notes": "Greyson qualifies at 36 in. if accompanied by adult 54+ in.",
+          "mapIds": [
+            "dl-317"
+          ]
+        },
+        {
+          "time": "10:05–10:25",
+          "activity": "Red Rose Taverne • French Toast Cold Brew",
+          "notes": "Coffee #4; walk toward Fantasyland.",
+          "mapIds": [
+            "dis-dining-red-rose-taverne"
+          ]
+        },
+        {
+          "time": "10:25–11:00",
+          "activity": "Dumbo the Flying Elephant; photos",
+          "notes": "Any height; prioritize Dumbo over the carousel.",
+          "mapIds": [
+            "dl-275"
+          ]
+        },
+        {
+          "time": "11:00–12:15",
+          "activity": "Mickey’s Toontown + Runaway Railway",
+          "notes": "Play yards, optional character greeting; Railway Lightning Lane if suitable.",
+          "mapIds": [
+            "dis-landmark-mickey-s-toontown",
+            "dl-11526"
+          ]
+        },
+        {
+          "time": "12:15–12:50",
+          "activity": "Lunch & stroller nap",
+          "notes": "Café Daisy or other easy quick service.",
+          "mapIds": [
+            "dis-dining-cafe-daisy"
+          ]
+        },
+        {
+          "time": "12:50–1:25",
+          "activity": "“it’s a small world” Holiday",
+          "notes": "Optional if Greyson sleeps; no height minimum.",
+          "mapIds": [
+            "dl-307"
+          ]
+        },
+        {
+          "time": "1:25–2:40",
+          "activity": "Walk west; Tiana’s Bayou Adventure + Winnie the Pooh",
+          "notes": "Rider Switch for adults; Greyson enjoys Pooh.",
+          "mapIds": [
+            "dl-14168",
+            "dl-306"
+          ]
+        },
+        {
+          "time": "2:40–3:25",
+          "activity": "Haunted Mansion Holiday, New Orleans Square",
+          "notes": "Any height, but spooky; Lightning Lane Multi Pass if available.",
+          "mapIds": [
+            "dl-13958"
+          ]
+        },
+        {
+          "time": "3:25–4:45",
+          "activity": "Exit Disneyland; hop into California Adventure",
+          "notes": "Protect dinner arrival; skip small world if ride returns run late.",
+          "mapIds": [
+            "cal-landmark-california-adventure-main-entrance"
+          ]
+        },
+        {
+          "time": "5:00–6:20",
+          "activity": "Lamplight Lounge dinner",
+          "notes": "Pixar Pier • party of 6.",
+          "mapIds": [
+            "cal-dining-lamplight-lounge"
+          ]
+        },
+        {
+          "time": "After 6:20",
+          "activity": "Pixar Pier lights / optional World of Color / hotel",
+          "notes": "World of Color would be a late night.",
+          "mapIds": [
+            "cal-landmark-pixar-pier"
+          ]
+        }
+      ],
+      "lightningLane": [
+        {
+          "time": "8:00 AM",
+          "activity": "1 · Space Mountain",
+          "notes": "Target 8:40–9:30 AM. Book participating adults together; ask about Rider Switch. If no usable window, check Tiana’s first."
+        },
+        {
+          "time": "~9–10 AM",
+          "activity": "2 · Tiana’s Bayou Adventure",
+          "notes": "Rebook immediately after eligible Space redemption, or at 10:00 after an 8:00 booking if still unredeemed. Aim for 1:25–2:40 PM."
+        },
+        {
+          "time": "~11 AM–noon",
+          "activity": "3 · Haunted Mansion Holiday",
+          "notes": "When eligible, try for 2:40–3:25 PM. Greyson meets the height rule, but spooky scenes may not suit him."
+        },
+        {
+          "time": "During Toontown",
+          "activity": "OPTIONAL · Runaway Railway",
+          "notes": "Check only if eligible and a return fits about 11:00 AM–12:15 PM; otherwise use standby or skip."
+        },
+        {
+          "time": "1:25 PM",
+          "activity": "Confirm Tiana / Rider Switch",
+          "notes": "Verify the actual return window, adult rider group and Greyson’s nearby Winnie the Pooh plan."
+        },
+        {
+          "time": "By 3:00 PM",
+          "activity": "Stop conflicting bookings",
+          "notes": "No new return windows that interfere with leaving Disneyland and arriving at Lamplight Lounge by 4:45 PM."
+        }
+      ],
+      "walking": "Key walking blocks: Main Street→Tomorrowland 10–15 min; Tomorrowland→Fantasyland 5–10 min; Fantasyland→Toontown 5–10 min; Toontown→Bayou Country 20–30 min; Tiana→Haunted Mansion 5–10 min; Haunted Mansion→Disneyland exit 15–20 min; Disneyland gate→Lamplight Lounge 25–40 min including entry.",
+      "ridePlanning": [
+        {
+          "item": "Space Mountain",
+          "detail": "35–75 min",
+          "plan": "Lightning Lane + Rider Switch"
+        },
+        {
+          "item": "Buzz Lightyear Astro Blasters",
+          "detail": "10–30 min",
+          "plan": "Standby or Lightning Lane"
+        },
+        {
+          "item": "Autopia",
+          "detail": "15–45 min",
+          "plan": "Standby if manageable"
+        },
+        {
+          "item": "Dumbo the Flying Elephant",
+          "detail": "10–35 min",
+          "plan": "Family priority; standby"
+        },
+        {
+          "item": "Mickey & Minnie’s Runaway Railway",
+          "detail": "30–65 min",
+          "plan": "Lightning Lane preferred"
+        },
+        {
+          "item": "“it’s a small world” Holiday",
+          "detail": "10–35 min",
+          "plan": "Standby / Lightning Lane if offered"
+        },
+        {
+          "item": "Tiana’s Bayou Adventure",
+          "detail": "35–90+ min",
+          "plan": "Lightning Lane + Rider Switch"
+        },
+        {
+          "item": "Winnie the Pooh",
+          "detail": "5–20 min",
+          "plan": "Standby"
+        },
+        {
+          "item": "Haunted Mansion Holiday",
+          "detail": "20–60 min",
+          "plan": "Lightning Lane preferred; any height"
+        }
+      ],
+      "riderSwitch": [
+        {
+          "ride": "Space Mountain",
+          "requirement": "40 in.; Lightning Lane Multi Pass",
+          "whileAdultsRide": "Buzz Lightyear Astro Blasters / Tomorrowland exploration"
+        },
+        {
+          "ride": "Tiana’s Bayou Adventure",
+          "requirement": "40 in.; Lightning Lane Multi Pass",
+          "whileAdultsRide": "Winnie the Pooh / Bayou Country rest"
+        }
+      ],
+      "skipFirst": "Skip the carousel, shorten Toontown greetings and small world if return windows drift. Preserve Dumbo, Space Mountain, Tiana and Haunted Mansion when possible; Greyson can skip the spooky ride.",
+      "extraNotes": [
+        "Rider Switch: ask the attraction Cast Member before the group separates. A waiting adult stays with Greyson and follows the Cast Member’s instructions for the second riding group. Budget roughly 40–65 minutes for each group rotation even when using Lightning Lane."
+      ],
+      "routeable": true,
+      "coffeeStops": [
+        {
+          "day": "Tue 17",
+          "venue": "Jolly Holiday • Main Street",
+          "drink": "Peppermint Mocha Cold Brew"
+        },
+        {
+          "day": "Tue 17",
+          "venue": "Red Rose Taverne • Fantasyland",
+          "drink": "French Toast Cold Brew"
+        }
+      ],
+      "mealReservations": [
+        {
+          "when": "Tue 11/17 • 5:00 PM",
+          "reservation": "Lamplight Lounge",
+          "notes": "California Adventure / Pixar Pier • party of 6"
+        }
+      ],
+      "lightningLaneBookingRule": "BOOKING RULE  Check the app after redeeming a selection or 2 hours after booking; actual return windows vary. The times above are reminders to check, not confirmed bookings."
+    },
+    {
+      "date": "2026-11-18",
+      "day": "Wed 18",
+      "title": "Family rest day",
+      "subtitle": "No park admission planned  •  Character brunch 11:20 AM  •  Dinner 6:00 PM",
+      "priority": "Two fixed meals; naps, pool and shopping remain optional. The brunch party is large and may need extra check-in time.",
+      "timeline": [
+        {
+          "time": "8:00–10:30",
+          "activity": "Sleep in, breakfast, easy morning",
+          "notes": "Pack camera and stroller; no park rush.",
+          "mapIds": []
+        },
+        {
+          "time": "10:30–11:10",
+          "activity": "Travel to Disneyland Hotel",
+          "notes": "Allow parking and group gathering.",
+          "mapIds": []
+        },
+        {
+          "time": "11:20–12:50",
+          "activity": "Goofy’s Kitchen holiday character brunch",
+          "notes": "10 confirmed people; Selena and Nick possible (12 total).",
+          "mapIds": []
+        },
+        {
+          "time": "12:50–1:30",
+          "activity": "Disneyland Hotel photos / optional gift shop",
+          "notes": "Only if Greyson is enjoying himself.",
+          "mapIds": []
+        },
+        {
+          "time": "1:30–3:15",
+          "activity": "Return to Travelodge; nap & rest",
+          "notes": "Toddler recharge; no obligation to shop.",
+          "mapIds": []
+        },
+        {
+          "time": "3:15–4:45",
+          "activity": "Pool / hotel downtime / short shopping",
+          "notes": "Outdoor pool dependent on conditions and hours.",
+          "mapIds": []
+        },
+        {
+          "time": "4:45–5:45",
+          "activity": "Get ready; travel to Pixar Place Hotel",
+          "notes": "Parking and lobby/photo allowance.",
+          "mapIds": []
+        },
+        {
+          "time": "6:00–7:20",
+          "activity": "Great Maple dinner",
+          "notes": "Verify reservation party size.",
+          "mapIds": []
+        },
+        {
+          "time": "After 7:20",
+          "activity": "Return to Travelodge",
+          "notes": "Recharge for final park day.",
+          "mapIds": []
+        }
+      ],
+      "lightningLane": [],
+      "extraNotes": [
+        "Approximate driving time to either resort hotel: often 10–20 minutes from Travelodge, plus parking and walking. For shopping, consider World of Disney or the LEGO Store in Downtown Disney, but only if the family wants the extra steps."
+      ],
+      "diningTips": [
+        "☐ Confirm Goofy’s Kitchen final party count, including Greyson, and whether Selena and Nick are joining.",
+        "☐ Mention Greyson’s birthday.",
+        "☐ Ask each hotel restaurant about dining parking validation.",
+        "☐ Confirm Great Maple’s reservation party size separately from Goofy’s Kitchen."
+      ],
+      "routeable": false,
+      "coffeeStops": [],
+      "mealReservations": [
+        {
+          "when": "Wed 11/18 • 11:20 AM",
+          "reservation": "Goofy’s Kitchen",
+          "notes": "Disneyland Hotel • 10 confirmed, 2 possible"
+        },
+        {
+          "when": "Wed 11/18 • 6:00 PM",
+          "reservation": "Great Maple",
+          "notes": "Pixar Place Hotel • verify reservation party size"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-19",
+      "day": "Thu 19",
+      "title": "Pixar, parade & a last wish",
+      "subtitle": "Starting park: California Adventure  •  Family of 6  •  Céntrico at 5 PM",
+      "priority": "Revisit Cars Land and Pixar Pier, ride Guardians, then park hop for Indiana Jones, two coffees and the Toy Story parade. Indiana is adult-only (46-inch minimum); prioritize its return window.",
+      "timeline": [
+        {
+          "time": "6:45–8:00",
+          "activity": "Leave hotel, security, enter California Adventure",
+          "notes": "First Lightning Lane as soon as scanned in.",
+          "mapIds": [
+            "cal-landmark-california-adventure-main-entrance"
+          ]
+        },
+        {
+          "time": "8:00–9:00",
+          "activity": "Cars Land: favorite ride, McQueen/Mater and photos",
+          "notes": "Follow Greyson’s lead; shorter revisit to protect afternoon.",
+          "mapIds": [
+            "cal-landmark-cars-land"
+          ]
+        },
+        {
+          "time": "9:00–10:05",
+          "activity": "Guardians of the Galaxy – Mission: BREAKOUT!",
+          "notes": "Adult Lightning Lane + Rider Switch; Greyson stays with one adult.",
+          "mapIds": [
+            "dca-329"
+          ]
+        },
+        {
+          "time": "10:05–10:45",
+          "activity": "Walk to Pixar Pier; snack, character check",
+          "notes": "Allow transition and a short stroller break.",
+          "mapIds": [
+            "cal-landmark-pixar-pier"
+          ]
+        },
+        {
+          "time": "10:45–11:05",
+          "activity": "Optional Green Army Patrol performance",
+          "notes": "If offered; can skip for a better Toy Story greeting.",
+          "mapIds": [
+            "cal-landmark-pixar-pier"
+          ]
+        },
+        {
+          "time": "11:05–11:40",
+          "activity": "Toy Story Midway Mania",
+          "notes": "Lightning Lane if possible; standby if Lightning Lane reserved for Indiana.",
+          "mapIds": [
+            "dca-313"
+          ]
+        },
+        {
+          "time": "11:40–12:05",
+          "activity": "Toy Story characters OR Jessie’s carousel",
+          "notes": "Select one, not both, if time is limited.",
+          "mapIds": [
+            "cal-experience-meet-pixar-pals-at-pixar-pier",
+            "dca-310"
+          ]
+        },
+        {
+          "time": "12:05–12:50",
+          "activity": "Walk to gate; hop into Disneyland",
+          "notes": "Early hop is important for Indiana Jones.",
+          "mapIds": [
+            "dis-landmark-disneyland-park-main-entrance"
+          ]
+        },
+        {
+          "time": "12:50–1:05",
+          "activity": "Bengal Barbecue coffee #5",
+          "notes": "Vietnamese Iced Coffee; mobile order if offered.",
+          "mapIds": [
+            "dis-dining-bengal-barbecue"
+          ]
+        },
+        {
+          "time": "1:05–2:10",
+          "activity": "Indiana Jones Adventure • adults only",
+          "notes": "46 in. minimum; Lightning Lane + Rider Switch; 65 min target.",
+          "mapIds": [
+            "dl-326"
+          ]
+        },
+        {
+          "time": "2:10–2:30",
+          "activity": "Rancho del Zocalo coffee #6",
+          "notes": "Hot Chocolate Cafe; short sit-down if possible.",
+          "mapIds": [
+            "dis-dining-rancho-del-zocalo-restaurante"
+          ]
+        },
+        {
+          "time": "2:30–3:15",
+          "activity": "Move to Main Street parade location",
+          "notes": "Check route direction and stroller viewing space.",
+          "mapIds": [
+            "dis-landmark-main-street-u-s-a"
+          ]
+        },
+        {
+          "time": "~3:15–4:10",
+          "activity": "A Christmas Fantasy Parade (if scheduled)",
+          "notes": "Toy Story float; timing varies by viewing position.",
+          "mapIds": [
+            "dis-landmark-main-street-u-s-a"
+          ]
+        },
+        {
+          "time": "4:10–4:45",
+          "activity": "Exit Disneyland; walk to Céntrico",
+          "notes": "Protect dinner check-in buffer.",
+          "mapIds": [
+            "dow-dining-centrico"
+          ]
+        },
+        {
+          "time": "5:00–6:20",
+          "activity": "Céntrico dinner",
+          "notes": "Party of 6.",
+          "mapIds": [
+            "dow-dining-centrico"
+          ]
+        },
+        {
+          "time": "After 6:20",
+          "activity": "Optional Cars Land night lights / hotel",
+          "notes": "Nighttime reroute is extra walking; only if happy and energetic.",
+          "mapIds": [
+            "cal-landmark-cars-land"
+          ]
+        }
+      ],
+      "lightningLane": [
+        {
+          "time": "8:00 AM",
+          "activity": "1 · Guardians of the Galaxy",
+          "notes": "Target 9:00–10:05 AM. Book participating adults and plan Rider Switch while Greyson stays with an adult."
+        },
+        {
+          "time": "~9:15–10 AM",
+          "activity": "2 · Indiana Jones Adventure",
+          "notes": "Book after eligible Guardians redemption, or at 10:00 after an unredeemed 8:00 booking. Target 1:05–2:10 PM after park hop."
+        },
+        {
+          "time": "~10:30 AM",
+          "activity": "Check Toy Story entertainment",
+          "notes": "Not a Lightning Lane: confirm Green Army Patrol and character times before committing to the next ride."
+        },
+        {
+          "time": "~11 AM–noon",
+          "activity": "3 · OPTIONAL Toy Story Midway Mania!",
+          "notes": "Only if eligible and an immediate return fits roughly 11:05–11:40 AM. Otherwise try standby; do not lose Indiana Jones."
+        },
+        {
+          "time": "12:05 PM",
+          "activity": "Park hop / Indiana confirmation",
+          "notes": "Leave California Adventure. Check actual Indiana window and synchronize all adult riders."
+        },
+        {
+          "time": "1:00 PM",
+          "activity": "Indiana Rider Switch check",
+          "notes": "Talk to a Cast Member before splitting up. Try to finish by 2:10 for coffee and parade positioning."
+        },
+        {
+          "time": "By 2:30 PM",
+          "activity": "Stop conflicting bookings",
+          "notes": "Protect the 3:15 PM parade and 5:00 PM Céntrico reservation; no late return-window detours."
+        }
+      ],
+      "walking": "Walking blocks: Cars Land→Guardians 7–12 min; Guardians→Pixar Pier 12–18 min; Pixar Pier→DCA exit 12–18 min; park hop 10–20 min; Disneyland entry→Bengal 10–15 min; Bengal→Indiana 2–5 min; Indiana→Rancho 5–8 min; Rancho→Town Square 8–15 min; Disneyland exit→Céntrico 10–15 min.",
+      "ridePlanning": [
+        {
+          "item": "Mater’s Jingle Jamboree",
+          "detail": "Yes • 32 in. min.",
+          "plan": "5–25 min standby"
+        },
+        {
+          "item": "Luigi’s Joy to the Whirl",
+          "detail": "Yes • 32 in. min.",
+          "plan": "10–30 min standby"
+        },
+        {
+          "item": "Guardians – Mission: BREAKOUT!",
+          "detail": "No • 40 in. min.",
+          "plan": "40–65 min Lightning Lane  + Rider Switch total"
+        },
+        {
+          "item": "Toy Story Midway Mania",
+          "detail": "Yes • no minimum",
+          "plan": "15–30 min Lightning Lane; 25–60+ standby"
+        },
+        {
+          "item": "Jessie’s Critter Carousel",
+          "detail": "Yes • no minimum",
+          "plan": "5–20 min standby"
+        },
+        {
+          "item": "Indiana Jones Adventure",
+          "detail": "No • 46 in. minimum",
+          "plan": "45–70 min Lightning Lane + Rider Switch"
+        }
+      ],
+      "skipFirst": "Skip Jessie’s carousel, longer Toy Story character lines and Green Army Patrol first. Book Indiana Jones ahead if possible; if its return time conflicts with the parade, choose which is more important. Dinner always wins.",
+      "extraNotes": [
+        "If Greyson has energy after dinner, the holiday neon of Cars Land makes a great final photo. It requires an extra California Adventure park entry and substantial walking, so treat it as optional — not madatory. World of Color would mean a very late night and is another optional alternative."
+      ],
+      "routeable": true,
+      "coffeeStops": [
+        {
+          "day": "Thu 19",
+          "venue": "Bengal Barbecue • Adventureland",
+          "drink": "Vietnamese Iced Coffee"
+        },
+        {
+          "day": "Thu 19",
+          "venue": "Rancho del Zocalo • Frontierland",
+          "drink": "Hot Chocolate Cafe"
+        }
+      ],
+      "mealReservations": [
+        {
+          "when": "Thu 11/19 • 5:00 PM",
+          "reservation": "Céntrico",
+          "notes": "Downtown Disney • party of 6"
+        }
+      ],
+      "lightningLaneBookingRule": "BOOKING RULE  Check the app after redeeming a selection or 2 hours after booking; actual return windows vary. The times above are reminders to check, not confirmed bookings."
+    },
+    {
+      "date": "2026-11-20",
+      "day": "Fri 20",
+      "title": "Travel home",
+      "subtitle": "Anaheim → Arizona • Travel day",
+      "priority": "Travel Anaheim → Arizona",
+      "timeline": [],
+      "lightningLane": [],
+      "routeable": false,
+      "coffeeStops": [],
+      "mealReservations": []
+    }
+  ]
+}

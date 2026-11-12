@@ -1,0 +1,169 @@
+{
+  "source": "2026 Disneyland Itinerary v5.docx",
+  "timeSource": "itinerary-2026.json / days[].timeline[].time (not duplicated or adjusted)",
+  "routeType": "Ordered map-stop preview. Dashed connectors are schematic; NOT walking routes.",
+  "routes": {
+    "2026-11-16": [
+      {
+        "timelineIndex": 0,
+        "placeId": "cal-landmark-california-adventure-main-entrance"
+      },
+      {
+        "timelineIndex": 1,
+        "placeId": "dca-315"
+      },
+      {
+        "timelineIndex": 1,
+        "placeId": "dca-13961"
+      },
+      {
+        "timelineIndex": 2,
+        "placeId": "cal-experience-meet-the-residents-of-radiator-springs-in-cars-land"
+      },
+      {
+        "timelineIndex": 3,
+        "placeId": "dis-landmark-disneyland-park-main-entrance"
+      },
+      {
+        "timelineIndex": 4,
+        "placeId": "dl-296"
+      },
+      {
+        "timelineIndex": 5,
+        "placeId": "dl-289"
+      },
+      {
+        "timelineIndex": 6,
+        "placeId": "dis-dining-harbour-galley"
+      },
+      {
+        "timelineIndex": 6,
+        "placeId": "dis-dining-hungry-bear-barbecue-jamboree"
+      },
+      {
+        "timelineIndex": 7,
+        "placeId": "dis-landmark-star-wars-galaxy-s-edge"
+      },
+      {
+        "timelineIndex": 8,
+        "placeId": "dl-droid-depot"
+      },
+      {
+        "timelineIndex": 9,
+        "placeId": "dl-6339"
+      },
+      {
+        "timelineIndex": 11,
+        "placeId": "dow-dining-naples-ristorante-e-bar"
+      }
+    ],
+    "2026-11-17": [
+      {
+        "timelineIndex": 0,
+        "placeId": "dis-landmark-disneyland-park-main-entrance"
+      },
+      {
+        "timelineIndex": 1,
+        "placeId": "dis-dining-jolly-holiday-bakery-cafe"
+      },
+      {
+        "timelineIndex": 2,
+        "placeId": "dl-284"
+      },
+      {
+        "timelineIndex": 2,
+        "placeId": "dl-273"
+      },
+      {
+        "timelineIndex": 3,
+        "placeId": "dl-317"
+      },
+      {
+        "timelineIndex": 4,
+        "placeId": "dis-dining-red-rose-taverne"
+      },
+      {
+        "timelineIndex": 5,
+        "placeId": "dl-275"
+      },
+      {
+        "timelineIndex": 6,
+        "placeId": "dl-11526"
+      },
+      {
+        "timelineIndex": 7,
+        "placeId": "dis-dining-cafe-daisy"
+      },
+      {
+        "timelineIndex": 8,
+        "placeId": "dl-307"
+      },
+      {
+        "timelineIndex": 9,
+        "placeId": "dl-14168"
+      },
+      {
+        "timelineIndex": 9,
+        "placeId": "dl-306"
+      },
+      {
+        "timelineIndex": 10,
+        "placeId": "dl-13958"
+      },
+      {
+        "timelineIndex": 11,
+        "placeId": "cal-landmark-california-adventure-main-entrance"
+      },
+      {
+        "timelineIndex": 12,
+        "placeId": "cal-dining-lamplight-lounge"
+      }
+    ],
+    "2026-11-19": [
+      {
+        "timelineIndex": 0,
+        "placeId": "cal-landmark-california-adventure-main-entrance"
+      },
+      {
+        "timelineIndex": 1,
+        "placeId": "cal-landmark-cars-land"
+      },
+      {
+        "timelineIndex": 2,
+        "placeId": "dca-329"
+      },
+      {
+        "timelineIndex": 3,
+        "placeId": "cal-landmark-pixar-pier"
+      },
+      {
+        "timelineIndex": 5,
+        "placeId": "dca-313"
+      },
+      {
+        "timelineIndex": 7,
+        "placeId": "dis-landmark-disneyland-park-main-entrance"
+      },
+      {
+        "timelineIndex": 8,
+        "placeId": "dis-dining-bengal-barbecue"
+      },
+      {
+        "timelineIndex": 9,
+        "placeId": "dl-326"
+      },
+      {
+        "timelineIndex": 10,
+        "placeId": "dis-dining-rancho-del-zocalo-restaurante"
+      },
+      {
+        "timelineIndex": 11,
+        "placeId": "dis-landmark-main-street-u-s-a"
+      },
+      {
+        "timelineIndex": 14,
+        "placeId": "dow-dining-centrico"
+      }
+    ]
+  }
+}
