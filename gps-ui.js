@@ -98,7 +98,7 @@
 
     if (!resortBounds.contains(position)) {
       removeGraphics();
-      if (!outsideNotified) notify('Outside the displayed resort map');
+      if (!outsideNotified) notify('Bruh, this only works in Disney');
       outsideNotified = true;
       return;
     }
@@ -177,7 +177,7 @@
     } else if (!centerOn(lastPosition)) {
       centerOnNextFix = true;
       notify(lastPosition && !resortBounds.contains(lastPosition)
-        ? 'Outside the displayed resort map'
+        ? 'Bruh, this only works in Disney'
         : 'Finding your location…');
     }
   }
@@ -195,6 +195,11 @@
       toast.setAttribute('role', 'status');
       toast.setAttribute('aria-live', 'polite');
       toast.hidden = true;
+	  toast.addEventListener('click', function () {
+		clearTimeout(toastTimer);
+		toast.hidden = true;
+		toastTimer = null;
+	  });
       updateButton();
       button.addEventListener('click', locateOrRecenter);
       L.DomEvent.disableClickPropagation(root);
