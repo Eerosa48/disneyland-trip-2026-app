@@ -1,32 +1,56 @@
-/* Greyson's Disney Trip — optional on-device location indicator.
-   Uses the browser's Geolocation API. No location is sent by this script.
-   Review locally before committing to GitHub.
+/* Greyson's Disney Trip — compact GPS wayfinder (review version).
+   On-device Geolocation API only. No coordinates are sent by this script.
+   Tap once to start GPS; tap again to recenter at a closer zoom.
+   Tracking pauses when the app is hidden and resumes when visible.
 */
 (function () {
   'use strict';
-
   if (!window.L || typeof map === 'undefined') return;
 
-  // Use the same visible-artwork boundary as our existing map.
+  // Same artwork boundary as our Leaflet map. Never pan to a distant location.
   var resortBounds = typeof artworkBounds !== 'undefined'
     ? artworkBounds
     : L.latLngBounds([33.80197, -117.93097], [33.81987, -117.91281]);
 
+  // Adjust this one value if you prefer a closer/wider recenter view.
+  // The app won't zoom OUT if the user is already closer than this.
+  var GPS_FOCUS_ZOOM = 19.0;
   var watchId = null;
   var trackingRequested = false;
   var centerOnNextFix = false;
   var lastPosition = null;
+  var outsideNotified = false;
   var dot = null;
   var accuracyCircle = null;
-  var locateButton, stopButton, statusText;
+  var button = null;
+  var toast = null;
+  var toastTimer = null;
 
-  // GPS symbols sit above map artwork, but never intercept taps or swipes.
+  // Place GPS graphics above the map artwork without intercepting gestures.
   var pane = map.getPane('greyson-gps-pane') || map.createPane('greyson-gps-pane');
   pane.style.zIndex = '625';
   pane.style.pointerEvents = 'none';
 
-  function message(text) {
-    if (statusText) statusText.textContent = text;
+  function notify(message) {
+    if (!toast) return;
+    if (toastTimer !== null) clearTimeout(toastTimer);
+    toast.textContent = message;
+    toast.hidden = false;
+    toastTimer = setTimeout(function () {
+      toast.hidden = true;
+      toastTimer = null;
+    }, 3500);
+  }
+
+  function updateButton() {
+    if (!button) return;
+    button.classList.toggle('is-active', trackingRequested);
+    button.setAttribute('aria-pressed', String(trackingRequested));
+    var label = trackingRequested
+      ? 'Recenter map on my current location'
+      : 'Turn on location and find me on the map';
+    button.setAttribute('aria-label', label);
+    button.title = label;
   }
 
   function removeGraphics() {
@@ -35,37 +59,50 @@
   }
 
   function centerOn(position) {
-    if (!position || !resortBounds.contains(position)) {
-      message('Outside the resort map');
-      return false;
-    }
-    map.flyTo(position, Math.max(17.5, map.getZoom()), { duration: 0.6 });
+    if (!position || !resortBounds.contains(position)) return false;
+    // Respect a manually chosen zoom if it is already closer than 19.
+    map.flyTo(position, Math.max(GPS_FOCUS_ZOOM, map.getZoom()), { duration: 0.6 });
     centerOnNextFix = false;
     return true;
   }
 
+  function clearWatch() {
+    if (watchId !== null && navigator.geolocation) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+    }
+  }
+
+  function deactivate() {
+    trackingRequested = false;
+    centerOnNextFix = false;
+    lastPosition = null;
+    outsideNotified = false;
+    clearWatch();
+    removeGraphics();
+    updateButton();
+  }
+
   function onPosition(result) {
-    if (!trackingRequested) return;
+    if (!trackingRequested || document.hidden) return;
     var coords = result && result.coords;
     if (!coords || !Number.isFinite(coords.latitude) || !Number.isFinite(coords.longitude)) {
-      message('Could not read GPS coordinates');
+      notify('Location data unavailable');
       return;
     }
-    // Do not show an old cached position as current after leaving the app.
-    if (Number.isFinite(result.timestamp) && Date.now() - result.timestamp > 60000) {
-      message('Waiting for a current GPS fix…');
-      return;
-    }
+    // Do not show a cached old GPS fix as if it were live.
+    if (Number.isFinite(result.timestamp) && Date.now() - result.timestamp > 60000) return;
 
     var position = L.latLng(coords.latitude, coords.longitude);
     lastPosition = position;
-    locateButton.textContent = '◎ Recenter';
 
     if (!resortBounds.contains(position)) {
       removeGraphics();
-      message('GPS active · outside the resort map');
+      if (!outsideNotified) notify('Outside the displayed resort map');
+      outsideNotified = true;
       return;
     }
+    outsideNotified = false;
 
     var accuracy = Number(coords.accuracy);
     var validAccuracy = Number.isFinite(accuracy) && accuracy > 0;
@@ -79,8 +116,8 @@
       dot.setLatLng(position);
     }
 
-    // Very large circles would obscure the park map. Show the measured
-    // uncertainty in text instead of drawing circles above 250 meters.
+    // Keep the true accuracy radius when it fits the map. Hide very large
+    // circles (>250 m) rather than drawing a misleading, clipped radius.
     if (validAccuracy && accuracy <= 250) {
       if (!accuracyCircle) {
         accuracyCircle = L.circle(position, {
@@ -88,45 +125,33 @@
           radius: accuracy, color: '#2d77d4', weight: 1,
           opacity: 0.55, fillColor: '#3388ff', fillOpacity: 0.11
         }).addTo(map);
-        dot.bringToFront();
       } else {
         accuracyCircle.setLatLng(position);
         accuracyCircle.setRadius(accuracy);
-        dot.bringToFront();
       }
+      dot.bringToFront();
     } else if (accuracyCircle) {
       map.removeLayer(accuracyCircle);
       accuracyCircle = null;
     }
 
-    message(validAccuracy
-      ? 'Accuracy: ±' + Math.round(accuracy * 3.28084) + ' ft'
-      : 'GPS active · accuracy unavailable');
     if (centerOnNextFix) centerOn(position);
   }
 
   function onError(error) {
-    if (!trackingRequested) return;
+    if (!trackingRequested || document.hidden) return;
     if (error && error.code === 1) {
-      stopTracking();
-      message('Location permission denied');
+      deactivate();
+      notify('Location access denied. Check browser permissions.');
     } else if (error && error.code === 3) {
-      message('Waiting for GPS signal…');
+      notify('Waiting for a GPS signal…');
     } else {
-      message('Location temporarily unavailable');
-    }
-  }
-
-  function clearWatch() {
-    if (watchId !== null && navigator.geolocation) {
-      navigator.geolocation.clearWatch(watchId);
-      watchId = null;
+      notify('Location temporarily unavailable');
     }
   }
 
   function startWatch() {
     if (!trackingRequested || watchId !== null || document.hidden) return;
-    message('Finding your location…');
     try {
       watchId = navigator.geolocation.watchPosition(onPosition, onError, {
         enableHighAccuracy: true,
@@ -134,34 +159,26 @@
         timeout: 20000
       });
     } catch (_) {
-      stopTracking();
-      message('Unable to start location services');
+      deactivate();
+      notify('Unable to start location services');
     }
   }
 
-  function stopTracking() {
-    trackingRequested = false;
-    centerOnNextFix = false;
-    lastPosition = null;
-    clearWatch();
-    removeGraphics();
-    if (locateButton) locateButton.textContent = '◎ Locate me';
-    if (stopButton) stopButton.hidden = true;
-    message('Location off');
-  }
-
-  function locate() {
+  function locateOrRecenter() {
     if (!window.isSecureContext || !navigator.geolocation) {
-      message('Location requires HTTPS or localhost');
+      notify('Location requires HTTPS or localhost');
       return;
     }
     if (!trackingRequested) {
       trackingRequested = true;
       centerOnNextFix = true;
-      stopButton.hidden = false;
+      updateButton();
       startWatch();
     } else if (!centerOn(lastPosition)) {
       centerOnNextFix = true;
+      notify(lastPosition && !resortBounds.contains(lastPosition)
+        ? 'Outside the displayed resort map'
+        : 'Finding your location…');
     }
   }
 
@@ -169,23 +186,17 @@
     options: { position: 'bottomright' },
     onAdd: function () {
       var root = L.DomUtil.create('div', 'leaflet-control-greyson-gps');
-      locateButton = L.DomUtil.create('button', 'greyson-gps-locate', root);
-      locateButton.type = 'button';
-      locateButton.textContent = '◎ Locate me';
-      locateButton.setAttribute('aria-label', 'Locate and recenter on my position');
-
-      stopButton = L.DomUtil.create('button', 'greyson-gps-stop', root);
-      stopButton.type = 'button';
-      stopButton.textContent = 'Stop';
-      stopButton.setAttribute('aria-label', 'Stop location tracking');
-      stopButton.hidden = true;
-
-      statusText = L.DomUtil.create('small', 'greyson-gps-status', root);
-      statusText.setAttribute('role', 'status');
-      statusText.textContent = 'Location off';
-
-      locateButton.addEventListener('click', locate);
-      stopButton.addEventListener('click', stopTracking);
+      button = L.DomUtil.create('button', 'greyson-gps-locate', root);
+      button.type = 'button';
+      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+        '<path d="M20.5 3.5 14.2 21l-3.3-7.8L3 9.8 20.5 3.5Z"/>' +
+        '</svg>';
+      toast = L.DomUtil.create('div', 'greyson-gps-toast', root);
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.hidden = true;
+      updateButton();
+      button.addEventListener('click', locateOrRecenter);
       L.DomEvent.disableClickPropagation(root);
       L.DomEvent.disableScrollPropagation(root);
       return root;
@@ -193,18 +204,23 @@
   });
   map.addControl(new GPSControl());
 
-  // Avoid continuously running high-accuracy GPS while app is backgrounded.
+  // iOS may suspend the page when backgrounded. Explicitly release the GPS
+  // watcher while hidden, then resume only if the user had enabled tracking.
   document.addEventListener('visibilitychange', function () {
     if (!trackingRequested) return;
     if (document.hidden) {
       clearWatch();
+      lastPosition = null;
       removeGraphics();
     } else {
-      lastPosition = null;
       startWatch();
     }
   });
-  window.addEventListener('pagehide', clearWatch);
+  window.addEventListener('pagehide', function () {
+    clearWatch();
+    lastPosition = null;
+    removeGraphics();
+  });
   window.addEventListener('pageshow', function () {
     if (trackingRequested) startWatch();
   });
