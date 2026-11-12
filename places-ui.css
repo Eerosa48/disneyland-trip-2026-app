@@ -44,3 +44,30 @@
   position: relative;
   z-index: 2000;
 }
+
+/* ========================================
+   PREVENT ACCIDENTAL TEXT SELECTION
+   ======================================== */
+
+/* Disable text selection and iOS context menus */
+body,
+body * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Allow normal text editing, selection, and
+   copy/paste inside user-input fields */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+/* Remove iOS tap highlight from app controls */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
