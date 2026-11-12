@@ -123,8 +123,13 @@
         typeSelect = L.DomUtil.create('select', '', filters);
         typeSelect.setAttribute('aria-label', 'Filter by place type');
         [
-          ['all', 'All types'], ['Attraction', 'Attractions'],
-          ['Experience', 'Experiences'], ['Shopping', 'Shopping'], ['Landmark', 'Landmarks']
+          ['all', 'All types'],
+		  ['Attraction', 'Attractions'],
+          ['Dining', 'Dining'],
+		  ['Shopping', 'Shopping'],
+		  ['Experience', 'Experiences'],
+		  ['Landmark', 'Landmarks'],
+		  ['Services', 'Services']
         ].forEach(function (item) {
           var opt = document.createElement('option');
           opt.value = item[0];
