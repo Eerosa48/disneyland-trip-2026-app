@@ -12,7 +12,7 @@ const SHELL_FILES = [
   './vendor/leaflet-double-touch-drag-zoom.js',
   './icons/icon-192.png', './icons/icon-512.png',
   './icons/apple-touch-icon.png', './wait-times.js',
-  './wait-times.css'
+  './wait-times.css',
   './gps-ui.js',
   './gps-ui.css',
 ];
