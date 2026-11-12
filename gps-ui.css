@@ -27,9 +27,15 @@
 }
 .leaflet-control-greyson-gps .greyson-gps-locate svg {
   display: block;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   fill: currentColor;
+  
+  /* Thin white outline around the arrow */
+  stroke: white;
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
 }
 .leaflet-control-greyson-gps .greyson-gps-locate.is-active {
   color: #1765d1;
