@@ -92,21 +92,12 @@
   panel.hidden = true;
 
   var header = make('div', 'greyson-itinerary-head', panel);
+
   var titleGroup = make('div', 'greyson-itinerary-titlegroup', header);
-  make('strong', '', titleGroup, 'Trip itinerary');
-  make('small', '', titleGroup, 'November 15–20, 2026 · Anaheim time');
-  // Keep stop visibility beside the itinerary heading. A future walking
-  // route toggle can be added alongside this button without another redesign.
+  make('strong', '', titleGroup, 'Trip Itinerary');
+
   var headActions = make('div', 'greyson-itinerary-head-actions', header);
-  var stopsToggle = make('button', 'greyson-itinerary-stops-toggle', headActions, 'Show Stops');
-  stopsToggle.type = 'button';
-  stopsToggle.setAttribute('aria-pressed', 'false');
-  stopsToggle.addEventListener('click', function () {
-    if (!itinerary || !routeStopsForDay(itinerary.days[dayIndex]).length) return;
-    toggleRoute(!routeOn);
-    render();
-    if (routeOn) setOpen(false); // Let the family see the pins immediately.
-  });
+
   var dismiss = make('button', 'greyson-itinerary-close', headActions, '×');
   dismiss.type = 'button';
   dismiss.setAttribute('aria-label', 'Close itinerary');
@@ -177,14 +168,12 @@
     if (!available) routeOn = false;
     var pressed = routeOn && available;
     dayBannerDate.textContent = dateLabels[day.date] || day.day;
-    [stopsToggle, bannerStops].forEach(function (button) {
-      button.disabled = !available;
-      button.classList.toggle('is-active', pressed);
-      button.setAttribute('aria-pressed', String(pressed));
-      button.title = available
-        ? (pressed ? 'Hide stops for this day' : 'Show stops for this day')
-        : 'No map stops scheduled for this day';
-    });
+	bannerStops.disabled = !available;
+	bannerStops.classList.toggle('is-active', pressed);
+	bannerStops.setAttribute('aria-pressed', String(pressed));
+	bannerStops.title = available
+	  ? (pressed ? 'Hide stops for this day' : 'Show stops for this day')
+	  : 'No map stops scheduled for this day';
     bannerStops.setAttribute('aria-label', pressed
       ? 'Hide itinerary stops on map' : 'Show itinerary stops on map');
 
