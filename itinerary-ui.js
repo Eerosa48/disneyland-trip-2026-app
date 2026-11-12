@@ -14,7 +14,17 @@
   var routeData = null;
   var routeOn = false;
   var routeLayer = L.layerGroup();
-  var routeChip = null;
+  // Persist only local UI state; no GPS positions or server sync.
+  var SESSION_KEY = 'greyson-disney-map-session-v1';
+  var sessionReady = false;
+  var sessionDate = '';
+  var validDates = ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19'];
+  var dateLabels = {
+    '2026-11-16': 'Mon. 11/16',
+    '2026-11-17': 'Tues. 11/17',
+    '2026-11-18': 'Wed. 11/18',
+    '2026-11-19': 'Thurs. 11/19'
+  };
 
 
   function make(tag, cls, parent, content) {
@@ -43,11 +53,29 @@
   launch.type = 'button';
   launch.setAttribute('aria-controls', 'greyson-itinerary-panel');
   launch.setAttribute('aria-expanded', 'false');
-  routeChip = make('button', 'greyson-itinerary-routechip', root);
-  routeChip.type = 'button';
-  routeChip.hidden = true;
-  routeChip.setAttribute('aria-label', 'Hide visible itinerary stops');
-  routeChip.addEventListener('click', function () { toggleRoute(false); });
+  // The fixed top banner reflects the same selected day as the panel.
+  // Route stays disabled until actual walkable path geometry is developed.
+  var dayBanner = make('div', 'greyson-active-day', document.body);
+  dayBanner.setAttribute('aria-label', 'Selected itinerary day and map overlays');
+  var dayBannerDate = make('strong', 'greyson-active-day-date', dayBanner, 'Mon. 11/16');
+  var dayBannerControls = make('div', 'greyson-active-day-controls', dayBanner);
+  var bannerStops = make('button', 'greyson-active-day-toggle', dayBannerControls, 'Stops');
+  bannerStops.type = 'button';
+  bannerStops.disabled = true;
+  bannerStops.setAttribute('aria-pressed', 'false');
+  bannerStops.setAttribute('aria-label', 'Show itinerary stops on map');
+  bannerStops.addEventListener('click', function () {
+    if (!itinerary || !routeStopsForDay(itinerary.days[dayIndex]).length) return;
+    toggleRoute(!routeOn);
+    render();
+  });
+  var bannerWalking = make('button', 'greyson-active-day-toggle', dayBannerControls, 'Route');
+  bannerWalking.type = 'button';
+  bannerWalking.disabled = true;
+  bannerWalking.title = 'Walking routes are coming in a later phase';
+  bannerWalking.setAttribute('aria-label', 'Walking route not available yet');
+  bannerWalking.setAttribute('aria-pressed', 'false');
+
   var panel = make('section', 'greyson-itinerary-panel', root);
   panel.id = 'greyson-itinerary-panel';
   panel.setAttribute('role', 'dialog');
@@ -128,11 +156,22 @@
   }
 
   function updateRouteButtons() {
-    if (!routeChip || !itinerary) return;
+    if (!itinerary) return;
     var day = itinerary.days[dayIndex];
     var available = routeStopsForDay(day).length > 0;
-    routeChip.hidden = !(routeOn && available);
-    if (!routeChip.hidden) routeChip.textContent = 'Stops: ' + day.day + '  ×';
+    if (!available) routeOn = false;
+    var pressed = routeOn && available;
+    dayBannerDate.textContent = dateLabels[day.date] || day.day;
+    [stopsToggle, bannerStops].forEach(function (button) {
+      button.disabled = !available;
+      button.classList.toggle('is-active', pressed);
+      button.setAttribute('aria-pressed', String(pressed));
+      button.title = available
+        ? (pressed ? 'Hide stops for this day' : 'Show stops for this day')
+        : 'No map stops scheduled for this day';
+    });
+    bannerStops.setAttribute('aria-label', pressed
+      ? 'Hide itinerary stops on map' : 'Show itinerary stops on map');
   }
 
   function routePopup(stop) {
@@ -204,7 +243,8 @@
   function toggleRoute(enabled) {
     routeOn = enabled;
     renderRoute();
-    if (enabled) focusRouteBounds();
+    if (routeOn) focusRouteBounds();
+    saveSession();
   }
 
   function renderRouteList(day) {
@@ -312,14 +352,8 @@
   function render() {
     if (!itinerary) return;
     var day = itinerary.days[dayIndex];
-    // The DOCX still retains travel days, but only Nov 16–19 appear in the UI.
-    var hasStops = routeStopsForDay(day).length > 0;
-    stopsToggle.disabled = !hasStops;
-    stopsToggle.classList.toggle('is-active', routeOn && hasStops);
-    stopsToggle.setAttribute('aria-pressed', String(routeOn && hasStops));
-    stopsToggle.title = hasStops
-      ? (routeOn ? 'Hide stops for this day' : 'Show stops for this day')
-      : 'No map stops scheduled for this day';
+    // Keep the top banner and itinerary-panel toggle in sync.
+    updateRouteButtons();
 
     daysNav.replaceChildren();
     itinerary.days.forEach(function (d, index) {
@@ -333,6 +367,7 @@
         currentTab = 'schedule';
         if (routeOn) renderRoute();
         render();
+        saveSession();
       });
     });
 
@@ -387,6 +422,73 @@
     foot.textContent = 'DOCX v5 · Anaheim (PST) · Schematic stop order only, NOT walking directions.';
   }
 
+  // Save map center/zoom and overlay state after the user finishes panning,
+  // zooming, focusing a place, or toggling stops. Storage is per browser/origin.
+  function saveSession() {
+    if (!sessionReady || !itinerary) return;
+    // If Anaheim rolled into a new day while the app stayed visible, reset
+    // before persisting rather than carrying yesterday's overlays forward.
+    if (todayInAnaheim() !== sessionDate) {
+      refreshDayIfNeeded();
+      return;
+    }
+    try {
+      var center = map.getCenter();
+      var chosenDay = itinerary.days[dayIndex];
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        savedOn: todayInAnaheim(),
+        selectedDate: chosenDay.date,
+        center: [center.lat, center.lng],
+        zoom: map.getZoom(),
+        stopsOn: !!routeOn
+      }));
+    } catch (_) { /* Blocked/full storage: app remains functional without persistence. */ }
+  }
+
+  function readSavedSession(today) {
+    try {
+      var saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+      if (!saved || saved.savedOn !== today || !validDates.includes(saved.selectedDate)) return null;
+      // On an actual park/rest day, the real Anaheim day overrides any
+      // previously browsed itinerary day, regardless of saved map state.
+      if (validDates.includes(today) && saved.selectedDate !== today) return null;
+      return saved;
+    } catch (_) { return null; }
+  }
+
+  function restoreMapView(saved) {
+    if (!saved || !Array.isArray(saved.center) || saved.center.length !== 2) return;
+    var lat = saved.center[0], lon = saved.center[1], zoom = saved.zoom;
+    if (![lat, lon, zoom].every(Number.isFinite)) return;
+    if (!map.getMaxBounds() || !map.getMaxBounds().contains([lat, lon])) return;
+    if (zoom < map.getMinZoom() || zoom > map.getMaxZoom()) return;
+    map.setView([lat, lon], zoom, { animate: false });
+  }
+
+  function refreshDayIfNeeded() {
+    if (!sessionReady || !itinerary) return;
+    var today = todayInAnaheim();
+    if (today === sessionDate) return;
+    sessionDate = today;
+    // A new Anaheim calendar day always begins with a clean map overview.
+    var matchingDay = itinerary.days.findIndex(function (d) { return d.date === today; });
+    if (matchingDay >= 0 && validDates.includes(today)) dayIndex = matchingDay;
+    else dayIndex = 1; // Preview day outside the four itinerary dates.
+    routeOn = false;
+    currentTab = 'schedule';
+    if (highlight) { map.removeLayer(highlight); highlight = null; }
+    renderRoute();
+    if (typeof focusInitialView === 'function') focusInitialView();
+    render();
+    saveSession();
+  }
+
+  map.on('moveend zoomend', saveSession);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) refreshDayIfNeeded();
+  });
+  window.addEventListener('pageshow', refreshDayIfNeeded);
+
   launch.addEventListener('click', function () { setOpen(panel.hidden); });
   dismiss.addEventListener('click', function () { setOpen(false); });
   document.addEventListener('keydown', function (event) {
@@ -420,11 +522,20 @@
     var places = results[1].places || [];
     places.forEach(function (p) { placesById[p.id] = p; });
     var today = todayInAnaheim();
+    sessionDate = today;
     var matchingDay = itinerary.days.findIndex(function (d) { return d.date === today; });
-    if (matchingDay >= 0 &&
-        itinerary.days[matchingDay].date !== '2026-11-15' &&
-        itinerary.days[matchingDay].date !== '2026-11-20') dayIndex = matchingDay;
+    if (matchingDay >= 0 && validDates.includes(today)) dayIndex = matchingDay;
+    var saved = readSavedSession(today);
+    if (saved) {
+      var savedIndex = itinerary.days.findIndex(function (d) { return d.date === saved.selectedDate; });
+      if (savedIndex >= 0) dayIndex = savedIndex;
+      routeOn = !!saved.stopsOn && routeStopsForDay(itinerary.days[dayIndex]).length > 0;
+    }
+    if (routeOn) renderRoute(); // Does not auto-fit on restoration.
+    if (saved) restoreMapView(saved);
     render();
+    sessionReady = true;
+    saveSession();
   }).catch(function (error) {
     launch.disabled = true;
     launch.textContent = 'Itinerary unavailable';
