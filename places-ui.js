@@ -174,12 +174,13 @@
     map.flyTo([place.lat, place.lon], 19.05, { duration: 0.65 });
   }
 
-  // Dismiss a selected place's name when tapping outside Search.
+  // Remove the selected place's marker and label on the next tap.
   document.addEventListener('pointerdown', function (event) {
-    if (marker && (!panel || !panel.contains(event.target))) {
-      marker.closeTooltip();
+    if (marker && !panel.contains(event.target)) {
+      map.removeLayer(marker);
+	  marker = null;
     }
-  });
+  }, true);
 
   function makeResult(place) {
     var button = document.createElement('button');

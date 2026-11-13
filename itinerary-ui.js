@@ -742,6 +742,13 @@
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && !panel.hidden) setOpen(false);
   });
+  // Remove the selected itinerary marker and label on the next tap.
+  document.addEventListener('pointerdown', function (event) {
+    if (highlight && !panel.contains(event.target)) {
+      map.removeLayer(highlight);
+      highlight = null;
+    }
+  }, true);
   document.addEventListener('pointerdown', function (event) {
     if (!panel.hidden && !root.contains(event.target)) {
       panel.hidden = true;

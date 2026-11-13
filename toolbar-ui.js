@@ -231,12 +231,13 @@
     );
   }
 
-  // Dismiss the attraction label when tapping elsewhere.
+  // Remove the selected attraction's marker and label on the next tap.
   document.addEventListener('pointerdown', function () {
     if (waitFocusMarker) {
-      waitFocusMarker.closeTooltip();
+      map.removeLayer(waitFocusMarker);
+	  waitFocusMarker = null;
     }
-  });
+  }, true);
 
   function renderWaits() {
     waitList.replaceChildren();
