@@ -178,7 +178,7 @@
 .greyson-wait-list-status.is-medium { background: #a16a08; }
 .greyson-wait-list-status.is-long { background: #a63c31; }
 .greyson-wait-list-status.is-down { background: #9d3a3a; }
-.greyson-wait-panel-credit { display: block; padding: 7px 2px 1px; font-size: 10px; color: #496b53; }
+.greyson-wait-panel-credit { display: none; }
 
 /* Hide the old informational Wait Times box, not the interactive map bubbles. */
 .leaflet-control-greyson-wait { display: none !important; }

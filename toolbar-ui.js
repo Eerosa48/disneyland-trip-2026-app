@@ -189,7 +189,7 @@
         closeAll();
         // The existing map wait bubbles remain in charge of the map display.
         map.flyTo([item.place.lat, item.place.lon],
-          Math.max(map.getZoom(), item.place.zoom || 18.05), { duration: 0.65 });
+          Math.max(map.getZoom(), 19.25), { duration: 0.65 });
       });
       waitList.appendChild(button);
     });
