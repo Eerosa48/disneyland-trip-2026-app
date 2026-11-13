@@ -278,6 +278,13 @@
 
   font: 800 10px/1.3 system-ui, -apple-system, sans-serif;
   letter-spacing: 0.4px;
+  
+  /* Thin dark outline for better lettering contrast */
+  -webkit-text-stroke: 0.35px rgba(0, 0, 0, 0.85);
+  paint-order: stroke fill;
+
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.65);
 }
 
 .greyson-itinerary-entry.is-upcoming

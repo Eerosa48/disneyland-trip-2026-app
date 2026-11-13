@@ -463,72 +463,106 @@
     });
   }
 
-  function updateScheduleFocus(scrollToActivity) {
-    if (!itinerary || currentTab !== 'schedule') return;
 
-    var rows = Array.from(
-      content.querySelectorAll('.greyson-itinerary-entry')
+function updateScheduleFocus(scrollToActivity) {
+  if (!itinerary || currentTab !== 'schedule') return;
+
+  var rows = Array.from(
+    content.querySelectorAll('.greyson-itinerary-entry')
+  );
+
+  // Clear previous highlights and labels.
+  rows.forEach(function (row) {
+    row.classList.remove('is-current', 'is-upcoming');
+
+    var label = row.querySelector(
+      '.greyson-itinerary-live-tag'
     );
 
-    rows.forEach(function (row) {
-      row.classList.remove('is-current', 'is-upcoming');
-      var label = row.querySelector('.greyson-itinerary-live-tag');
-      if (label) label.remove();
-    });
+    if (label) label.remove();
+  });
 
-    var day = itinerary.days[dayIndex];
+  var day = itinerary.days[dayIndex];
 
-    // Never label a different date as the current activity.
-    if (day.date !== todayInAnaheim()) return;
+  // Only highlight activities for today's actual Anaheim date.
+  if (day.date !== todayInAnaheim()) return;
 
-    var now = anaheimMinutes();
-    var periods = schedulePeriods(day.timeline);
-    var targetIndex = -1;
-    var state = '';
+  var now = anaheimMinutes();
+  var periods = schedulePeriods(day.timeline);
 
-    for (var i = 0; i < periods.length; i++) {
-      var period = periods[i];
-      if (!period) continue;
+  var currentIndex = -1;
+  var nextIndex = -1;
 
-      if (now < period.start) {
-        targetIndex = i;
-        state = 'is-upcoming';
-        break;
-      }
+  for (var i = 0; i < periods.length; i++) {
+    var period = periods[i];
+    if (!period) continue;
 
-      var end = period.end;
-      if (end === null) {
-        end = periods[i + 1] ? periods[i + 1].start : 1440;
-      }
-
-      if (now >= period.start && now < end) {
-        targetIndex = i;
-        state = 'is-current';
-        break;
-      }
+    if (now < period.start) {
+      nextIndex = i;
+      break;
     }
 
-    if (targetIndex < 0 || !rows[targetIndex]) return;
+    var end = period.end;
 
-    var target = rows[targetIndex];
-    target.classList.add(state);
+    if (end === null) {
+      end = periods[i + 1]
+        ? periods[i + 1].start
+        : 1440;
+    }
 
-    var main = target.querySelector('.greyson-itinerary-entry-main');
+    if (now >= period.start && now < end) {
+      currentIndex = i;
+
+      // Find the next scheduled activity.
+      for (var j = i + 1; j < periods.length; j++) {
+        if (periods[j]) {
+          nextIndex = j;
+          break;
+        }
+      }
+
+      break;
+    }
+  }
+
+  // Apply a highlight and badge to an entry.
+  function highlightEntry(index, className, labelText) {
+    if (index < 0 || !rows[index]) return;
+
+    var row = rows[index];
+    row.classList.add(className);
+
+    var main = row.querySelector(
+      '.greyson-itinerary-entry-main'
+    );
+
     if (main) {
       var badge = document.createElement('span');
       badge.className = 'greyson-itinerary-live-tag';
-      badge.textContent =
-        state === 'is-current' ? 'NOW' : 'UP NEXT';
+      badge.textContent = labelText;
+
       main.insertBefore(badge, main.firstChild);
     }
+  }
 
-    if (scrollToActivity && !panel.hidden) {
+  highlightEntry(currentIndex, 'is-current', 'NOW');
+  highlightEntry(nextIndex, 'is-upcoming', 'UP NEXT');
+
+  // Scroll only when opening the itinerary.
+  // Prefer the current activity; otherwise show the next one.
+  if (scrollToActivity && !panel.hidden) {
+    var focusIndex = currentIndex >= 0
+      ? currentIndex
+      : nextIndex;
+
+    if (focusIndex >= 0 && rows[focusIndex]) {
       var listRect = content.getBoundingClientRect();
-      var rowRect = target.getBoundingClientRect();
+      var rowRect = rows[focusIndex].getBoundingClientRect();
 
       content.scrollTop += rowRect.top - listRect.top - 12;
     }
   }
+}
 
   function renderRow(entry, parent) {
     var card = make('article', 'greyson-itinerary-entry', parent);
