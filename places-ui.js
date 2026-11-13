@@ -240,12 +240,20 @@
         close.type = 'button';
         close.textContent = '×';
         close.setAttribute('aria-label', 'Close search');
+   
+		var inputWrap = L.DomUtil.create('div', 'place-search-input-wrap', panel);
 
-        input = L.DomUtil.create('input', 'place-search-input', panel);
-        input.type = 'search';
-        input.placeholder = 'Search rides, shops, landmarks…';
-        input.setAttribute('aria-label', 'Place name');
-        input.autocomplete = 'off';
+		input = L.DomUtil.create('input', 'place-search-input', inputWrap);
+		input.type = 'search';
+		input.placeholder = 'Search rides, shops, landmarks…';
+		input.setAttribute('aria-label', 'Place name');
+		input.autocomplete = 'off';
+
+		var clearSearch = L.DomUtil.create('button', 'place-search-clear', inputWrap);
+		clearSearch.type = 'button';
+		clearSearch.textContent = '×';
+		clearSearch.setAttribute('aria-label', 'Clear search text');
+		clearSearch.hidden = true;
 
         var filters = L.DomUtil.create('div', 'place-search-filters', panel);
         parkSelect = L.DomUtil.create('select', '', filters);
@@ -300,7 +308,17 @@
           closePanel();
           trigger.focus();
         });
-        input.addEventListener('input', render);
+        input.addEventListener('input', function () {
+		  clearSearch.hidden = !input.value.length;
+		  render();
+		});
+
+		clearSearch.addEventListener('click', function () {
+		  input.value = '';
+		  clearSearch.hidden = true;
+		  render();
+		  input.focus({ preventScroll: true });
+		});
         parkSelect.addEventListener('change', render);
         typeSelect.addEventListener('change', render);
         root.addEventListener('keydown', function (event) {

@@ -78,3 +78,42 @@ a {
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
 }
+/* Search field with quick-clear button */
+.place-search-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.place-search-input-wrap .place-search-input {
+  padding-right: 45px;
+}
+
+.place-search-clear {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #536654;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.place-search-clear[hidden] {
+  display: none;
+}
+
+.place-search-clear:hover {
+  background: rgba(83, 102, 84, 0.12);
+}
+
+/* Prevent the browser's native X from appearing twice */
+.place-search-input::-webkit-search-cancel-button {
+  display: none;
+}
