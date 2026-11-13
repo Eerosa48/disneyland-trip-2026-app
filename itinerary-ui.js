@@ -169,7 +169,7 @@
     highlight.bindTooltip(p.name, {
       direction: 'top', permanent: false, className: 'place-search-label'
     }).openTooltip();
-    map.flyTo([p.lat, p.lon], Math.max(map.getZoom(), 18.4), { duration: 0.65 });
+    map.flyTo([p.lat, p.lon], Math.max(map.getZoom(), 19.05), { duration: 0.65 });
     setOpen(false);
   }
 

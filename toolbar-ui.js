@@ -194,7 +194,7 @@
     // Consistent target zoom, regardless of starting zoom.
     map.flyTo(
       [place.lat, place.lon],
-      19.25,
+      19.05,
       { duration: 0.65 }
     );
   }

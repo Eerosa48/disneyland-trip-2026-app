@@ -171,7 +171,7 @@
       direction: 'top', permanent: false, opacity: 1,
       className: 'place-search-label', offset: [0, -10]
     }).openTooltip();
-    map.flyTo([place.lat, place.lon], place.zoom || 18.05, { duration: 0.65 });
+    map.flyTo([place.lat, place.lon], 19.05, { duration: 0.65 });
   }
 
   // Dismiss a selected place's name when tapping outside Search.
