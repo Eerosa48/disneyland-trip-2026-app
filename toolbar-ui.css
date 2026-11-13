@@ -1,0 +1,204 @@
+/* Greyson's Disney Trip — floating three-action glass toolbar.
+ * This stylesheet only changes layout/presentation of existing controls.
+ */
+:root {
+  --greyson-toolbar-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  --greyson-toolbar-panel-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+}
+
+#greyson-toolbar {
+  position: fixed;
+  z-index: 2600;
+  bottom: var(--greyson-toolbar-bottom);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  width: min(540px, calc(100vw - 24px));
+  height: 72px;
+  padding: 6px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, .66);
+  border-radius: 23px;
+  background: rgba(244, 249, 246, .70);
+  -webkit-backdrop-filter: blur(21px) saturate(155%);
+  backdrop-filter: blur(21px) saturate(155%);
+  box-shadow: 0 8px 30px rgba(24, 46, 32, .23), inset 0 1px rgba(255, 255, 255, .65);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+#greyson-toolbar .greyson-toolbar-button {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 6px 5px;
+  border: 0;
+  border-radius: 15px;
+  background: transparent;
+  color: #274b3c;
+  font: 750 14px/1.1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+#greyson-toolbar .greyson-toolbar-button svg {
+  display: block;
+  flex: 0 0 25px;
+  height: 25px;
+  width: 25px;
+}
+#greyson-toolbar .greyson-toolbar-button::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 13px;
+  height: 29px;
+  border-right: 1px solid rgba(73, 105, 83, .24);
+  pointer-events: none;
+}
+#greyson-toolbar .greyson-toolbar-button:last-child::after { display: none; }
+#greyson-toolbar .greyson-toolbar-button.is-selected {
+  background: rgba(200, 226, 210, .60);
+  color: #163c2c;
+}
+#greyson-toolbar .greyson-toolbar-button:focus-visible {
+  outline: 2px solid #1765d1;
+  outline-offset: 0;
+}
+@media (max-width: 420px) {
+  #greyson-toolbar .greyson-toolbar-button { gap: 6px; font-size: 12px; }
+  #greyson-toolbar .greyson-toolbar-button svg { width: 23px; height: 23px; flex-basis: 23px; }
+}
+
+/* Search: keep existing input, filters, rankings and result handlers.
+ * Only relocate the panel to a safe top-level floating overlay.
+ */
+.leaflet-control-place-search { display: none !important; }
+.place-search-panel {
+  position: fixed !important;
+  z-index: 2800 !important;
+  top: auto !important;
+  bottom: var(--greyson-toolbar-panel-bottom) !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+  width: min(430px, calc(100vw - 24px)) !important;
+  max-height: min(65dvh, 580px) !important;
+}
+.place-search-count, .place-search-note { display: none !important; }
+
+/* Itinerary: remove only the launch pill and footer; retain panel and data. */
+.greyson-itinerary-app {
+  bottom: var(--greyson-toolbar-panel-bottom) !important;
+}
+.greyson-itinerary-launch { display: none !important; }
+.greyson-itinerary-panel { bottom: 0 !important; }
+.greyson-itinerary-foot { display: none !important; }
+
+/* Wait list: alphabetized, tappable live feed. */
+#greyson-wait-panel {
+  position: fixed;
+  z-index: 2800;
+  bottom: var(--greyson-toolbar-panel-bottom);
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: min(430px, calc(100vw - 24px));
+  max-height: min(65dvh, 580px);
+  padding: 12px 11px 8px;
+  border: 1px solid #b6c6b2;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .98);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .26);
+  color: #25382f;
+  font: 13px/1.4 system-ui, -apple-system, sans-serif;
+}
+#greyson-wait-panel[hidden] { display: none; }
+.greyson-wait-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 0 1px 7px;
+}
+.greyson-wait-panel-head strong { font-size: 15px; }
+.greyson-wait-panel-close {
+  flex: none;
+  min-height: 32px;
+  min-width: 32px;
+  border: none;
+  background: transparent;
+  color: #44584b;
+  font-size: 24px;
+  cursor: pointer;
+}
+.greyson-wait-panel-status { margin: 0 2px 7px; font-size: 11px; color: #627568; }
+.greyson-wait-panel-list {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid #e0e7db;
+}
+.greyson-wait-list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 47px;
+  padding: 9px 5px;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid #e6ede7;
+  background: transparent;
+  font: 600 12px/1.35 system-ui, -apple-system, sans-serif;
+  color: #243829;
+  cursor: pointer;
+}
+.greyson-wait-list-row:hover, .greyson-wait-list-row:focus-visible { background: #edf5e9; }
+.greyson-wait-list-name { min-width: 0; }
+.greyson-wait-list-status {
+  flex: none;
+  min-width: 54px;
+  padding: 4px 6px;
+  text-align: center;
+  border-radius: 999px;
+  background: #526474;
+  color: #fff;
+  font: 750 11px/1.2 system-ui, -apple-system, sans-serif;
+}
+.greyson-wait-list-status.is-short { background: #227a48; }
+.greyson-wait-list-status.is-medium { background: #a16a08; }
+.greyson-wait-list-status.is-long { background: #a63c31; }
+.greyson-wait-list-status.is-down { background: #9d3a3a; }
+.greyson-wait-panel-credit { display: block; padding: 7px 2px 1px; font-size: 10px; color: #496b53; }
+
+/* Hide the old informational Wait Times box, not the interactive map bubbles. */
+.leaflet-control-greyson-wait { display: none !important; }
+
+/* Keep the existing GPS arrow itself unchanged, but float it above the
+ * right corner of the centered toolbar on both phones and desktop screens.
+ */
+.leaflet-control-greyson-gps {
+  position: fixed !important;
+  right: max(12px, calc((100vw - 540px) / 2)) !important;
+  bottom: calc(101px + env(safe-area-inset-bottom, 0px)) !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 540px) {
+  .place-search-panel, #greyson-wait-panel { max-height: min(59dvh, 480px) !important; }
+  .greyson-itinerary-app { width: min(400px, calc(100vw - 18px)); }
+  .greyson-itinerary-panel { height: min(66dvh, 600px); }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  #greyson-toolbar { background: rgba(250, 252, 251, .97); }
+}

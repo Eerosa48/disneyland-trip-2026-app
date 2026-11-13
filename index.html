@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="wait-times.css" />
   <link rel="stylesheet" href="gps-ui.css" />
   <link rel="stylesheet" href="itinerary-ui.css" />
+  <link rel="stylesheet" href="toolbar-ui.css" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <style>
@@ -140,13 +141,13 @@
 
       // Initial view when opening the map
       initialMobile: {
-        center: [33.80972, -117.92060],
-        zoom: 16.00
+        center: [33.81078, -117.92184],
+        zoom: 15.35
       },
 
       initialDesktop: {
-        center: [33.81078, -117.92203],
-        zoom: 16.50
+        center: [33.81078, -117.92184],
+        zoom: 15.70
       },
 
       // Centering dropdown selections
@@ -280,64 +281,9 @@
     updateMinZoom();
     focusInitialView();
 
-    // Dropdown replaces the old recenter-only control.
-    const FocusControl = L.Control.extend({
-      options: { position: 'topleft' },
-      onAdd() {
-        const container = L.DomUtil.create('div', 'leaflet-control-focus');
-        const trigger = L.DomUtil.create('button', 'focus-trigger', container);
-        trigger.type = 'button';
-        trigger.textContent = '⌖  Locations  ▾';
-        trigger.setAttribute('aria-haspopup', 'true');
-        trigger.setAttribute('aria-expanded', 'false');
-        trigger.setAttribute('aria-label', 'Choose a map area');
-        const menu = L.DomUtil.create('div', 'focus-menu', container);
-        menu.hidden = true;
 
-        function closeMenu() {
-          menu.hidden = true;
-          trigger.setAttribute('aria-expanded', 'false');
-        }
-        function setMenuOpen(open) {
-          menu.hidden = !open;
-          trigger.setAttribute('aria-expanded', String(open));
-          if (open) menu.querySelector('button')?.focus();
-        }
+    // The Locations control has been retired; toolbar tools are Search, Itinerary, Wait Times.
 
-        const choices = [
-          ['Whole Resort', 'resort'],
-          ['Disneyland Park', 'disneyland'],
-          ['California Adventure', 'california'],
-          ['Downtown Disney', 'downtown']
-        ];
-        for (const [label, key] of choices) {
-          const option = L.DomUtil.create('button', 'focus-option', menu);
-          option.type = 'button';
-          option.textContent = label;
-          option.addEventListener('click', () => {
-            closeMenu();
-            trigger.focus();
-            focusPark(key);
-			trigger.textContent = '⌖  ' + label + '  ▾';
-          });
-        }
-
-        trigger.addEventListener('click', () => setMenuOpen(menu.hidden));
-        container.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape') {
-            closeMenu();
-            trigger.focus();
-          }
-        });
-        document.addEventListener('pointerdown', (event) => {
-          if (!container.contains(event.target)) closeMenu();
-        });
-        L.DomEvent.disableClickPropagation(container);
-        L.DomEvent.disableScrollPropagation(container);
-        return container;
-      }
-    });
-    map.addControl(new FocusControl());
 
     // Accommodate rotation and desktop resizing without resetting a view the
     // user has deliberately panned or zoomed. Recenter remains available.
@@ -356,5 +302,6 @@
 <script src="gps-ui.js"></script>
 <script src="itinerary-ui.js"></script>
 <script src="offline-ui.js"></script>
+<script src="toolbar-ui.js"></script>
 </body>
 </html>
