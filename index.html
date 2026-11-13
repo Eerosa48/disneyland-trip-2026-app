@@ -137,18 +137,19 @@
     // Longitude: increase = East, decrease = West
     // Zoom:      increase = Closer, decrease = Farther
 
-    const cameraViews = {
 
-      // Initial view when opening the map
-      initialMobile: {
-        center: [33.81078, -117.92184],
-        zoom: 15.35
-      },
+	const cameraViews = {
 
-      initialDesktop: {
+	  // Initial view when opening the map
+	  initialMobile: {
+		center: [33.81078, -117.92184],
+	    zoom: 16.35
+	  },
+
+	  initialDesktop: {
         center: [33.81078, -117.92184],
-        zoom: 15.70
-      },
+        zoom: 17.10
+	  },
 
       // Centering dropdown selections
       resort: {
@@ -206,7 +207,7 @@
 	  doubleTouchDragZoom: true,
 	  doubleTouchDragZoomInvert: true,
 	  doubleTouchDragZoomScaleFactor: 100,
-      maxBoundsViscosity: 0.6,
+      maxBoundsViscosity: 1.0,
       attributionControl: false
     });
 	
