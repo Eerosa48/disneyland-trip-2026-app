@@ -288,3 +288,138 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6);
 }
 
+/* ==========================================
+   LIQUID GLASS — MATCHED HEADER & TOOLBAR
+   ========================================== */
+
+:root {
+  --greyson-glass-fill: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(242, 251, 246, 0.60) 48%,
+    rgba(210, 233, 220, 0.62) 100%
+  );
+
+  --greyson-glass-border: rgba(255, 255, 255, 0.82);
+
+  --greyson-glass-shadow:
+    0 8px 28px rgba(25, 55, 40, 0.19),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(65, 105, 85, 0.12);
+}
+
+/* Matching floating glass surfaces */
+#greyson-toolbar,
+.greyson-active-day {
+  border: 1px solid var(--greyson-glass-border);
+  background: var(--greyson-glass-fill);
+
+  -webkit-backdrop-filter: blur(26px) saturate(175%);
+  backdrop-filter: blur(26px) saturate(175%);
+
+  box-shadow: var(--greyson-glass-shadow);
+}
+
+/* Keep both surfaces softly rounded */
+#greyson-toolbar {
+  border-radius: 23px;
+}
+
+.greyson-active-day {
+  border-radius: 22px;
+}
+
+/* Subtle light reflection across the glass */
+#greyson-toolbar::before,
+.greyson-active-day::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.32),
+    transparent 45%,
+    rgba(255, 255, 255, 0.09)
+  );
+  pointer-events: none;
+}
+
+/* Matching dark green text */
+#greyson-toolbar .greyson-toolbar-button,
+.greyson-active-day-date {
+  color: #244b3c;
+}
+
+/* Active toolbar icon: raised glass effect */
+#greyson-toolbar .greyson-toolbar-button.is-selected {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.78),
+    rgba(210, 235, 219, 0.55)
+  );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    0 2px 8px rgba(30, 65, 47, 0.10);
+
+  color: #173f31;
+}
+
+/* Stops and Route: inactive glass buttons */
+.greyson-active-day-toggle {
+  background: rgba(255, 255, 255, 0.46);
+  border-color: rgba(255, 255, 255, 0.70);
+  color: #365c4b;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.85);
+}
+
+/* Stops and Route: active green glass */
+.greyson-active-day-toggle.is-active,
+.greyson-active-day-toggle[aria-pressed="true"] {
+  background: linear-gradient(
+    145deg,
+    rgba(37, 101, 76, 0.94),
+    rgba(28, 78, 61, 0.92)
+  );
+
+  border-color: rgba(28, 85, 64, 0.80);
+  color: #ffffff;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.22),
+    0 2px 7px rgba(25, 70, 49, 0.18);
+}
+
+/* Give the day dropdown a matching glass finish */
+.greyson-active-day-menu {
+  background: var(--greyson-glass-fill);
+  border-color: var(--greyson-glass-border);
+
+  -webkit-backdrop-filter: blur(26px) saturate(175%);
+  backdrop-filter: blur(26px) saturate(175%);
+
+  box-shadow: var(--greyson-glass-shadow);
+}
+
+/* Smooth transition from window to glass toolbar */
+#greyson-panel-connector {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(240, 250, 244, 0.78)
+  );
+
+  border-color: rgba(255, 255, 255, 0.78);
+}
+
+/* Accessibility: less transparency when requested */
+@media (prefers-reduced-transparency: reduce) {
+  #greyson-toolbar,
+  .greyson-active-day,
+  .greyson-active-day-menu {
+    background: rgba(248, 252, 249, 0.98);
+  }
+}
