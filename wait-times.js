@@ -12,10 +12,47 @@
     california: '832fcd51-ea19-4e77-85c7-75d5843b127c'
   };
   var REFRESH_MS = 1 * 60 * 1000;
-  var MIN_ZOOM = 17;
+  var MIN_ZOOM = 18;
   var markers = L.layerGroup();
   var heading, note, places = [], latest = {}, lastCheck = 0;
   var pending = false, errors = 0;
+  var waitItems = [], placesReady = false;
+  var subscribers = [];
+
+  function snapshot() {
+    return {
+      items: waitItems,
+      lastCheck: lastCheck,
+      pending: pending,
+      errors: errors
+    };
+  }
+
+  function notifySubscribers() {
+    var state = snapshot();
+    subscribers.slice().forEach(function (callback) {
+      try { callback(state); }
+      catch (error) { console.warn('Greyson wait subscriber:', error); }
+    });
+  }
+
+  // Shared source of live wait data for the map and toolbar.
+  window.greysonWaitFeed = {
+    subscribe: function (callback) {
+      if (typeof callback !== 'function') {
+        throw new TypeError('Wait-time subscriber must be a function');
+      }
+      subscribers.push(callback);
+      callback(snapshot());
+      return function () {
+        var index = subscribers.indexOf(callback);
+        if (index !== -1) subscribers.splice(index, 1);
+      };
+    },
+    refreshIfStale: function () {
+      if (!lastCheck || Date.now() - lastCheck >= REFRESH_MS) return refresh();
+    }
+  };
 
   function normalize(s) {
     return String(s || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
@@ -106,7 +143,7 @@
 
   function paint() {
     markers.clearLayers();
-    var matched = 0, missing = [];
+    var matched = 0, missing = [], items = [];
     places.forEach(function (place) {
       var rows = latest[place.park] || [];
       var accepted = [place.name].concat(place.aliases || []).map(normalize);
@@ -114,6 +151,7 @@
       if (!entry) { missing.push(place.name); return; }
       matched += 1;
       var badge = badgeInfo(entry);
+      items.push({ place: place, badge: badge });
       var icon = L.divIcon({
         className: 'greyson-wait-icon',
         html: '<span class="greyson-wait-bubble greyson-wait-' + badge.style + '">' + badge.label + '</span>',
@@ -124,6 +162,9 @@
         riseOnHover: true
       }).bindPopup(popupFor(place, entry), { maxWidth: 235, minWidth: 170, autoPan: true })
         .addTo(markers);
+    });
+    waitItems = items.sort(function (a, b) {
+      return a.place.name.localeCompare(b.place.name, undefined, { sensitivity: 'base' });
     });
     if (note) {
       note.textContent = lastCheck
@@ -148,7 +189,7 @@
   }
 
   async function refresh() {
-    if (pending || !navigator.onLine) return;
+    if (pending || !navigator.onLine || !placesReady) return;
     pending = true;
     updateVisibility();
     var checks = await Promise.allSettled(Object.keys(PARK_IDS).map(async function (park) {
@@ -168,6 +209,7 @@
     lastCheck = Date.now();
     pending = false;
     paint();
+    notifySubscribers();
   }
 
 
@@ -223,8 +265,10 @@
   map.on('zoomend', updateVisibility);
   window.addEventListener('offline', function () {
     latest = {};
+    waitItems = [];
     markers.clearLayers();
     updateVisibility();
+    notifySubscribers();
   });
   window.addEventListener('online', refresh);
   document.addEventListener('visibilitychange', function () {
@@ -241,6 +285,7 @@
         return place.type === 'Attraction' && PARK_IDS[place.park] &&
           Number.isFinite(place.lat) && Number.isFinite(place.lon);
       });
+      placesReady = true;
       return refresh();
     })
     .catch(function (error) {
@@ -248,6 +293,7 @@
       pending = false;
       if (note) note.textContent = 'Attraction directory unavailable';
       updateVisibility();
+      notifySubscribers();
       console.warn('Greyson Wait Times:', error);
     });
 })();

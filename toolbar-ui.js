@@ -133,58 +133,15 @@
   waitCredit.textContent = 'Live data: ThemeParks.wiki';
   waitPanel.appendChild(waitCredit);
 
-  var PARK_IDS = {
-    disneyland: '7340550b-c14d-4def-80bb-acdb51d49a66',
-    california: '832fcd51-ea19-4e77-85c7-75d5843b127c'
-  };
-  var API = 'https://api.themeparks.wiki/v1/entity/';
-  var placePromise = null;
-  var waitData = null;
+  // Reuse the map's already-fetched and normalized live wait information.
+  var waitFeed = window.greysonWaitFeed;
+  var waitData = [];
   var waitChecked = 0;
-  var waitPending = null;
-  var REFRESH_MS = 60 * 1000;
+  var waitErrors = 0;
+  var waitPending = false;
 
-  function normalize(value) {
-    return String(value || '').normalize('NFKD')
-      .replace(/[\u0300-\u036f]/g, '').toLowerCase()
-      .replace(/[^a-z0-9]+/g, ' ').trim();
-  }
-
-  function placeDirectory() {
-    if (!placePromise) {
-      placePromise = fetch(new URL('places.json', document.baseURI))
-        .then(function (response) {
-          if (!response.ok) throw new Error('Place directory unavailable');
-          return response.json();
-        }).then(function (data) {
-          if (!Array.isArray(data.places)) throw new Error('Invalid place directory');
-          return data.places.filter(function (p) {
-            return p.type === 'Attraction' && PARK_IDS[p.park] &&
-              Number.isFinite(p.lat) && Number.isFinite(p.lon);
-          });
-        }).catch(function (error) { placePromise = null; throw error; });
-    }
-    return placePromise;
-  }
-
-  function findEntry(place, rows) {
-    var names = [place.name].concat(place.aliases || []).map(normalize);
-    return rows.find(function (row) { return names.includes(normalize(row.name)); });
-  }
-
-  function formatWait(entry) {
-    var status = entry.status || 'UNKNOWN';
-    var wait = entry.queue && entry.queue.STANDBY && entry.queue.STANDBY.waitTime;
-    if (status === 'DOWN') return { text: 'Down', kind: 'down' };
-    if (status === 'CLOSED') return { text: 'Closed', kind: 'closed' };
-    if (status === 'REFURBISHMENT') return { text: 'Refurb', kind: 'closed' };
-    if (status === 'OPERATING' && typeof wait === 'number' &&
-        Number.isFinite(wait) && wait >= 0 && wait <= 600) {
-      var minutes = Math.round(wait);
-      return { text: minutes + ' min', kind: minutes <= 20 ? 'short' :
-        minutes <= 45 ? 'medium' : 'long' };
-    }
-    return { text: '—', kind: 'unknown' };
+  if (!waitFeed) {
+    console.warn('Greyson toolbar: shared wait-time feed was not initialized.');
   }
 
   var waitFocusPane = map.getPane('greyson-wait-focus-pane') ||
@@ -245,18 +202,23 @@
       waitStatus.textContent = 'Live wait times are unavailable offline.';
       return;
     }
-    if (!waitData) {
-      waitStatus.textContent = 'Loading live wait times…';
+    if (!waitChecked || (waitPending && !waitData.length)) {
+      waitStatus.textContent = waitErrors === 2 && !waitPending
+        ? 'Wait times unavailable. Try again shortly.'
+        : 'Loading live wait times…';
       return;
     }
     if (!waitData.length) {
-      waitStatus.textContent = 'No live attraction reports are available right now.';
+      waitStatus.textContent = waitErrors === 2
+        ? 'Wait times unavailable. Try again shortly.'
+        : 'No live attraction reports are available right now.';
       return;
     }
     var updated = new Date(waitChecked).toLocaleTimeString([], {
       hour: 'numeric', minute: '2-digit'
     });
-    waitStatus.textContent = waitData.length + ' attractions · Updated ' + updated;
+    waitStatus.textContent = waitData.length + ' attractions · Updated ' + updated +
+      (waitErrors ? ' · Partial feed' : '');
     waitData.forEach(function (item) {
       var button = document.createElement('button');
       button.type = 'button';
@@ -265,8 +227,8 @@
       name.className = 'greyson-wait-list-name';
       name.textContent = item.place.name;
       var status = document.createElement('span');
-      status.className = 'greyson-wait-list-status is-' + item.badge.kind;
-      status.textContent = item.badge.text;
+      status.className = 'greyson-wait-list-status is-' + item.badge.style;
+      status.textContent = item.badge.label.replace(/(\d+)m$/, '$1 min');
       button.appendChild(name);
       button.appendChild(status);
       button.addEventListener('click', function () {
@@ -277,57 +239,19 @@
     });
   }
 
-  async function loadWaits() {
-    if (!navigator.onLine) {
-      waitData = null;
-      renderWaits();
-      return;
-    }
-    if (waitData && Date.now() - waitChecked < REFRESH_MS) {
-      renderWaits();
-      return;
-    }
-    if (waitPending) return waitPending;
-    waitStatus.textContent = 'Loading live wait times…';
-    waitPending = (async function () {
-      var directory = await placeDirectory();
-      var parks = Object.keys(PARK_IDS);
-      var feeds = await Promise.allSettled(parks.map(async function (park) {
-        var response = await fetch(API + PARK_IDS[park] + '/live', { cache: 'no-store' });
-        if (!response.ok) throw new Error('Live feed HTTP ' + response.status);
-        var data = await response.json();
-        if (!Array.isArray(data.liveData)) throw new Error('Invalid live feed');
-        return { park: park, rows: data.liveData };
-      }));
-      var rowsByPark = Object.create(null);
-      var successes = 0;
-      feeds.forEach(function (result) {
-        if (result.status === 'fulfilled') {
-          rowsByPark[result.value.park] = result.value.rows;
-          successes++;
-        }
-      });
-      if (!successes) throw new Error('Live wait-time service is unavailable');
-      waitData = directory.map(function (place) {
-        var entry = findEntry(place, rowsByPark[place.park] || []);
-        return entry ? { place: place, badge: formatWait(entry) } : null;
-      }).filter(Boolean).sort(function (a, b) {
-        return a.place.name.localeCompare(b.place.name, undefined, { sensitivity: 'base' });
-      });
-      waitChecked = Date.now();
+  function loadWaits() {
+    if (!waitPanel.hidden) renderWaits();
+    if (waitFeed && navigator.onLine) waitFeed.refreshIfStale();
+  }
+
+  if (waitFeed) {
+    waitFeed.subscribe(function (state) {
+      waitData = state.items;
+      waitChecked = state.lastCheck;
+      waitErrors = state.errors;
+      waitPending = state.pending;
       if (!waitPanel.hidden) renderWaits();
-      if (successes < parks.length && !waitPanel.hidden) {
-        waitStatus.textContent += ' · Partial feed';
-      }
-    })().catch(function (error) {
-      waitData = null;
-      if (!waitPanel.hidden) {
-        waitList.replaceChildren();
-        waitStatus.textContent = 'Wait times unavailable. Try again shortly.';
-      }
-      console.warn('Greyson toolbar wait times:', error);
-    }).finally(function () { waitPending = null; });
-    return waitPending;
+    });
   }
 
   function closeDayMenu() {
@@ -469,7 +393,6 @@
     requestAnimationFrame(updateActive);
   });
   window.addEventListener('offline', function () {
-    waitData = null;
     if (!waitPanel.hidden) renderWaits();
   });
   window.addEventListener('online', function () {
