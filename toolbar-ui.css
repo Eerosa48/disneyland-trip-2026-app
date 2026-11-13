@@ -497,3 +497,66 @@
     backdrop-filter: none;
   }
 }
+
+/* Small external-launch shortcut; NOT an expandable toolbar panel.
+ * Preserve the three existing buttons and the 72px toolbar height. */
+#greyson-toolbar .greyson-toolbar-external {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex: 0 0 50px;
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid rgba(128, 165, 143, .45);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .46);
+  color: #244b3c;
+  text-decoration: none;
+  font: 750 10px/1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#greyson-toolbar .greyson-toolbar-castle {
+  display: block;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  object-fit: contain;
+}
+#greyson-toolbar .greyson-toolbar-external-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  white-space: nowrap;
+}
+#greyson-toolbar .greyson-toolbar-external:active {
+  background: rgba(200, 226, 210, .65);
+}
+#greyson-toolbar .greyson-toolbar-external:focus-visible {
+  outline: 2px solid #1765d1;
+  outline-offset: 0;
+}
+/* Preserve breathing room for labels on narrower phones. */
+@media (max-width: 390px) {
+  #greyson-toolbar .greyson-toolbar-button { gap: 4px; font-size: 11px; }
+  #greyson-toolbar .greyson-toolbar-button svg {
+    width: 21px;
+    height: 21px;
+    flex-basis: 21px;
+  }
+}
+@media (max-width: 350px) {
+  #greyson-toolbar .greyson-toolbar-button { gap: 2px; font-size: 10px; }
+  #greyson-toolbar .greyson-toolbar-button svg {
+    width: 17px;
+    height: 17px;
+    flex-basis: 17px;
+  }
+}

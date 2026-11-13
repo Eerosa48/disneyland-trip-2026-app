@@ -95,6 +95,26 @@
     button.addEventListener('click', function () { toggleTool(action.key); });
   });
 
+  // External Disneyland launch link: intentionally NOT a fourth panel action.
+  // Keeping it outside `actions` preserves the three original buttons,
+  // their active state, and the panel's glass connector positions.
+  var disneyLaunch = document.createElement('a');
+  disneyLaunch.className = 'greyson-toolbar-external';
+  disneyLaunch.setAttribute('aria-label',
+    'Open Disneyland app for dining reservations and Lightning Lane');
+  disneyLaunch.title = 'Dining Reservations and Lightning Lane (opens Disneyland)';
+  var appleDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  // A named Apple Shortcut, with one Open App -> Disneyland action, must be
+  // installed on each iPhone. Keep navigation as a direct user-tapped link.
+  disneyLaunch.href = appleDevice
+    ? 'shortcuts://run-shortcut?name=Open%20Disneyland'
+    : 'https://disneyland.disney.go.com/';
+  disneyLaunch.innerHTML =
+    '<img class="greyson-toolbar-castle" src="icons/disney-castle-toolbar.png" alt="" aria-hidden="true">' +
+    '<span class="greyson-toolbar-external-text">Disney</span>';
+  bar.appendChild(disneyLaunch);
+
   // Suppress the existing scripts' outside-pointer handlers while a toolbar
   // button is pressed. We manage panel switching intentionally below.
   bar.addEventListener('pointerdown', function (event) { event.stopPropagation(); });
