@@ -301,7 +301,6 @@
           trigger.setAttribute('aria-expanded', String(opening));
           if (opening) {
             render();
-            input.focus();
           }
         });
         close.addEventListener('click', function () {

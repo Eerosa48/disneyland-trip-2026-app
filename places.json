@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "notice": "316 locations reviewed and calibrated on the user's Disney map: 314 manually positioned, and 2 manually verified at their existing coordinates. Coordinates represent user-selected points, not necessarily entrance positions. Availability and operating status may change.",
+  "notice": "316 existing reviewed/calibrated locations plus one provisional, manually verifiable Cars Land sunset-lighting viewing point; all coordinates are map landmarks and not guaranteed entrances or viewpoints.",
   "sources": [
     "https://github.com/chrisclawguitarte/rayban-disney-nearby",
     "https://disneyland.disney.go.com/attractions/",
@@ -709,6 +709,24 @@
       "accuracy": "manually_placed",
       "source_url": "https://disneyland.disney.go.com/maps/",
       "listing_status": "listed"
+    },
+    {
+      "id": "cal-experience-cars-land-sh-boom",
+      "name": "Cars Land Sh-Boom Neon Lighting",
+      "park": "california",
+      "area": "Cars Land",
+      "type": "Experience",
+      "lat": 33.805695,
+      "lon": -117.918834,
+      "zoom": 19.05,
+      "aliases": [
+        "Sh-Boom",
+        "Cars Land lighting ceremony",
+        "Radiator Springs neon lighting"
+      ],
+      "accuracy": "PROVISIONAL — midpoint of existing Flo's and Cozy Cone pins; calibrate on your map",
+      "listing_status": "trip-planned seasonal moment; time not guaranteed",
+      "source_url": "https://disneyparksblog.com/dlr/10-ways-to-celebrate-cars-lands-10th-anniversary-at-disneyland-resort/"
     },
     {
       "id": "cal-dining-carthay-circle-lounge",

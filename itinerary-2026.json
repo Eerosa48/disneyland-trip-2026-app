@@ -1,9 +1,9 @@
 {
   "source": "2026 Disneyland Itinerary v5.docx",
-  "sourceVersion": "v5",
+  "sourceVersion": "v5 + Nov 19 sunset and Céntrico amendment",
   "dates": "2026-11-15 to 2026-11-20",
   "timeZone": "America/Los_Angeles",
-  "displayTimeRule": "All time strings are exact DOCX table values, preserving approximation and After/By/During qualifiers. No estimated or calculated showtimes.",
+  "displayTimeRule": "Based on itinerary v5 DOCX, with November 19 afternoon and dinner adjusted for the Cars Land sunset lighting moment and 6:30 PM Céntrico reservation. Parade and lighting times are subject to operational changes.",
   "atAGlance": [
     {
       "date": "Sun, Nov 15",
@@ -27,7 +27,7 @@
     },
     {
       "date": "Thu, Nov 19",
-      "plan": "Cars, Guardians, Pixar Pier, Indiana Jones; Céntrico 5 PM",
+      "plan": "Cars, Guardians, Pixar Pier, Indiana, 3:15 parade, Cars Land sunset lights; Céntrico 6:30 PM",
       "people": "6 incl. Greyson"
     },
     {
@@ -58,7 +58,7 @@
       "notes": "Pixar Place Hotel • verify reservation party size"
     },
     {
-      "when": "Thu 11/19 • 5:00 PM",
+      "when": "Thu 11/19 • 6:30 PM",
       "reservation": "Céntrico",
       "notes": "Downtown Disney • party of 6"
     }
@@ -669,8 +669,8 @@
       "date": "2026-11-19",
       "day": "Thu 19",
       "title": "Pixar, parade & a last wish",
-      "subtitle": "Starting park: California Adventure  •  Family of 6  •  Céntrico at 5 PM",
-      "priority": "Revisit Cars Land and Pixar Pier, ride Guardians, then park hop for Indiana Jones, two coffees and the Toy Story parade. Indiana is adult-only (46-inch minimum); prioritize its return window.",
+      "subtitle": "Starting park: California Adventure  •  Family of 6  •  Céntrico at 6:30 PM",
+      "priority": "Revisit Cars Land and Pixar Pier, ride Guardians, then park hop for Indiana Jones, two coffees and the 3:15 PM Christmas Fantasy Parade. Return to California Adventure for the Cars Land neon-lighting moment (arrive 4:30 PM), before 6:30 PM Céntrico. Indiana is adult-only (46-inch minimum); protect the afternoon departure.",
       "timeline": [
         {
           "time": "6:45–8:00",
@@ -770,36 +770,53 @@
           ]
         },
         {
-          "time": "~3:15–4:10",
-          "activity": "A Christmas Fantasy Parade (if scheduled)",
-          "notes": "Toy Story float; timing varies by viewing position.",
+          "time": "3:15–3:55",
+          "activity": "A Christmas Fantasy Parade (subject to schedule)",
+          "notes": "3:15 PM advertised start; Disney lists about 40 minutes. Watch near an exit-friendly Main Street/Town Square position. Aim to depart by 3:55 PM to make Cars Land by 4:30; the parade may arrive or finish later at your specific position.",
           "mapIds": [
             "dis-landmark-main-street-u-s-a"
           ]
         },
         {
-          "time": "4:10–4:45",
-          "activity": "Exit Disneyland; walk to Céntrico",
-          "notes": "Protect dinner check-in buffer.",
+          "time": "3:55–4:30",
+          "activity": "Exit Disneyland; park hop back to California Adventure; reach Cars Land",
+          "notes": "Time-sensitive transfer with stroller/group: leave Main Street promptly, cross the Esplanade, reenter California Adventure and head directly to Route 66. 35 minutes is a goal, not a guaranteed walking time.",
+          "mapIds": [
+            "cal-landmark-california-adventure-main-entrance",
+            "cal-experience-cars-land-sh-boom"
+          ]
+        },
+        {
+          "time": "4:30–5:05",
+          "activity": "Cars Land “Sh-Boom” sunset neon-lighting moment",
+          "notes": "Be in position by 4:30 PM along Route 66 between Flo's V8 Cafe and Cozy Cone Motel. Sunset is about 4:46–4:48 PM; neon lighting often occurs around sunset or a few minutes later (~4:42–4:53, not a posted showtime). The moment lasts a few minutes. Holiday-season music may differ from Sh-Boom; stay for neon photos.",
+          "mapIds": [
+            "cal-experience-cars-land-sh-boom",
+            "cal-dining-flo-s-v8-cafe",
+            "cal-dining-cozy-cone-motel"
+          ]
+        },
+        {
+          "time": "5:05–6:15",
+          "activity": "Leave Cars Land; exit California Adventure; walk to Céntrico",
+          "notes": "Allow comfortable time to leave the park and walk through Downtown Disney, with stroller, rest and reservation check-in buffer. Enjoy the district if early.",
           "mapIds": [
             "dow-dining-centrico"
           ]
         },
         {
-          "time": "5:00–6:20",
+          "time": "6:30–7:45",
           "activity": "Céntrico dinner",
-          "notes": "Party of 6.",
+          "notes": "Confirmed reservation update: 6:30 PM, party of 6.",
           "mapIds": [
             "dow-dining-centrico"
           ]
         },
         {
-          "time": "After 6:20",
-          "activity": "Optional Cars Land night lights / hotel",
-          "notes": "Nighttime reroute is extra walking; only if happy and energetic.",
-          "mapIds": [
-            "cal-landmark-cars-land"
-          ]
+          "time": "After 7:45",
+          "activity": "Optional Downtown Disney stroll / return to hotel",
+          "notes": "The Cars Land neon moment has already been planned before dinner, so no extra park reentry is necessary.",
+          "mapIds": []
         }
       ],
       "lightningLane": [
@@ -836,10 +853,10 @@
         {
           "time": "By 2:30 PM",
           "activity": "Stop conflicting bookings",
-          "notes": "Protect the 3:15 PM parade and 5:00 PM Céntrico reservation; no late return-window detours."
+          "notes": "Protect the 3:15 PM parade, the 4:30 PM Cars Land arrival for sunset neon lighting, and the 6:30 PM Céntrico reservation; no late detours."
         }
       ],
-      "walking": "Walking blocks: Cars Land→Guardians 7–12 min; Guardians→Pixar Pier 12–18 min; Pixar Pier→DCA exit 12–18 min; park hop 10–20 min; Disneyland entry→Bengal 10–15 min; Bengal→Indiana 2–5 min; Indiana→Rancho 5–8 min; Rancho→Town Square 8–15 min; Disneyland exit→Céntrico 10–15 min.",
+      "walking": "Walking blocks: Cars Land→Guardians 7–12 min; Guardians→Pixar Pier 12–18 min; Pixar Pier→DCA exit 12–18 min; DCA→Disneyland hop 10–20 min; Disneyland entry→Bengal 10–15 min; Bengal→Indiana 2–5 min; Indiana→Rancho 5–8 min; Rancho→Town Square 8–15 min. NEW: Main Street→Cars Land via park hop 3:55–4:30 target (allow for queues/crowds); Cars Land→Céntrico via DCA exit and Downtown Disney after the neon lighting. These are planning buffers, not navigation ETAs.",
       "ridePlanning": [
         {
           "item": "Mater’s Jingle Jamboree",
@@ -872,9 +889,9 @@
           "plan": "45–70 min Lightning Lane + Rider Switch"
         }
       ],
-      "skipFirst": "Skip Jessie’s carousel, longer Toy Story character lines and Green Army Patrol first. Book Indiana Jones ahead if possible; if its return time conflicts with the parade, choose which is more important. Dinner always wins.",
+      "skipFirst": "Skip optional Toy Story character lines, Green Army Patrol, or extra rides if afternoon timing slips. Prioritize the 3:15 parade, returning to Cars Land by 4:30 for the neon moment, and the 6:30 dinner. The parade may not finish at your viewing spot by 3:55; be ready to leave early if the lighting moment is the priority.",
       "extraNotes": [
-        "If Greyson has energy after dinner, the holiday neon of Cars Land makes a great final photo. It requires an extra California Adventure park entry and substantial walking, so treat it as optional — not madatory. World of Color would mean a very late night and is another optional alternative."
+        "Cars Land's sunset neon lighting is now a planned Thursday stop, not an after-dinner option. The music may be seasonal during the holidays. Check sunset and ask a Cars Land Cast Member about timing; the moment is not a fixed advertised show."
       ],
       "routeable": true,
       "coffeeStops": [
@@ -891,7 +908,7 @@
       ],
       "mealReservations": [
         {
-          "when": "Thu 11/19 • 5:00 PM",
+          "when": "Thu 11/19 • 6:30 PM",
           "reservation": "Céntrico",
           "notes": "Downtown Disney • party of 6"
         }
