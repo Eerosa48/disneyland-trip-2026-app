@@ -35,6 +35,38 @@
   bar.id = 'greyson-toolbar';
   bar.setAttribute('aria-label', 'Map tools');
   document.body.appendChild(bar);
+  
+  // Keep expanded panels just below the selected-day banner.
+  var dayHeader = document.querySelector('.greyson-active-day');
+
+  function updateExpandedPanelTop() {
+    if (!dayHeader) return;
+
+    var top = Math.ceil(dayHeader.getBoundingClientRect().bottom + 6);
+
+    document.documentElement.style.setProperty(
+      '--greyson-expanded-panel-top',
+      top + 'px'
+    );
+  }
+
+  if (dayHeader) {
+    updateExpandedPanelTop();
+
+    window.addEventListener('resize', updateExpandedPanelTop);
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener(
+        'resize',
+        updateExpandedPanelTop
+      );
+    }
+
+    if (window.ResizeObserver) {
+      var panelTopObserver = new ResizeObserver(updateExpandedPanelTop);
+      panelTopObserver.observe(dayHeader);
+    }
+  }
 
   var iconSvg = {
     search: '<circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 5 5"></path>',

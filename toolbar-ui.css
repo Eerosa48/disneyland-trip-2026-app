@@ -202,3 +202,55 @@
 @media (prefers-reduced-transparency: reduce) {
   #greyson-toolbar { background: rgba(250, 252, 251, .97); }
 }
+
+/* ========================================
+   EXPANDED TOOLBAR WINDOWS
+   ======================================== */
+
+:root {
+  --greyson-expanded-panel-top:
+    calc(104px + env(safe-area-inset-top, 0px));
+
+  --greyson-toolbar-panel-bottom:
+    calc(88px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Search and Wait Times fill the available height. */
+.place-search-panel,
+#greyson-wait-panel {
+  top: var(--greyson-expanded-panel-top) !important;
+  bottom: var(--greyson-toolbar-panel-bottom) !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+/* The Itinerary wrapper fills the same space. */
+.greyson-itinerary-app {
+  top: var(--greyson-expanded-panel-top) !important;
+  bottom: var(--greyson-toolbar-panel-bottom) !important;
+  height: auto !important;
+}
+
+/* Stretch the existing Itinerary panel within its wrapper. */
+.greyson-itinerary-panel {
+  top: 0 !important;
+  bottom: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+}
+
+/* Small visual connector above the selected toolbar item. */
+#greyson-toolbar .greyson-toolbar-button.is-selected::before {
+  content: '';
+  position: absolute;
+  left: calc(50% - 24px);
+  top: -13px;
+  width: 48px;
+  height: 21px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+  background: rgba(244, 249, 246, 0.97);
+  pointer-events: none;
+}
