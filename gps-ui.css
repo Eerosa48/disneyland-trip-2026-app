@@ -10,9 +10,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 46px;
-  height: 46px;
-  padding: 10px;
+  width: 48px;
+  height: 48px;
+  box-sizing: border-box;
+  padding: 4px;
   border: 1px solid transparent;
   border-radius: 50%;
   background: transparent;
@@ -27,8 +28,8 @@
 }
 .leaflet-control-greyson-gps .greyson-gps-locate svg {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   fill: currentColor;
   
   /* Thin white outline around the arrow */
