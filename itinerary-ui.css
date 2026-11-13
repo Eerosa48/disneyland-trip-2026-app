@@ -155,7 +155,68 @@
   font: 700 13px/1.25 system-ui,-apple-system,sans-serif;
   white-space: nowrap;
 }
-.greyson-active-day-date {font-size: 14px; letter-spacing: .1px;}
+
+.greyson-active-day-date {
+  border: 0;
+  background: transparent;
+  color: #233d31;
+  font: 800 17px/1.25 system-ui, -apple-system, sans-serif;
+  letter-spacing: .1px;
+  padding: 3px 6px;
+  border-radius: 7px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.greyson-active-day-date:focus-visible {
+  outline: 2px solid #1765d1;
+  outline-offset: 2px;
+}
+
+.greyson-active-day-menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 175px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px;
+  border: 1px solid #b5c8ba;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .98);
+  box-shadow: 0 6px 20px #0003;
+}
+
+.greyson-active-day-menu[hidden] {
+  display: none;
+}
+
+.greyson-active-day-option {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #233d31;
+  text-align: center;
+  font: 700 13px/1.2 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+}
+
+.greyson-active-day-option.is-selected {
+  background: #e7f2e9;
+  color: #285947;
+}
+
+.greyson-active-day-option:hover,
+.greyson-active-day-option:focus-visible {
+  background: #dcefe2;
+}
+
 .greyson-active-day-controls {display:flex;gap:6px;align-items:center;justify-content:center;}
 .greyson-active-day-toggle {
   min-width: 60px;
@@ -183,6 +244,6 @@
 .leaflet-top.leaflet-left:has(.place-search-panel:not([hidden])) {z-index:1700;}
 @media (max-width:540px) {
   .greyson-active-day {top:calc(6px + env(safe-area-inset-top, 0px));padding:6px 8px;}
-  .greyson-active-day-date {font-size:13px;}
+  .greyson-active-day-date {font-size:16px;}
   .greyson-active-day-toggle {min-width:52px;min-height:26px;padding:4px 8px;}
 }

@@ -65,7 +65,41 @@
   // The Route control is available for the Nov 16 pilot; other days remain disabled.
   var dayBanner = make('div', 'greyson-active-day', document.body);
   dayBanner.setAttribute('aria-label', 'Selected itinerary day and map overlays');
-  var dayBannerDate = make('strong', 'greyson-active-day-date', dayBanner, 'Mon. 11/16');
+  var dayBannerDate = make('button', 'greyson-active-day-date', dayBanner, 'Mon. 11/16 ▾');
+  dayBannerDate.type = 'button';
+  dayBannerDate.disabled = true;
+  dayBannerDate.setAttribute('aria-expanded', 'false');
+  dayBannerDate.setAttribute('aria-haspopup', 'true');
+
+  var dayMenu = make('div', 'greyson-active-day-menu', dayBanner);
+  dayMenu.hidden = true;
+  dayMenu.setAttribute('aria-label', 'Choose itinerary day');
+
+  function closeDayMenu() {
+    dayMenu.hidden = true;
+    dayBannerDate.setAttribute('aria-expanded', 'false');
+  }
+
+  dayBannerDate.addEventListener('click', function () {
+    if (!itinerary) return;
+    if (!panel.hidden) setOpen(false);
+
+    var opening = dayMenu.hidden;
+    dayMenu.hidden = !opening;
+    dayBannerDate.setAttribute('aria-expanded', String(opening));
+  });
+
+  document.addEventListener('pointerdown', function (event) {
+    if (!dayMenu.contains(event.target) &&
+	    !dayBannerDate.contains(event.target)) {
+	  closeDayMenu();
+	}
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && !dayMenu.hidden) closeDayMenu();
+  });
+
   var dayBannerControls = make('div', 'greyson-active-day-controls', dayBanner);
   var bannerStops = make('button', 'greyson-active-day-toggle', dayBannerControls, 'Stops');
   bannerStops.type = 'button';
@@ -167,7 +201,10 @@
     var available = routeStopsForDay(day).length > 0;
     if (!available) routeOn = false;
     var pressed = routeOn && available;
-    dayBannerDate.textContent = dateLabels[day.date] || day.day;
+    dayBannerDate.textContent = (dateLabels[day.date] || day.day) + ' ▾';
+    dayBannerDate.disabled = false;
+    dayBannerDate.setAttribute('aria-label',
+      'Change selected day. Currently ' + (dateLabels[day.date] || day.day));
 	bannerStops.disabled = !available;
 	bannerStops.classList.toggle('is-active', pressed);
 	bannerStops.setAttribute('aria-pressed', String(pressed));
@@ -432,11 +469,48 @@
     }
   }
 
+  function selectDay(index) {
+    if (!itinerary || !itinerary.days[index] ||
+        !validDates.includes(itinerary.days[index].date)) return;
+
+    closeDayMenu();
+    if (dayIndex === index) return;
+
+    dayIndex = index;
+    currentTab = 'schedule';
+
+    if (routeOn) renderRoute();
+    if (walkingOn && !WALKING_DATES.includes(itinerary.days[index].date)) {
+      walkingOn = false;
+    }
+
+    renderWalking();
+    render();
+    saveSession();
+  }
+
   function render() {
     if (!itinerary) return;
     var day = itinerary.days[dayIndex];
     // Keep the top banner and itinerary-panel toggle in sync.
     updateRouteButtons();
+
+	dayMenu.replaceChildren();
+
+	itinerary.days.forEach(function (day, index) {
+	  if (!validDates.includes(day.date)) return;
+
+	  var option = make('button', 'greyson-active-day-option',
+        dayMenu, dateLabels[day.date]);
+
+	  option.type = 'button';
+	  option.classList.toggle('is-selected', index === dayIndex);
+	  option.setAttribute('aria-pressed', String(index === dayIndex));
+
+	  option.addEventListener('click', function () {
+        selectDay(index);
+      });
+    });
 
     daysNav.replaceChildren();
     itinerary.days.forEach(function (d, index) {
@@ -446,13 +520,7 @@
       b.setAttribute('aria-pressed', String(index === dayIndex));
       if (index === dayIndex) b.classList.add('is-selected');
       b.addEventListener('click', function () {
-        dayIndex = index;
-        currentTab = 'schedule';
-        if (routeOn) renderRoute();
-        if (walkingOn && !WALKING_DATES.includes(d.date)) walkingOn = false;
-        renderWalking();
-        render();
-        saveSession();
+        selectDay(index);
       });
     });
 
