@@ -341,11 +341,83 @@
     if (!searchPanel.hidden) return 'search';
     return '';
   }
+  // A floating glass neck connects whichever panel is open to its toolbar tab.
+  // These elements are decorative, so they never intercept taps on the map.
+  var connector = document.createElement('div');
+  connector.id = 'greyson-panel-connector';
+  connector.hidden = true;
+  document.body.appendChild(connector);
+
+  var connectorSeam = document.createElement('div');
+  connectorSeam.id = 'greyson-panel-connector-seam';
+  connectorSeam.hidden = true;
+  document.body.appendChild(connectorSeam);
+
+  function positionConnector(active) {
+    var panel = active === 'search' ? searchPanel :
+      active === 'itinerary' ? itineraryPanel :
+      active === 'waits' ? waitPanel : null;
+    var button = buttons[active];
+
+    if (!panel || !button) {
+      connector.hidden = true;
+      connectorSeam.hidden = true;
+      return;
+    }
+
+    var panelRect = panel.getBoundingClientRect();
+    var buttonRect = button.getBoundingClientRect();
+    var centerX = (buttonRect.left + buttonRect.right) / 2;
+
+    // Keep the neck inside the panel's left and right edges, even on desktop.
+    var neckWidth = Math.min(
+      buttonRect.width - 12,
+      136,
+      2 * (centerX - panelRect.left - 10),
+      2 * (panelRect.right - centerX - 10)
+    );
+
+    if (neckWidth < 40 || !panelRect.height) {
+      connector.hidden = true;
+      connectorSeam.hidden = true;
+      return;
+    }
+
+    var left = centerX - neckWidth / 2;
+    var top = panelRect.bottom - 5;
+    var bottom = buttonRect.bottom - 4;
+
+    connector.style.left = left + 'px';
+    connector.style.top = top + 'px';
+    connector.style.width = neckWidth + 'px';
+    connector.style.height = Math.max(12, bottom - top) + 'px';
+
+    // Conceal the horizontal panel border beneath the connecting neck.
+    connectorSeam.style.left = (left + 1) + 'px';
+    connectorSeam.style.top = (panelRect.bottom - 3) + 'px';
+    connectorSeam.style.width = (neckWidth - 2) + 'px';
+    connectorSeam.style.height = '6px';
+
+    connector.hidden = false;
+    connectorSeam.hidden = false;
+  }
+
   function updateActive() {
     var active = activeTool();
     Object.keys(buttons).forEach(function (key) {
       buttons[key].classList.toggle('is-selected', key === active);
       buttons[key].setAttribute('aria-expanded', String(key === active));
+    });
+    positionConnector(active);
+  }
+
+  // Keep the connector aligned when Safari changes its visible viewport.
+  window.addEventListener('resize', function () {
+    requestAnimationFrame(updateActive);
+  });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', function () {
+      requestAnimationFrame(updateActive);
     });
   }
   function closeAll() {
