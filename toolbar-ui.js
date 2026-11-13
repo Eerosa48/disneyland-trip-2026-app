@@ -155,6 +155,57 @@
     return { text: '—', kind: 'unknown' };
   }
 
+  var waitFocusPane = map.getPane('greyson-wait-focus-pane') ||
+    map.createPane('greyson-wait-focus-pane');
+
+  waitFocusPane.style.zIndex = '640';
+  waitFocusPane.style.pointerEvents = 'none';
+
+  var waitFocusMarker = null;
+
+  function focusWaitRide(place) {
+    // Remove the previous highlighted attraction.
+    if (waitFocusMarker) {
+      map.removeLayer(waitFocusMarker);
+    }
+
+    // Highlight the newly selected attraction.
+    waitFocusMarker = L.circleMarker(
+      [place.lat, place.lon], {
+        pane: 'greyson-wait-focus-pane',
+		radius: 9,
+        weight: 3,
+        color: '#ffffff',
+        fillColor: '#0c7780',
+        fillOpacity: 1,
+        interactive: false
+      }
+    ).addTo(map);
+
+    // Display the attraction name above its marker.
+    waitFocusMarker.bindTooltip(place.name, {
+      direction: 'top',
+      permanent: false,
+      opacity: 1,
+      className: 'place-search-label',
+      offset: [0, -10]
+    }).openTooltip();
+
+    // Consistent target zoom, regardless of starting zoom.
+    map.flyTo(
+      [place.lat, place.lon],
+      19.25,
+      { duration: 0.65 }
+    );
+  }
+
+  // Dismiss the attraction label when tapping elsewhere.
+  document.addEventListener('pointerdown', function () {
+    if (waitFocusMarker) {
+      waitFocusMarker.closeTooltip();
+    }
+  });
+
   function renderWaits() {
     waitList.replaceChildren();
     if (!navigator.onLine) {
@@ -187,9 +238,7 @@
       button.appendChild(status);
       button.addEventListener('click', function () {
         closeAll();
-        // The existing map wait bubbles remain in charge of the map display.
-        map.flyTo([item.place.lat, item.place.lon],
-          Math.max(map.getZoom(), 19.25), { duration: 0.65 });
+        focusWaitRide(item.place);
       });
       waitList.appendChild(button);
     });

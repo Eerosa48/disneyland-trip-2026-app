@@ -164,15 +164,22 @@
     closePanel();
     if (marker) map.removeLayer(marker);
     marker = L.circleMarker([place.lat, place.lon], {
-      radius: 8, weight: 3, color: '#fff', fillColor: '#296344',
+      radius: 9, weight: 3, color: '#fff', fillColor: '#0c7780',
       fillOpacity: 1, interactive: false
     }).addTo(map);
     marker.bindTooltip(place.name, {
-      direction: 'top', permanent: true, opacity: 1,
+      direction: 'top', permanent: false, opacity: 1,
       className: 'place-search-label', offset: [0, -10]
     }).openTooltip();
     map.flyTo([place.lat, place.lon], place.zoom || 18.05, { duration: 0.65 });
   }
+
+  // Dismiss a selected place's name when tapping outside Search.
+  document.addEventListener('pointerdown', function (event) {
+    if (marker && (!panel || !panel.contains(event.target))) {
+      marker.closeTooltip();
+    }
+  });
 
   function makeResult(place) {
     var button = document.createElement('button');
