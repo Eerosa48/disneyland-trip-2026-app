@@ -191,6 +191,28 @@
       button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
         '<path d="M20.5 3.5 14.2 21l-3.3-7.8L3 9.8 20.5 3.5Z"/>' +
         '</svg>';
+      // Separate map recenter button above the GPS arrow.
+      var recenterButton = L.DomUtil.create(
+        'button', 'greyson-map-recenter', root
+      );
+
+      recenterButton.type = 'button';
+      recenterButton.title = 'Return to the default map view';
+      recenterButton.setAttribute(
+        'aria-label', 'Recenter the resort map'
+      );
+
+      recenterButton.innerHTML =
+        '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+          '<circle cx="12" cy="12" r="6.25"/>' +
+          '<path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>' +
+        '</svg>';
+
+      recenterButton.addEventListener('click', function () {
+        if (typeof focusInitialView === 'function') {
+          focusInitialView(true);
+        }
+      });
       toast = L.DomUtil.create('div', 'greyson-gps-toast', document.body);
       toast.setAttribute('role', 'status');
       toast.setAttribute('aria-live', 'polite');

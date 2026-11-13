@@ -74,3 +74,52 @@
 .greyson-gps-toast[hidden] {
   display: none;
 }
+
+/* ========================================
+   MAP RECENTER BUTTON — ABOVE GPS
+   ======================================== */
+
+.leaflet-control-greyson-gps .greyson-map-recenter {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+  padding: 5px;
+  box-sizing: border-box;
+
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #59695f;
+
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.leaflet-control-greyson-gps .greyson-map-recenter svg {
+  display: block;
+  width: 36px;
+  height: 36px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  filter:
+    drop-shadow(0 0 1px white)
+    drop-shadow(0 1px 1px white);
+}
+
+.leaflet-control-greyson-gps .greyson-map-recenter:focus-visible {
+  outline: 3px solid #1765d1;
+  outline-offset: 2px;
+}

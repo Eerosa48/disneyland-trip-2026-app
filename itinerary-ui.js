@@ -152,7 +152,12 @@
     launch.setAttribute('aria-expanded', String(open));
     if (open) {
       render();
-      dismiss.focus({ preventScroll: true });
+	  
+	  requestAnimationFrame(function () {
+		updateScheduleFocus(true);
+      });
+	  
+	  dismiss.focus({ preventScroll: true });
     } else {
       launch.focus({ preventScroll: true });
     }
@@ -411,6 +416,120 @@
     });
   }
 
+  // Current time in Anaheim, expressed as minutes after midnight.
+  function anaheimMinutes() {
+    var parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23'
+    }).formatToParts(new Date());
+
+    var values = Object.create(null);
+    parts.forEach(function (p) {
+      values[p.type] = p.value;
+    });
+
+    return Number(values.hour) * 60 + Number(values.minute);
+  }
+
+  // Convert the chronological itinerary times to 24-hour ranges.
+  function schedulePeriods(entries) {
+    var previousStart = -1;
+
+    return entries.map(function (entry) {
+      var times = String(entry.time || '').match(/\d{1,2}:\d{2}/g);
+      if (!times) return null;
+
+      function halfDay(value) {
+        var parts = value.split(':').map(Number);
+        return (parts[0] % 12) * 60 + parts[1];
+      }
+
+      var start = halfDay(times[0]);
+      while (start <= previousStart) start += 720;
+      previousStart = start;
+
+      var end = null;
+
+      if (times.length > 1) {
+        end = halfDay(times[1]);
+        while (end <= start) end += 720;
+      } else if (/^\s*After\b/i.test(entry.time)) {
+        end = 1440;
+      }
+
+      return { start: start, end: end };
+    });
+  }
+
+  function updateScheduleFocus(scrollToActivity) {
+    if (!itinerary || currentTab !== 'schedule') return;
+
+    var rows = Array.from(
+      content.querySelectorAll('.greyson-itinerary-entry')
+    );
+
+    rows.forEach(function (row) {
+      row.classList.remove('is-current', 'is-upcoming');
+      var label = row.querySelector('.greyson-itinerary-live-tag');
+      if (label) label.remove();
+    });
+
+    var day = itinerary.days[dayIndex];
+
+    // Never label a different date as the current activity.
+    if (day.date !== todayInAnaheim()) return;
+
+    var now = anaheimMinutes();
+    var periods = schedulePeriods(day.timeline);
+    var targetIndex = -1;
+    var state = '';
+
+    for (var i = 0; i < periods.length; i++) {
+      var period = periods[i];
+      if (!period) continue;
+
+      if (now < period.start) {
+        targetIndex = i;
+        state = 'is-upcoming';
+        break;
+      }
+
+      var end = period.end;
+      if (end === null) {
+        end = periods[i + 1] ? periods[i + 1].start : 1440;
+      }
+
+      if (now >= period.start && now < end) {
+        targetIndex = i;
+        state = 'is-current';
+        break;
+      }
+    }
+
+    if (targetIndex < 0 || !rows[targetIndex]) return;
+
+    var target = rows[targetIndex];
+    target.classList.add(state);
+
+    var main = target.querySelector('.greyson-itinerary-entry-main');
+    if (main) {
+      var badge = document.createElement('span');
+      badge.className = 'greyson-itinerary-live-tag';
+      badge.textContent =
+        state === 'is-current' ? 'NOW' : 'UP NEXT';
+      main.insertBefore(badge, main.firstChild);
+    }
+
+    if (scrollToActivity && !panel.hidden) {
+      var listRect = content.getBoundingClientRect();
+      var rowRect = target.getBoundingClientRect();
+
+      content.scrollTop += rowRect.top - listRect.top - 12;
+    }
+  }
+
   function renderRow(entry, parent) {
     var card = make('article', 'greyson-itinerary-entry', parent);
     make('span', 'greyson-itinerary-time', card, entry.time);
@@ -572,7 +691,10 @@
     } else {
       renderDetails(day);
     }
-    foot.textContent = 'DOCX v5 · Anaheim (PST) · Route is a visual draft, NOT turn-by-turn navigation.';
+	if (currentTab === 'schedule') {
+      updateScheduleFocus(false);
+	}
+	foot.textContent = 'DOCX v5 · Anaheim (PST) · Route is a visual draft, NOT turn-by-turn navigation.';
   }
 
   // Save map center/zoom and overlay state after the user finishes panning,
@@ -753,6 +875,21 @@
     if (!panel.hidden && !root.contains(event.target)) {
       panel.hidden = true;
       launch.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Refresh the highlight without interrupting manual scrolling.
+  window.setInterval(function () {
+    if (!document.hidden &&
+        !panel.hidden &&
+        currentTab === 'schedule') {
+      updateScheduleFocus(false);
+    }
+  }, 30000);
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && !panel.hidden) {
+      updateScheduleFocus(false);
     }
   });
 

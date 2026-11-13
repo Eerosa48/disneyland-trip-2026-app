@@ -247,3 +247,40 @@
   .greyson-active-day-date {font-size:16px;}
   .greyson-active-day-toggle {min-width:52px;min-height:26px;padding:4px 8px;}
 }
+
+/* ========================================
+   CURRENT / UPCOMING SCHEDULE ACTIVITY
+   ======================================== */
+
+.greyson-itinerary-entry.is-current {
+  background: rgba(196, 231, 206, 0.52);
+  border-left: 3px solid #27845a;
+  border-radius: 10px;
+  padding-left: 9px;
+}
+
+.greyson-itinerary-entry.is-upcoming {
+  background: rgba(229, 241, 230, 0.65);
+  border-left: 3px solid #95b69f;
+  border-radius: 10px;
+  padding-left: 9px;
+}
+
+.greyson-itinerary-live-tag {
+  display: inline-block;
+  width: fit-content;
+  margin-bottom: 5px;
+  padding: 3px 8px;
+
+  border-radius: 999px;
+  background: #27845a;
+  color: #fff;
+
+  font: 800 10px/1.3 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.4px;
+}
+
+.greyson-itinerary-entry.is-upcoming
+.greyson-itinerary-live-tag {
+  background: #658a70;
+}

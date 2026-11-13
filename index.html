@@ -238,18 +238,23 @@
 	}
 
     
-	function focusInitialView() {
+	function focusInitialView(animate = false) {
 	  const mobile = window.matchMedia('(max-width: 900px)').matches;
 
 	  const view = mobile
         ? cameraViews.initialMobile
         : cameraViews.initialDesktop;
 
-	  map.setView(view.center, view.zoom, {
-        animate: false
-	  });
-	}
-
+      if (animate) {
+        map.flyTo(view.center, view.zoom, {
+          duration: 0.65
+      });
+      } else {
+        map.setView(view.center, view.zoom, {
+          animate: false
+        });
+      }
+    }
     
 	
 	function configureNavigationBounds() {
