@@ -191,7 +191,7 @@
       button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
         '<path d="M20.5 3.5 14.2 21l-3.3-7.8L3 9.8 20.5 3.5Z"/>' +
         '</svg>';
-      toast = L.DomUtil.create('div', 'greyson-gps-toast', root);
+      toast = L.DomUtil.create('div', 'greyson-gps-toast', document.body);
       toast.setAttribute('role', 'status');
       toast.setAttribute('aria-live', 'polite');
       toast.hidden = true;

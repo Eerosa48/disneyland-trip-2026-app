@@ -46,22 +46,30 @@
   outline: 3px solid #1765d1;
   outline-offset: 3px;
 }
-/* Only appears briefly on errors or when GPS is outside the mapped area. */
-.leaflet-control-greyson-gps .greyson-gps-toast {
-  position: absolute;
-  right: 55px;
-  bottom: 2px;
+.greyson-gps-toast {
+  position: fixed;
+  z-index: 3000;
+  top: calc(96px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+
   box-sizing: border-box;
   width: max-content;
-  max-width: min(290px, calc(100vw - 95px));
+  max-width: min(310px, calc(100vw - 32px));
   padding: 12px 14px;
+
   border: 1px solid #c7d6c4;
   border-radius: 9px;
   background: rgba(255, 255, 255, .97);
   box-shadow: 0 2px 10px #0003;
+
   color: #24402d;
   font: 600 13px/1.45 system-ui, -apple-system, sans-serif;
+  text-align: center;
+
   pointer-events: auto;
   cursor: pointer;
 }
-.leaflet-control-greyson-gps .greyson-gps-toast[hidden] { display: none; }
+.greyson-gps-toast[hidden] {
+  display: none;
+}

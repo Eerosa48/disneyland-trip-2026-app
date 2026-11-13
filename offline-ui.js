@@ -15,9 +15,12 @@
   style.textContent = `    
   #disney-offline-toast {
     position: fixed;
-    left: 14px;
-    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-    z-index: 1650;
+    top: calc(170px + env(safe-area-inset-top, 0px));
+	left: 50%;
+	bottom: auto;
+	z-index: 3100;
+	width: max-content;
+	text-align: center;
     max-width: min(300px, calc(100vw - 28px));
 
     /* Text only — no background or container appearance */
@@ -39,7 +42,7 @@
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(6px);
+    transform: translate(-50%, 6px);
     transition:
       opacity 250ms ease,
       transform 250ms ease,
@@ -48,11 +51,11 @@
     #disney-offline-toast.is-visible {
       opacity: 1;
       visibility: visible;
-      transform: translateY(0);
+      transform: translate(-50%, 0);
     }
     #disney-offline-toast.is-warning { color: #ffe6ad; }
     @media (prefers-reduced-motion: reduce) {
-      #disney-offline-toast { transition: none; transform: none; }
+      #disney-offline-toast { transition: none; transform: translate(-50%, 0); }
     }
   `;
   document.head.appendChild(style);
