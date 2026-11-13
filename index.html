@@ -142,18 +142,18 @@
 
 	  // Initial view when opening the map
 	  initialMobile: {
-		center: [33.81078, -117.92027],
+		center: [33.81068, -117.92027],
 	    zoom: 16.20
 	  },
 
 	  initialDesktop: {
-        center: [33.81078, -117.92027],
-        zoom: 16.20
+        center: [33.81068, -117.92027],
+        zoom: 17.05
 	  },
 
       // Centering dropdown selections
       resort: {
-        center: [33.81078, -117.92027],
+        center: [33.81068, -117.92027],
         zoom: 16.20
       },
 
@@ -256,16 +256,46 @@
       }
     }
     
-	
+
 	function configureNavigationBounds() {
-	  // Allow a little extra space around the artwork
-	  const padding = 0.10;
+	  // Restrict the map CENTER to the street rectangle.
+	  // Expand Leaflet's viewport bounds by half the
+	  // current screen size so its native restriction
+	  // allows every street-boundary point to be centered.
+
+	  const zoom = map.getZoom();
+	  if (!Number.isFinite(zoom)) return;
+
+	  const halfScreen = map.getSize().divideBy(2);
+
+	  const sw = map.project(
+        streetBounds.getSouthWest(), zoom
+      );
+
+	  const ne = map.project(
+		streetBounds.getNorthEast(), zoom
+	  );
+
+	  const expandedSW = map.unproject(
+		L.point(
+		  sw.x - halfScreen.x,
+		  sw.y + halfScreen.y
+		),
+		zoom
+	  );
+
+	  const expandedNE = map.unproject(
+		L.point(
+		  ne.x + halfScreen.x,
+		  ne.y - halfScreen.y
+		),
+		zoom
+	  );
 
 	  map.setMaxBounds(
-        artworkBounds.pad(padding)
+		L.latLngBounds(expandedSW, expandedNE)
 	  );
 	}
-
 
 
 	function focusPark(key) {
@@ -283,9 +313,12 @@
 	}
 
 
-    configureNavigationBounds();
     updateMinZoom();
     focusInitialView();
+    configureNavigationBounds();
+	
+	// Recalculate the allowable camera area whenever zoom changes.
+	map.on('zoomend', configureNavigationBounds);
 
 
     // The Locations control has been retired; toolbar tools are Search, Itinerary, Wait Times.
