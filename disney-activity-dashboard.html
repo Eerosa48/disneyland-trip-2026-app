@@ -89,6 +89,32 @@
         overflow-wrap: anywhere;
 	  }
 	}
+	
+	/* Activity statistics period selector */
+	.summary-period-controls {
+	  display: inline-flex;
+	  gap: 4px;
+	  padding: 4px;
+	  margin: 0 0 16px;
+	  max-width: 100%;
+	  border: 1px solid #b7cbb3;
+	  border-radius: 15px;
+	  background: rgba(250, 255, 245, .85);
+	}
+
+	.summary-period-controls .btn {
+	  border: 0;
+	  border-radius: 11px;
+	  padding: 9px 15px;
+	  white-space: nowrap;
+	  background: transparent;
+	}
+
+	.summary-period-controls .btn[aria-pressed="true"],
+	.summary-period-controls .btn[aria-pressed="true"]:hover {
+	  background: #315e49;
+	  color: #fff;
+	}
   </style>
 </head>
 <body>
@@ -112,6 +138,10 @@
       <div class="top-actions"><span id="status" class="status" role="status" aria-live="polite">Loading…</span><a class="btn" href="./index.html" style="text-decoration:none;text-align:center">Map</a><button id="refresh" class="btn" type="button">Refresh</button><button id="logout" class="btn" type="button">Sign out</button></div>
     </header>
     <div id="last-sync" class="last-sync">Waiting for report…</div>
+	<div class="summary-period-controls" role="group" aria-label="Statistics period">
+	  <button type="button" class="btn" data-summary-period="24h" aria-pressed="true">Last 24h</button>
+	  <button type="button" class="btn" data-summary-period="all" aria-pressed="false">All time</button>
+	</div>
     <section class="stats" aria-label="Overview statistics">
       <article class="stat"><div id="stat-visitors" class="num">—</div><div class="name">Tracked profiles</div><div class="desc">Unique browser / app identifiers, not necessarily distinct people</div></article>
       <article class="stat"><div id="stat-sessions" class="num">—</div><div class="name">Total sessions</div><div class="desc">All recorded launches / sessions</div></article>
@@ -140,7 +170,7 @@
     // Shared only with the map page on the same origin, never with family visitors.
     // The reporting endpoint still authenticates and authorizes each request.
     const SESSION_KEY = "greyson-disney-admin-session-v1";
-    const state = { session: null, report: null, loading: false };
+    const state = { session: null, report: null, loading: false, period: "24h" };
     function storeSession() {
       try { localStorage.setItem(SESSION_KEY, JSON.stringify(state.session)); } catch (_) { /* private browsing */ }
     }
@@ -210,15 +240,30 @@
     async function loadReport(){
       if(state.loading||!state.session)return;
       state.loading=true;el("refresh").disabled=true;setStatus("Refreshing…");
+	  updatePeriodButtons();
       try{
         const token=await ensureSession();
-        const response=await fetch(REPORT_URL,{method:"GET",headers:{"apikey":PUBLISHABLE_KEY,"Authorization":`Bearer ${token}`},cache:"no-store"});
+		const reportUrl = new URL(REPORT_URL);
+		reportUrl.searchParams.set("period", state.period);
+
+		const response = await fetch(reportUrl.href, {
+		  method: "GET",
+		  headers: {
+		    apikey: PUBLISHABLE_KEY,
+			Authorization: `Bearer ${token}`
+		  },
+		  cache: "no-store"
+		});
         if(!response.ok){let error=await apiError(response);if(response.status===401||response.status===403){signOut()}throw error}
         const report=await response.json();if(!report.ok||!report.summary)throw new Error("Report response was incomplete");
         state.report=report;renderReport(report);
         setStatus("Updated successfully");el("last-sync").textContent=`Last refreshed: ${dateTime(report.generatedAt)}`;
       }catch(e){setStatus(e.message,true);if(el("dashboard").classList.contains("hidden"))throw e}
-      finally{state.loading=false;el("refresh").disabled=false}
+      finally {
+	    state.loading = false;
+	    el("refresh").disabled = false;
+	    updatePeriodButtons();
+	  }
     }
     function textCell(row,text,sub){const cell=document.createElement("td");const top=document.createElement("div");top.textContent=String(text??"—");if(sub){top.style.fontWeight="650"};cell.append(top);if(sub){const detail=document.createElement("div");detail.className="small";detail.textContent=String(sub);cell.append(detail)}row.append(cell);return cell}
     function badgeCell(row,label,cls=""){const cell=document.createElement("td");const pill=document.createElement("span");pill.className=`pill ${cls}`.trim();pill.textContent=label;cell.append(pill);row.append(cell)}
@@ -259,6 +304,31 @@
     document.addEventListener("visibilitychange",()=>{if(!document.hidden&&state.session)loadReport()});
     // Restore an existing authorized session on repeat visits. A saved session
     // is never treated as proof of administrator access until the report returns.
+	const periodButtons = document.querySelectorAll(
+	  "[data-summary-period]"
+	);
+
+	function updatePeriodButtons() {
+	  periodButtons.forEach(button => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.summaryPeriod === state.period)
+		);
+		button.disabled = state.loading;
+	  });
+	}
+
+	periodButtons.forEach(button => {
+	  button.addEventListener("click", () => {
+        if (state.loading ||
+            button.dataset.summaryPeriod === state.period) return;
+
+		state.period = button.dataset.summaryPeriod;
+		updatePeriodButtons();
+		void loadReport();
+	  });
+	});
+
     async function restoreLogin(){
       const saved=readSession();if(!saved)return;
       state.session=saved;
