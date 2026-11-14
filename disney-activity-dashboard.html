@@ -111,7 +111,6 @@
       <div class="brand"><div class="brand-icon" aria-hidden="true">🏰</div><div><div class="eyebrow">Private monitoring</div><h1>Disney Activity</h1><p class="sub">Greyson's Disney Trip</p></div></div>
       <div class="top-actions"><span id="status" class="status" role="status" aria-live="polite">Loading…</span><a class="btn" href="./index.html" style="text-decoration:none;text-align:center">Map</a><button id="refresh" class="btn" type="button">Refresh</button><button id="logout" class="btn" type="button">Sign out</button></div>
     </header>
-    <div class="notice"><strong>Usage reports.</strong> “Active” = reported activity within the last 2 minutes. “Home Screen” = app was observed launching in standalone web app mode.</div>
     <div id="last-sync" class="last-sync">Waiting for report…</div>
     <section class="stats" aria-label="Overview statistics">
       <article class="stat"><div id="stat-visitors" class="num">—</div><div class="name">Tracked profiles</div><div class="desc">Unique browser / app identifiers, not necessarily distinct people</div></article>
@@ -217,7 +216,7 @@
         if(!response.ok){let error=await apiError(response);if(response.status===401||response.status===403){signOut()}throw error}
         const report=await response.json();if(!report.ok||!report.summary)throw new Error("Report response was incomplete");
         state.report=report;renderReport(report);
-        setStatus("Updated successfully");el("last-sync").textContent=`Last refreshed: ${dateTime(report.generatedAt)} · Times shown in your device's time zone`;
+        setStatus("Updated successfully");el("last-sync").textContent=`Last refreshed: ${dateTime(report.generatedAt)}`;
       }catch(e){setStatus(e.message,true);if(el("dashboard").classList.contains("hidden"))throw e}
       finally{state.loading=false;el("refresh").disabled=false}
     }
