@@ -330,7 +330,7 @@
     window.addEventListener('resize', () => {
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(() => {
-        map.invalidateSize({ pan: false });
+        map.invalidateSize({ pan: true, animate: false });
         configureNavigationBounds();
         updateMinZoom();
       });
