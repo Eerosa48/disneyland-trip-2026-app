@@ -1,0 +1,96 @@
+/* First-time identification — matches the Disney app's sage liquid-glass UI.
+   This is the only family-facing UI added by activity tracking. */
+#greyson-activity-welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 11000;
+  display: grid;
+  place-items: center;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 18px
+           calc(18px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  background: rgba(29, 49, 35, 0.48);
+  -webkit-backdrop-filter: blur(11px);
+  backdrop-filter: blur(11px);
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #244738;
+}
+#greyson-activity-welcome *, #greyson-activity-welcome *::before,
+#greyson-activity-welcome *::after { box-sizing: border-box; }
+#greyson-activity-welcome .greyson-activity-card {
+  width: min(100%, 390px);
+  padding: 27px 24px 25px;
+  background: linear-gradient(145deg, rgba(253,255,248,.97), rgba(221,237,214,.97));
+  border: 2px solid rgba(245, 250, 232, .98);
+  border-radius: 27px;
+  box-shadow: 0 14px 45px rgba(19, 43, 28, .28);
+  text-align: center;
+}
+#greyson-activity-welcome .greyson-activity-emblem {
+  display: grid;
+  place-items: center;
+  margin: 0 auto 11px;
+  width: 58px;
+  height: 58px;
+  border: 1px solid #bbd1b5;
+  background: rgba(214, 231, 208, .8);
+  border-radius: 17px;
+  font-size: 28px;
+}
+#greyson-activity-welcome .greyson-activity-kicker {
+  color: #597965;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+#greyson-activity-welcome h2 {
+  margin: 12px 0 22px;
+  color: #264938;
+  font-size: clamp(20px, 5.5vw, 24px);
+  line-height: 1.27;
+  font-weight: 750;
+  letter-spacing: -.025em;
+}
+#greyson-activity-welcome label {
+  display: block;
+  margin-bottom: 7px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+}
+#greyson-activity-welcome input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid #a7c3a3;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .94);
+  color: #253f31;
+  font: 16px system-ui, -apple-system, sans-serif;
+}
+#greyson-activity-welcome input:focus-visible,
+#greyson-activity-welcome button:focus-visible {
+  outline: 3px solid #88b498;
+  outline-offset: 3px;
+}
+#greyson-activity-welcome .greyson-activity-error {
+  margin: 0 0 11px;
+  color: #a13e36;
+  font-size: 12px;
+}
+#greyson-activity-welcome .greyson-activity-error[hidden] { display: none; }
+#greyson-activity-welcome button {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(30, 78, 51, .9);
+  border-radius: 14px;
+  margin-top: 12px;
+  background: #315e49;
+  color: #fff;
+  font: 750 16px system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+}
+#greyson-activity-welcome button:active { transform: translateY(1px); }
