@@ -113,6 +113,43 @@
     if (!launcher.hidden) launcher.focus({ preventScroll: true });
   }
 
+  // Prevent browser-level pinch zoom outside the Leaflet map.
+  function blockPagePinch(doc, preserveMapPinch) {
+    function shouldBlock(event) {
+      if (!preserveMapPinch) return true;
+      const target = event.target;
+      return !(target instanceof Element && target.closest('#map'));
+    }
+
+    function cancelGesture(event) {
+      if (shouldBlock(event) && event.cancelable) {
+        event.preventDefault();
+      }
+    }
+
+    ['gesturestart', 'gesturechange'].forEach(type => {
+      doc.addEventListener(type, cancelGesture, {
+        capture: true,
+        passive: false
+      });
+    });
+
+    ['touchstart', 'touchmove'].forEach(type => {
+      doc.addEventListener(type, event => {
+        if (event.touches.length > 1 &&
+            shouldBlock(event) && event.cancelable) {
+          event.preventDefault();
+        }
+      }, {
+        capture: true,
+        passive: false
+      });
+    });
+  }
+
+  // Protect the main interface, but preserve Leaflet map gestures.
+  blockPagePinch(document, true);
+
   // The dashboard also works as a standalone page. Hide its own Map links
   // only when embedded, so navigation never replaces the frame with a map.
   frame.addEventListener('load', function () {
@@ -120,6 +157,7 @@
     try {
       const documentInFrame = frame.contentDocument;
       if (!documentInFrame) return;
+	  blockPagePinch(documentInFrame, false);
       documentInFrame.querySelectorAll('a.map-return, a[href="./index.html"]').forEach(function (link) {
         link.style.display = 'none';
         link.setAttribute('aria-hidden', 'true');
