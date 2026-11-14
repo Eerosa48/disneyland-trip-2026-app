@@ -1,0 +1,107 @@
+/* Private Disney activity dashboard — sage / cream liquid glass styling. */
+#greyson-admin-launch {
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  left: calc(12px + env(safe-area-inset-left, 0px));
+  z-index: 4100;
+  width: 45px;
+  height: 45px;
+  padding: 10px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(232, 248, 224, .95);
+  border-radius: 15px;
+  background: linear-gradient(145deg, rgba(247, 255, 244, .95), rgba(205, 225, 198, .91));
+  color: #244b3c;
+  box-shadow: 0 3px 14px rgba(30, 60, 39, .18), inset 0 1px 1px rgba(255,255,255,.75);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+#greyson-admin-launch[hidden], #greyson-admin-overlay[hidden] { display: none !important; }
+#greyson-admin-launch svg { display: block; width: 24px; height: 24px; }
+#greyson-admin-launch:active { transform: translateY(1px); }
+#greyson-admin-launch:focus-visible,
+#greyson-admin-overlay .greyson-admin-close:focus-visible {
+  outline: 3px solid #1765d1;
+  outline-offset: 3px;
+}
+
+#greyson-admin-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+  background: #e4eee0;
+  color: #244738;
+  overscroll-behavior: contain;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+}
+#greyson-admin-overlay *,
+#greyson-admin-overlay *::before,
+#greyson-admin-overlay *::after { box-sizing: border-box; }
+#greyson-admin-overlay .greyson-admin-header {
+  flex: 0 0 auto;
+  min-height: calc(62px + env(safe-area-inset-top, 0px));
+  padding: calc(9px + env(safe-area-inset-top, 0px))
+    calc(14px + env(safe-area-inset-right, 0px)) 9px
+    calc(18px + env(safe-area-inset-left, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #bed1b7;
+  background: linear-gradient(115deg, rgba(244, 251, 238, .98), rgba(211, 230, 205, .98));
+  box-shadow: 0 2px 14px rgba(37, 74, 48, .10);
+}
+#greyson-admin-overlay .greyson-admin-heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+#greyson-admin-overlay .greyson-admin-kicker {
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 750;
+  color: #56765b;
+}
+#greyson-admin-overlay .greyson-admin-heading strong {
+  font-size: clamp(15px, 4vw, 19px);
+  line-height: 1.2;
+  color: #244b3c;
+}
+#greyson-admin-overlay .greyson-admin-close {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  border: 1px solid #bad1b5;
+  color: #244b3c;
+  background: rgba(254, 255, 249, .85);
+  box-shadow: 0 2px 8px rgba(37, 74, 48, .12);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+#greyson-admin-overlay .greyson-admin-close svg { width: 21px; height: 21px; }
+#greyson-admin-overlay .greyson-admin-frame {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  border: 0;
+  background: #e4eee0;
+  overflow: auto;
+}

@@ -1,6 +1,6 @@
 /* Greyson's Disney Trip: installable shell + persistent tile cache.
    Only requests within the app's own HTTPS/localhost origin are cached. */
-const SHELL_CACHE = 'greyson-disney-shell-56';
+const SHELL_CACHE = 'greyson-disney-shell-57';
 const TILE_CACHE = 'greyson-disney-tiles-v1';
 const SHELL_PREFIX = 'greyson-disney-shell-';
 const APP_ROOT = new URL('./', self.registration.scope);
@@ -21,6 +21,11 @@ const SHELL_FILES = [
   './itinerary-ui.css',
   './itinerary-ui.js',
   './walking-routes-2026.json',
+  './disney-activity-tracker.js',
+  './disney-activity-tracker.css',
+  './disney-activity-dashboard.html',
+  './disney-admin-overlay.js',
+  './disney-admin-overlay.css',
 ];
 
 self.addEventListener('install', (event) => {
