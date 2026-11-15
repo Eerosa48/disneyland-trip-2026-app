@@ -1,11 +1,12 @@
 /* Greyson's Disney Trip: installable shell + persistent tile cache.
    Only requests within the app's own HTTPS/localhost origin are cached. */
-const SHELL_CACHE = 'greyson-disney-shell-75';
+const SHELL_CACHE = 'greyson-disney-shell-76';
 const TILE_CACHE = 'greyson-disney-tiles-v1';
 const SHELL_PREFIX = 'greyson-disney-shell-';
 const APP_ROOT = new URL('./', self.registration.scope);
 const SHELL_FILES = [
   './', './index.html', './manifest.webmanifest', './offline-ui.js', './toolbar-ui.js', './toolbar-ui.css',
+  './disney-version-ui.js',
   './tile-index.json', './places.json', './places-ui.css', './places-ui.js',
   './vendor/leaflet.css', './vendor/leaflet.js',
   './vendor/leaflet-double-touch-drag-zoom.css',
@@ -43,6 +44,16 @@ self.addEventListener('activate', (event) => {
       .map(key => caches.delete(key)));
     await self.clients.claim();
   })());
+});
+
+// Report the exact running shell version to the on-map version indicator.
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'GREYSON_GET_SHELL_VERSION' && event.ports && event.ports[0]) {
+    event.ports[0].postMessage({
+      type: 'GREYSON_SHELL_VERSION',
+      version: SHELL_CACHE.slice(SHELL_PREFIX.length)
+    });
+  }
 });
 
 self.addEventListener('fetch', (event) => {

@@ -144,6 +144,23 @@
     .linked-identities[open] .linked-header{margin-bottom:9px}
     .linked-header strong{font-size:14px}
     .linked-header span{color:var(--muted);font-size:11px}
+    /* Small chevron; the native <details> element still controls expansion. */
+    .linked-header #linked-count::after {
+      content:"";
+      display:inline-block;
+      width:7px;
+      height:7px;
+      margin-left:10px;
+      border-right:2px solid currentColor;
+      border-bottom:2px solid currentColor;
+      transform:translateY(-2px) rotate(45deg);
+      transition:transform 160ms ease;
+      vertical-align:middle;
+    }
+    .linked-identities[open] .linked-header #linked-count::after {
+      transform:translateY(2px) rotate(225deg);
+    }
+
     .linked-entry{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #e2ecdf}
     .linked-entry:first-child{border-top:0}
     .linked-entry-details{min-width:0;flex:1 1 auto}
