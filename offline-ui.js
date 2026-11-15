@@ -210,16 +210,67 @@
   window.addEventListener('pageshow', runCheck);
   window.addEventListener('online', runCheck);
 
+  
   async function start() {
     if (!available) {
-      console.info('Offline map auto-download requires HTTPS or localhost and Cache Storage support.');
+      console.info(
+        'Offline map auto-download requires HTTPS or localhost and Cache Storage support.'
+      );
       return;
     }
+
+    // Only reload when replacing an existing service worker.
+    // Do not reload during the very first installation.
+    const hadController = Boolean(navigator.serviceWorker.controller);
+    let reloadedForUpdate = false;
+
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController || reloadedForUpdate) return;
+
+      reloadedForUpdate = true;
+      window.location.reload();
+    });
+
     try {
-      await navigator.serviceWorker.register(new URL('sw.js', root).href, { scope: root.pathname });
+      const registration = await navigator.serviceWorker.register(
+        new URL('sw.js', root).href,
+        {
+          scope: root.pathname,
+          updateViaCache: 'none'
+        }
+      );
+
       await navigator.serviceWorker.ready;
+
       serviceReady = true;
       runCheck();
+
+      // Quietly check for updated application files.
+      let lastUpdateCheck = 0;
+	  const UPDATE_CHECK_INTERVAL = 15 * 60 * 1000;
+	  
+	  function checkForUpdate() {
+        if (document.hidden || navigator.onLine === false) return;
+
+        const now = Date.now();
+		
+        // Avoid repeatedly checking during brief app switching.
+		if (now - lastUpdateCheck < UPDATE_CHECK_INTERVAL) return;
+		  
+		lastUpdateCheck = now;
+		  
+		void registration.update().catch(() => {
+		  // Update failures never interrupt the app.
+        });
+      }
+
+      // Check when opening, returning, or reconnecting.
+      checkForUpdate();
+
+      document.addEventListener('visibilitychange', checkForUpdate);
+      window.addEventListener('pageshow', checkForUpdate);
+      window.addEventListener('online', checkForUpdate);
+
     } catch (error) {
       console.warn('Offline map service-worker setup:', error);
       notify('Offline maps unavailable — will retry later', true);

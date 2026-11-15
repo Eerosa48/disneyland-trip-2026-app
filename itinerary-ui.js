@@ -532,16 +532,16 @@ function updateScheduleFocus(scrollToActivity) {
     var row = rows[index];
     row.classList.add(className);
 
-    var main = row.querySelector(
-      '.greyson-itinerary-entry-main'
+    var time = row.querySelector(
+      '.greyson-itinerary-time'
     );
 
-    if (main) {
+    if (time) {
       var badge = document.createElement('span');
       badge.className = 'greyson-itinerary-live-tag';
       badge.textContent = labelText;
 
-      main.insertBefore(badge, main.firstChild);
+      time.appendChild(badge);
     }
   }
 
