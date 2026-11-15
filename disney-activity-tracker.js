@@ -11,7 +11,6 @@
   const ID_KEY = 'greyson-disney-activity-identity-v1';
   const QUEUE_KEY = 'greyson-disney-activity-pending-v1';
   const HEARTBEAT_MS = 60000;
-  const NEW_SESSION_AFTER_HIDDEN_MS = 15 * 60 * 1000;
   const MAX_QUEUE = 200;
   const VALID_NAME = /^[^\u0000-\u001f\u007f]+$/;
 
@@ -30,7 +29,6 @@
   let currentSessionStarted = false;
   let flushActive = false;
   let retryAfter = 0;
-  let hiddenAt = null;
   let lastHeartbeat = 0;
   let lastTracked = new Map();
 
@@ -158,6 +156,41 @@
       launchMode: launchMode(), deviceType: deviceType(), platform: platform()
     });
   }
+  function endSession() {
+    if (!identity || !currentSessionStarted || !currentSessionId) return;
+
+    const sessionId = currentSessionId;
+    currentSessionStarted = false;
+    currentSessionId = null;
+
+    // Save the end notification for later delivery if needed.
+    enqueue({ action: 'end', sessionId });
+
+    // Attempt immediate delivery as the app leaves the foreground.
+    if (!identity.registered || navigator.onLine === false) return;
+
+    try {
+      void fetch(INGEST_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': PUBLISHABLE_KEY
+        },
+        body: JSON.stringify({
+          visitorId: identity.visitorId,
+          token: identity.token,
+          action: 'end',
+          sessionId
+        }),
+        keepalive: true,
+        cache: 'no-store'
+      }).catch(() => {
+        // The saved notification can retry on the next visit.
+      });
+    } catch (_) {
+      // Reporting failures must never interrupt the app.
+    }
+  }
   async function heartbeat() {
     if (!identity || !currentSessionStarted || document.hidden ||
         navigator.onLine === false) return;
@@ -266,19 +299,22 @@
   });
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) {
-      hiddenAt = Date.now();
+      endSession();
     } else if (identity) {
-      if (!currentSessionStarted ||
-          (hiddenAt && Date.now() - hiddenAt > NEW_SESSION_AFTER_HIDDEN_MS)) {
-        startSession();
-      }
-      hiddenAt = null;
-      void flushQueue();
-      void heartbeat();
-    }
-  });
+      if (!currentSessionStarted) startSession();
+          void flushQueue();
+		  void heartbeat();
+		}
+	  });
+  // Additional safeguard when leaving the page.
+  window.addEventListener('pagehide', endSession);
+  
   window.addEventListener('pageshow', function () {
-    if (identity) { void flushQueue(); void heartbeat(); }
+    if (identity && !document.hidden) {
+	  if (!currentSessionStarted) startSession();
+	  void flushQueue();
+	  void heartbeat();
+	}
   });
   setInterval(function () { if (!document.hidden) { void flushQueue(); void heartbeat(); } }, HEARTBEAT_MS);
 })();
