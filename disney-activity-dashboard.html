@@ -121,6 +121,32 @@
     .record-field .label {display:block;font-size:10px;letter-spacing:.045em;text-transform:uppercase;font-weight:730;color:var(--muted);margin-bottom:3px}
     .record-field .value {display:block;font-size:12px;font-weight:630;color:#2b4b3b;overflow-wrap:anywhere}
     .record-empty {background:var(--card);border:1px solid var(--line);border-radius:13px}
+    /* Mobile-only visitor grouping management (no changes to the map). */
+    .visitor-heading {display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;flex:1 1 auto}
+    .visitor-heading > div{min-width:0}
+    .visitor-manage-btn{flex:none}
+    .manage-controls{padding:14px 17px;border-bottom:1px solid #c6d8c1;background:rgba(237,248,235,.65)}
+    .manage-controls p{margin:0 0 11px;font-size:12px;line-height:1.5;color:var(--muted)}
+    .manage-controls label{display:block;font-size:12px;font-weight:700;color:var(--ink)}
+    .manage-controls input{display:block;width:100%;min-height:42px;border:1px solid #b7ccb3;border-radius:9px;padding:9px 12px;margin:5px 0 12px;background:#fff;color:var(--ink)}
+    .manage-actions{display:flex;flex-wrap:wrap;gap:8px}
+    .manage-actions .btn{flex:1 1 120px;min-height:42px}
+    .manage-status{margin:10px 0 0!important;font-size:12px;overflow-wrap:anywhere}
+    .manage-status.is-error{color:#a63a3a!important}
+    .visitor-card.is-picked{background:#e0f1df;border-color:#4c8860;box-shadow:inset 0 0 0 1px #5c9470}
+    .visitor-select-symbol{flex:none;font-size:21px;line-height:1;color:#315e49}
+    .visitor-linked-count{display:inline-block;font-size:11px;color:#40684e;font-weight:700;white-space:nowrap}
+    .linked-identities{padding:12px 20px 17px;border-top:1px solid #dae8d7}
+    .linked-header{display:flex;justify-content:space-between;gap:9px;align-items:center;margin-bottom:9px}
+    .linked-header strong{font-size:14px}
+    .linked-header span{color:var(--muted);font-size:11px}
+    .linked-entry{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #e2ecdf}
+    .linked-entry:first-child{border-top:0}
+    .linked-entry-details{min-width:0;flex:1 1 auto}
+    .linked-entry-details strong{display:block;font-size:12px;overflow-wrap:anywhere}
+    .linked-entry-details small{display:block;font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45;overflow-wrap:anywhere}
+    .linked-entry .btn{flex:none;padding:8px 11px;min-height:38px}
+    .linked-note{font-size:11px;line-height:1.5;color:var(--muted);margin:7px 0 0}
     @media(max-width:650px) {
       .visitor-search-wrap {flex:1 1 100%;}
       .visitor-list {padding:10px}
@@ -168,11 +194,17 @@
       </section>
       <section class="panel visitors-panel" aria-labelledby="visitors-title">
         <div class="panel-head">
-          <div><h2 id="visitors-title">Visitors</h2><div class="meta">Select a visitor to view their sessions and activity</div></div>
+          <div class="visitor-heading"><div><h2 id="visitors-title">Visitors</h2><div class="meta">Select a visitor to view their sessions and activity</div></div><button type="button" id="manage-toggle" class="btn visitor-manage-btn" aria-pressed="false">Manage</button></div>
           <div class="visitor-search-wrap">
             <input class="search" id="visitor-search" type="search" placeholder="Find a visitor" aria-label="Filter visitors by name" autocomplete="off">
             <button id="visitor-clear" class="visitor-clear hidden" type="button" aria-label="Clear visitor search" title="Clear search">×</button>
           </div>
+        </div>
+        <div id="manage-controls" class="manage-controls hidden">
+          <p>Select two or more visitor cards to combine them. Existing sessions and events are preserved. You can separate linked identities in their profile later.</p>
+          <label for="merge-name">Name for merged visitor<input id="merge-name" type="text" maxlength="80" autocomplete="off" placeholder="Display name"></label>
+          <div class="manage-actions"><button type="button" id="merge-selected" class="btn primary" disabled>Merge selected (0)</button><button type="button" id="manage-done" class="btn">Done</button></div>
+          <p id="manage-message" class="manage-status" role="status" aria-live="polite"></p>
         </div>
         <div id="visitors-list" class="visitor-list"></div>
         <div id="visitors-empty" class="empty hidden">No matching visitors yet.</div>
@@ -189,6 +221,11 @@
           <div><dt>Observed access</dt><dd id="visitor-access">—</dd></div>
           <div><dt>Device / Platform</dt><dd id="visitor-device">—</dd></div>
         </dl>
+        <div class="linked-identities">
+          <div class="linked-header"><strong>Linked identities</strong><span id="linked-count">—</span></div>
+          <div id="linked-list"></div>
+          <p class="linked-note">Separate an identity to give it its own visitor card. Only your administrator account can change these groupings.</p>
+        </div>
       </section>
       <div class="previews">
         <button type="button" class="preview-card" id="open-sessions" aria-label="Show this visitor's sessions">
@@ -221,10 +258,12 @@
     const PROJECT_URL = "https://kdlbnceepmcumxlnicvx.supabase.co";
     const PUBLISHABLE_KEY = "sb_publishable_3LhyCSgyD1hBrV8JLZ1VLA_9K1-G-V_";
     const REPORT_URL = `${PROJECT_URL}/functions/v1/disney-activity-report`;
+    const PROFILES_URL = `${PROJECT_URL}/functions/v1/disney-activity-profiles`;
     // Shared only with the map page on the same origin, never with family visitors.
     // The reporting endpoint still authenticates and authorizes each request.
     const SESSION_KEY = "greyson-disney-admin-session-v1";
-    const state = { session: null, report: null, loading: false, period: "24h", view: "overview", visitorId: null, overviewScroll: 0 };
+    const state = { session: null, report: null, loading: false, period: "24h", view: "overview", visitorId: null, overviewScroll: 0,
+      links: [], linksLoaded: false, linksError: "", manage: false, selectedGroups: new Set(), saving: false, linksRevision: 0 };
     function storeSession() {
       try { localStorage.setItem(SESSION_KEY, JSON.stringify(state.session)); } catch (_) { /* private browsing */ }
     }
@@ -275,7 +314,8 @@
       return state.session.accessToken;
     }
     function signOut(){
-      state.session=null;state.report=null;state.view="overview";state.visitorId=null;clearSession();
+      state.session=null;state.report=null;state.view="overview";state.visitorId=null;
+      state.links=[];state.linksLoaded=false;state.linksError="";state.manage=false;state.selectedGroups.clear();clearSession();
       setView("overview", false);
       el("password").value="";
       el("dashboard").classList.add("hidden");el("login").classList.remove("hidden");
@@ -307,11 +347,138 @@
         const report=await response.json();
         if(!report.ok||!report.summary)throw new Error("Report response was incomplete");
         state.report=report;
+        // Reporting is independent of the optional visitor-management service.
+        // Show the dashboard immediately, even on a slow or unavailable network.
         renderReport(report);
+        if (!state.saving) {
+          void loadProfileLinks().then(() => {
+            if (state.session && state.report === report) renderReport(report);
+          });
+        }
         setStatus("Updated successfully");
         el("last-sync").textContent=`Last refreshed: ${dateTime(report.generatedAt)}`;
       }catch(e){setStatus(e.message,true);if(el("dashboard").classList.contains("hidden"))throw e}
       finally{state.loading=false;el("refresh").disabled=false;updatePeriodButtons()}
+    }
+    // Fetch saved associations separately so the existing reporting endpoint
+    // and its latest-100 history behavior remain unchanged.
+    async function loadProfileLinks(){
+      // Avoid indefinitely pending requests on weak hotel or park connections.
+      const revision=state.linksRevision;
+      const currentSession=state.session;
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),8000);
+      try{
+        const token=await ensureSession();
+        const response=await fetch(PROFILES_URL,{method:"GET",headers:{apikey:PUBLISHABLE_KEY,Authorization:`Bearer ${token}`},cache:"no-store",signal:controller.signal});
+        if(!response.ok)throw await apiError(response);
+        const data=await response.json();
+        if(!data.ok||!Array.isArray(data.links))throw new Error("Profile association response was incomplete");
+        // Do not allow a stale GET to undo a just-saved merge/separation.
+        if(state.linksRevision!==revision||state.session!==currentSession)return;
+        state.links=data.links;
+        state.linksLoaded=true;
+        state.linksError="";
+      }catch(error){
+        if(state.linksRevision!==revision||state.session!==currentSession)return;
+        // Keep the dashboard functional when the optional endpoint is unavailable.
+        state.linksLoaded=false;
+        state.linksError="Profile management unavailable. Check the administrator profile function and internet connection.";
+      }finally{
+        clearTimeout(timeout);
+      }
+    }
+    function normalizedName(name){return String(name||"").trim().replace(/\s+/g," ").toLocaleLowerCase()}
+    function visitorGroups(){
+      const visitors=Array.isArray(state.report?.visitors)?state.report.visitors:[];
+      const links=new Map(state.links.map(x=>[x.visitor_id,x]));
+      const groups=new Map();
+      for(const visitor of visitors){
+        const link=links.get(visitor.visitor_id);
+        const name=String(visitor.display_name||"Unnamed visitor").trim();
+        const key=link?.group_id?`linked:${link.group_id}`:`name:${normalizedName(name) || visitor.visitor_id}`;
+        if(!groups.has(key))groups.set(key,{visitor_id:key,display_name:link?.group_label||name,members:[],first_seen_at:visitor.first_seen_at,last_seen_at:visitor.last_seen_at});
+        const group=groups.get(key);
+        group.members.push(visitor);
+        if(parseTime(visitor.first_seen_at)<parseTime(group.first_seen_at))group.first_seen_at=visitor.first_seen_at;
+        if(parseTime(visitor.last_seen_at)>parseTime(group.last_seen_at)){
+          group.last_seen_at=visitor.last_seen_at;
+          if(!link?.group_label)group.display_name=name;
+        }
+      }
+      return Array.from(groups.values()).sort((a,b)=>parseTime(b.last_seen_at)-parseTime(a.last_seen_at));
+    }
+    function groupMembers(key){return visitorGroups().find(group=>group.visitor_id===key)?.members||[]}
+    function setManageMessage(message,error=false){
+      el("manage-message").textContent=message;
+      el("manage-message").classList.toggle("is-error",error);
+    }
+    function updateManageUI(){
+      el("manage-toggle").textContent=state.manage?"Cancel":"Manage";
+      el("manage-toggle").setAttribute("aria-pressed",String(state.manage));
+      el("manage-controls").classList.toggle("hidden",!state.manage);
+      const count=state.selectedGroups.size;
+      const button=el("merge-selected");
+      button.textContent=state.saving?"Saving…":`Merge selected (${count})`;
+      button.disabled=count<2||!state.linksLoaded||state.saving;
+      el("manage-toggle").disabled=state.saving;
+      el("manage-done").disabled=state.saving;
+      if(state.manage&&!state.linksLoaded)setManageMessage(state.linksError||"Profile management requires an internet connection.",true);
+      else if(state.manage&&!state.saving&&!state.linksError&&count===0)setManageMessage("Select visitors to merge.");
+    }
+    function closeManage(){state.manage=false;state.selectedGroups.clear();setManageMessage("");updateManageUI();renderVisitors()}
+    async function writeProfileLinks(payload){
+      if(!state.linksLoaded||state.saving)throw new Error("Profile management is unavailable");
+      state.saving=true;
+      state.linksRevision++;
+      updateManageUI();
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),12000);
+      try{
+        const token=await ensureSession();
+        const response=await fetch(PROFILES_URL,{method:"POST",headers:{apikey:PUBLISHABLE_KEY,Authorization:`Bearer ${token}`,"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store",signal:controller.signal});
+        if(!response.ok)throw await apiError(response);
+        const data=await response.json();
+        if(!data.ok||!Array.isArray(data.links))throw new Error("Unable to verify saved profile changes");
+        state.links=data.links;
+        state.linksLoaded=true;state.linksError="";
+        return true;
+      }catch(error){
+        // The server might have completed a request whose response was lost.
+        // Never claim a timed-out merge failed; ask the administrator to verify.
+        if(error?.name==="AbortError")throw new Error("Save could not be confirmed. Refresh the dashboard before trying again.");
+        throw error;
+      }finally{
+        clearTimeout(timeout);
+        state.saving=false;
+        updateManageUI();
+      }
+    }
+    async function mergeSelected(){
+      const selected=visitorGroups().filter(group=>state.selectedGroups.has(group.visitor_id));
+      if(selected.length<2)return;
+      const ids=Array.from(new Set(selected.flatMap(group=>group.members.map(member=>member.visitor_id))));
+      const label=el("merge-name").value.trim()||selected[0].display_name;
+      if(!label||[...label].length>80){setManageMessage("Choose a name with up to 80 characters.",true);return}
+      if(!window.confirm(`Merge ${selected.length} visitor profiles as “${label}”? All original records will be preserved.`))return;
+      try{
+        await writeProfileLinks({action:"merge",visitorIds:ids,label});
+        state.selectedGroups.clear();state.manage=false;
+        updateManageUI();renderReport(state.report);
+        const combined=visitorGroups().find(group=>group.members.some(m=>m.visitor_id===ids[0]));
+        if(combined){state.visitorId=combined.visitor_id;setView("visitor");renderVisitorDetails()}
+      }catch(error){setManageMessage(error.message||"Unable to merge visitors",true)}
+    }
+    async function separateIdentity(member){
+      const group=visitorById(state.visitorId);
+      if(!group||group.members.length<2||!state.linksLoaded||state.saving)return;
+      if(!window.confirm(`Separate “${member.display_name}” from “${group.display_name}”? No sessions or events will be deleted.`))return;
+      try{
+        await writeProfileLinks({action:"separate",visitorId:member.visitor_id});
+        renderReport(state.report);
+        // The original group usually remains after removing one member.
+        if(!visitorById(state.visitorId))backToOverview();
+      }catch(error){window.alert(error.message||"Unable to separate visitor")}
     }
     const modeLabel=mode=>mode==="standalone"?"Home Screen":mode==="browser"?"Browser":"Unknown";
     const featureLabel=value=>String(value||"Unknown").replaceAll("_"," ");
@@ -332,17 +499,17 @@
       if(text!==undefined)n.textContent=String(text);
       return n;
     }
-    function sortedSessions(visitorId){
-      return (state.report?.sessions||[]).filter(s=>s.visitor_id===visitorId)
+    function sortedSessions(groupKey){
+      const ids=new Set(groupMembers(groupKey).map(x=>x.visitor_id));
+      return (state.report?.sessions||[]).filter(s=>ids.has(s.visitor_id))
         .sort((a,b)=>parseTime(b.started_at)-parseTime(a.started_at));
     }
-    function sortedActivity(visitorId){
-      return (state.report?.events||[]).filter(e=>e.visitor_id===visitorId)
+    function sortedActivity(groupKey){
+      const ids=new Set(groupMembers(groupKey).map(x=>x.visitor_id));
+      return (state.report?.events||[]).filter(e=>ids.has(e.visitor_id))
         .sort((a,b)=>parseTime(b.received_at)-parseTime(a.received_at));
     }
-    function visitorById(visitorId){
-      return (state.report?.visitors||[]).find(v=>v.visitor_id===visitorId)||null;
-    }
+    function visitorById(groupKey){return visitorGroups().find(v=>v.visitor_id===groupKey)||null}
     function setView(view, scrollTop=true){
       state.view=view;
       el("overview-view").classList.toggle("hidden",view!=="overview");
@@ -371,20 +538,24 @@
     }
     function backToVisitor(){setView("visitor");renderVisitorDetails()}
     function renderVisitors(){
-      const report=state.report;if(!report)return;
-      const visitors=Array.isArray(report.visitors)?report.visitors:[];
+      if(!state.report)return;
+      const visitors=visitorGroups();
       const term=el("visitor-search").value.trim().toLocaleLowerCase();
-      const matching=visitors.filter(v=>String(v.display_name||"").toLocaleLowerCase().includes(term));
+      const matching=visitors.filter(v=>v.display_name.toLocaleLowerCase().includes(term)||v.members.some(m=>m.display_name.toLocaleLowerCase().includes(term)));
       const list=el("visitors-list");list.replaceChildren();
       for(const visitor of matching){
-        const latestSession=sortedSessions(visitor.visitor_id)[0];
+        const sessions=sortedSessions(visitor.visitor_id);
+        const latestSession=sessions[0];
         const latestEvent=sortedActivity(visitor.visitor_id)[0];
-        const active=isActive(latestSession);
-        const card=node("button","visitor-card");
+        const active=sessions.some(isActive);
+        const selected=state.selectedGroups.has(visitor.visitor_id);
+        const card=node("button",`visitor-card${selected?" is-picked":""}`);
         card.type="button";
-        card.setAttribute("aria-label",`View ${visitor.display_name||"Unnamed visitor"}'s profile`);
+        card.setAttribute("aria-label",state.manage?`${selected?"Deselect":"Select"} ${visitor.display_name} for merging`:`View ${visitor.display_name}'s profile`);
+        if(state.manage)card.setAttribute("aria-pressed",String(selected));
         const nameRow=node("span","visitor-card-name-row");
-        nameRow.append(node("span","visitor-card-name",visitor.display_name||"Unnamed visitor"),node("span","visitor-card-arrow","›"));
+        if(state.manage)nameRow.append(node("span","visitor-select-symbol",selected?"☑":"☐"));
+        nameRow.append(node("span","visitor-card-name",visitor.display_name),node("span","visitor-card-arrow",state.manage?"":"›"));
         const statusRow=node("span","visitor-card-status-row");
         statusRow.append(node("span","visitor-card-last",`Last seen: ${compactAgo(visitor.last_seen_at)}`));
         statusRow.append(node("span",`pill${active?" green":""}`,active?"Recently active":"Not active"));
@@ -392,27 +563,37 @@
         accessRow.append(node("span","",latestSession
           ?`${modeLabel(latestSession.launch_mode)} · ${latestSession.device_type||"Unknown device"} · ${latestSession.platform||"Unknown platform"}`
           :"Access and device not yet observed"));
+        if(visitor.members.length>1)accessRow.append(node("span","visitor-linked-count",`${visitor.members.length} profiles`));
         const featureRow=node("span","visitor-card-feature-row");
         featureRow.append(node("strong","","Recent activity:"));
         featureRow.append(node("span","",latestEvent?featureLabel(latestEvent.feature):"No recorded feature activity"));
         card.append(nameRow,statusRow,accessRow,featureRow);
-        card.addEventListener("click",()=>openVisitor(visitor.visitor_id));
+        card.addEventListener("click",()=>{
+          if(!state.manage){openVisitor(visitor.visitor_id);return}
+          if(selected)state.selectedGroups.delete(visitor.visitor_id);
+          else state.selectedGroups.add(visitor.visitor_id);
+          if(state.selectedGroups.size===1){const only=visitorGroups().find(g=>state.selectedGroups.has(g.visitor_id));el("merge-name").value=only?.display_name||""}
+          setManageMessage("");updateManageUI();renderVisitors();
+        });
         list.append(card);
       }
       el("visitors-empty").classList.toggle("hidden",matching.length>0);
       el("visitor-clear").classList.toggle("hidden",el("visitor-search").value.length===0);
+      updateManageUI();
     }
     function renderVisitorDetails(){
       const visitor=visitorById(state.visitorId);
       if(!visitor){backToOverview();return}
-      const session=sortedSessions(visitor.visitor_id)[0];
+      const sessions=sortedSessions(visitor.visitor_id);
+      const session=sessions[0];
+      const active=sessions.some(isActive);
       const event=sortedActivity(visitor.visitor_id)[0];
       el("visitor-name").textContent=visitor.display_name||"Unnamed visitor";
       el("visitor-first-seen").textContent=`First seen: ${dateTime(visitor.first_seen_at)}`;
       el("visitor-last-seen").textContent=compactAgo(visitor.last_seen_at);
       const status=el("visitor-status");
-      status.textContent=isActive(session)?"Recently active":"Not active";
-      status.classList.toggle("active-text",isActive(session));
+      status.textContent=active?"Recently active":"Not active";
+      status.classList.toggle("active-text",active);
       el("visitor-access").textContent=session?modeLabel(session.launch_mode):"Not yet observed";
       el("visitor-device").textContent=session
         ?`${session.device_type||"Unknown"} · ${session.platform||"Unknown"}`:"—";
@@ -423,6 +604,31 @@
         ?`${featureLabel(event.feature)} · ${featureLabel(event.event_type)} · Received ${dateTime(event.received_at)}`
         :"No feature activity in the available report history";
       el("records-back").textContent=`← ${visitor.display_name||"Profile"}`;
+      el("linked-count").textContent=`${visitor.members.length} ${visitor.members.length===1?"identity":"identities"}`;
+      const list=el("linked-list");list.replaceChildren();
+      const ordered=visitor.members.slice().sort((a,b)=>parseTime(b.last_seen_at)-parseTime(a.last_seen_at));
+      for(const member of ordered){
+        const row=node("div","linked-entry");
+        const details=node("div","linked-entry-details");
+        const shortId=member.visitor_id.slice(0,8);
+        details.append(node("strong","",member.display_name),node("small","",`Last seen ${compactAgo(member.last_seen_at)} · ID ${shortId}…`));
+        const observedSession=(state.report?.sessions||[]).filter(x=>x.visitor_id===member.visitor_id)
+          .sort((a,b)=>parseTime(b.started_at)-parseTime(a.started_at))[0];
+        details.append(node("small","",observedSession
+          ?`${modeLabel(observedSession.launch_mode)} · ${observedSession.device_type||"Unknown"} · ${observedSession.platform||"Unknown"}`
+          :"No session details in the latest report"));
+        row.append(details);
+        if(visitor.members.length>1){
+          const separate=node("button","btn","Separate");
+          separate.type="button";
+          separate.disabled=!state.linksLoaded||state.saving;
+          separate.setAttribute("aria-label",`Separate identity ${shortId} from ${visitor.display_name}`);
+          separate.addEventListener("click",()=>void separateIdentity(member));
+          row.append(separate);
+        }
+        list.append(row);
+      }
+      el("linked-list").title=state.linksLoaded?"":"Profile separation requires the private administrator profile service.";
     }
     function field(label,value){
       const div=node("div","record-field");
@@ -488,6 +694,12 @@
         button.disabled=state.loading;
       });
     }
+    el("manage-toggle").addEventListener("click",()=>{
+      if(state.manage){closeManage();return}
+      state.manage=true;state.selectedGroups.clear();el("merge-name").value="";setManageMessage("");updateManageUI();renderVisitors();
+    });
+    el("manage-done").addEventListener("click",closeManage);
+    el("merge-selected").addEventListener("click",()=>void mergeSelected());
     el("refresh").addEventListener("click",loadReport);
     el("logout").addEventListener("click",signOut);
     const visitorSearch=el("visitor-search");
