@@ -1,0 +1,379 @@
+/* Greyson's Disney Trip — Shell 77 landscape layout.
+ * Derived directly from the tested Option A and refinements in
+ * Eerosa48/disneyland-landscape-test (layout rules retain cascade order).
+ * Scope: coarse-pointer landscape screens only; portrait is unchanged.
+ */
+
+@media (orientation: landscape) and (pointer: coarse)
+       and (min-height: 320px) and (max-height: 560px) {
+  :root {
+    --greyson-landscape-top: calc(8px + env(safe-area-inset-top, 0px));
+    --greyson-landscape-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    --greyson-landscape-right: calc(8px + env(safe-area-inset-right, 0px));
+    --greyson-landscape-left: calc(8px + env(safe-area-inset-left, 0px));
+    --greyson-landscape-panel-right: calc(77px + env(safe-area-inset-right, 0px));
+    --greyson-landscape-panel-width: min(420px, 48vw);
+  }
+
+  /* Upper-left: a compact, upright day picker and three stacked toggles. */
+  .greyson-active-day {
+    position: fixed !important;
+    top: var(--greyson-landscape-top) !important;
+    left: var(--greyson-landscape-left) !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    box-sizing: border-box;
+    width: 88px !important;
+    min-width: 0 !important;
+    max-width: 88px !important;
+    padding: 7px 6px !important;
+    gap: 6px !important;
+    border-radius: 17px !important;
+    align-items: center !important;
+  }
+  .greyson-active-day-date {
+    box-sizing: border-box;
+    width: 68px !important;
+    min-width: 0 !important;
+    padding: 3px 0 !important;
+    white-space: normal !important;
+    text-align: center !important;
+    font-size: 12px !important;
+    line-height: 1.23 !important;
+    letter-spacing: 0 !important;
+    overflow-wrap: normal;
+  }
+  .greyson-active-day-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+  }
+  .greyson-active-day-toggle {
+    box-sizing: border-box;
+    flex: none !important;
+    width: 74px !important;
+    min-width: 0 !important;
+    min-height: 34px !important;
+    height: 34px !important;
+    padding: 5px 3px !important;
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    border-radius: 9px !important;
+  }
+  /* Open the day selector into the free space to its right. */
+  .greyson-active-day-menu {
+    top: 0 !important;
+    left: calc(100% + 8px) !important;
+    right: auto !important;
+    transform: none !important;
+    width: 165px !important;
+    max-height: calc(100dvh - 16px - env(safe-area-inset-top, 0px)
+                     - env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+  }
+
+  /* Upper-right: icon-only vertical tool rail (including the Disney link). */
+  #greyson-toolbar {
+    position: fixed !important;
+    top: var(--greyson-landscape-top) !important;
+    right: var(--greyson-landscape-right) !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+    box-sizing: border-box;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 62px !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: 5px !important;
+    gap: 4px !important;
+    border-radius: 19px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button {
+    box-sizing: border-box;
+    display: flex !important;
+    flex: 0 0 44px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 5px !important;
+    gap: 0 !important;
+    border-radius: 13px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button > span,
+  #greyson-toolbar .greyson-toolbar-external-text {
+    display: none !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button svg {
+    width: 25px !important;
+    height: 25px !important;
+    flex: 0 0 25px !important;
+  }
+  /* Original separators are designed for a horizontal toolbar. */
+  #greyson-toolbar .greyson-toolbar-button::after {
+    display: none !important;
+  }
+  #greyson-toolbar .greyson-toolbar-external {
+    box-sizing: border-box;
+    flex: 0 0 44px !important;
+    width: 44px !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 5px !important;
+    gap: 0 !important;
+    border-radius: 13px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-castle {
+    width: 26px !important;
+    height: 26px !important;
+    flex-basis: 26px !important;
+  }
+
+  /* Lower-right: recenter directly above GPS, aligned with tool rail. */
+  .leaflet-control-greyson-gps {
+    position: fixed !important;
+    top: auto !important;
+    right: calc(15px + env(safe-area-inset-right, 0px)) !important;
+    bottom: var(--greyson-landscape-bottom) !important;
+    left: auto !important;
+    margin: 0 !important;
+  }
+  .leaflet-control-greyson-gps .greyson-map-recenter {
+    bottom: calc(100% + 7px) !important;
+  }
+
+  /* Inward-opening compact windows, independent of the relocated day banner. */
+  .place-search-panel,
+  #greyson-wait-panel {
+    position: fixed !important;
+    top: var(--greyson-landscape-top) !important;
+    right: var(--greyson-landscape-panel-right) !important;
+    bottom: var(--greyson-landscape-bottom) !important;
+    left: auto !important;
+    transform: none !important;
+    box-sizing: border-box;
+    width: var(--greyson-landscape-panel-width) !important;
+    max-width: var(--greyson-landscape-panel-width) !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  .greyson-itinerary-app {
+    position: fixed !important;
+    top: var(--greyson-landscape-top) !important;
+    right: var(--greyson-landscape-panel-right) !important;
+    bottom: var(--greyson-landscape-bottom) !important;
+    left: auto !important;
+    transform: none !important;
+    box-sizing: border-box;
+    width: var(--greyson-landscape-panel-width) !important;
+    max-width: var(--greyson-landscape-panel-width) !important;
+    height: auto !important;
+  }
+  .greyson-itinerary-panel {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    box-sizing: border-box;
+  }
+  /* The portrait glass connector assumes a bottom toolbar: hide it here. */
+  #greyson-panel-connector,
+  #greyson-panel-connector-seam {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  /* Make itinerary entries more legible in the short landscape viewport. */
+  .greyson-itinerary-head { padding-top: 7px; padding-bottom: 5px; }
+  .greyson-itinerary-days { padding-bottom: 5px; }
+  .greyson-itinerary-summary { padding-bottom: 6px; }
+  .greyson-itinerary-entry { grid-template-columns: 70px minmax(0, 1fr); }
+}
+
+/* Smaller landscape iPhones: retain distinct, tappable right-side controls. */
+@media (orientation: landscape) and (pointer: coarse)
+       and (min-height: 320px) and (max-height: 365px) {
+  #greyson-toolbar { gap: 3px !important; padding: 4px !important; }
+  #greyson-toolbar .greyson-toolbar-button,
+  #greyson-toolbar .greyson-toolbar-external {
+    flex-basis: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button svg { width: 23px !important; height: 23px !important; flex-basis: 23px !important; }
+  .leaflet-control-greyson-gps .greyson-gps-locate,
+  .leaflet-control-greyson-gps .greyson-map-recenter {
+    width: 42px !important;
+    height: 42px !important;
+  }
+  .leaflet-control-greyson-gps { right: calc(17px + env(safe-area-inset-right, 0px)) !important; }
+  .greyson-active-day { gap: 4px !important; padding-top: 5px !important; padding-bottom: 5px !important; }
+  .greyson-active-day-controls { gap: 3px !important; }
+  .greyson-active-day-toggle { height: 31px !important; min-height: 31px !important; }
+}
+
+/* Tested landscape refinements (including the final 54px toolbar position). */
+@media (orientation: landscape) and (pointer: coarse)
+       and (min-height: 320px) and (max-height: 560px) {
+  :root {
+    /* A slightly wider vertical rail needs a little more panel clearance. */
+    --greyson-landscape-panel-right: calc(88px + env(safe-area-inset-right, 0px));
+  }
+
+  /* Admin stays at the top left; the day rail begins below it. */
+  #greyson-admin-launch {
+    top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+    left: var(--greyson-landscape-left) !important;
+  }
+  .greyson-active-day {
+    top: calc(68px + env(safe-area-inset-top, 0px)) !important;
+    width: 78px !important;
+    min-width: 0 !important;
+    max-width: 78px !important;
+    padding: 6px 5px !important;
+    gap: 4px !important;
+    border-radius: 16px !important;
+  }
+  /*
+   * Force the natural break before the numeric date, not before the caret:
+   * "Mon." / "11/16 ▾". The accessible button text is unchanged.
+   */
+  .greyson-active-day-date {
+    width: 58px !important;
+    max-width: 58px !important;
+    padding: 3px 0 !important;
+    font-size: 12px !important;
+    line-height: 1.18 !important;
+    letter-spacing: -0.1px !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    text-align: center !important;
+  }
+  .greyson-active-day-controls {
+    gap: 4px !important;
+  }
+  .greyson-active-day-toggle {
+    width: 66px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 4px 2px !important;
+    font-size: 10px !important;
+    line-height: 1.1 !important;
+    border-radius: 8px !important;
+  }
+
+  /* Version label remains unobstructed at the top right. */
+  #greyson-version-check {
+    top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+    right: calc(20px + env(safe-area-inset-right, 0px)) !important;
+  }
+
+  /* The larger toolbar begins below the updater, with bigger tap targets. */
+  #greyson-toolbar {
+    top: calc(54px + env(safe-area-inset-top, 0px)) !important;
+    width: 68px !important;
+    padding: 5px !important;
+    gap: 4px !important;
+    border-radius: 20px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button {
+    flex: 0 0 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    border-radius: 14px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button svg {
+    width: 27px !important;
+    height: 27px !important;
+    flex: 0 0 27px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-external {
+    flex: 0 0 48px !important;
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    border-radius: 14px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-castle {
+    width: 28px !important;
+    height: 28px !important;
+    flex-basis: 28px !important;
+  }
+
+  /* Keep the GPS/recenter centerline aligned under the toolbar rail. */
+  .leaflet-control-greyson-gps {
+    right: calc(19px + env(safe-area-inset-right, 0px)) !important;
+  }
+}
+
+/* Short landscape screens: preserve the space above the GPS controls. */
+@media (orientation: landscape) and (pointer: coarse)
+       and (min-height: 320px) and (max-height: 390px) {
+  #greyson-toolbar {
+    top: calc(60px + env(safe-area-inset-top, 0px)) !important;
+    width: 66px !important;
+    padding: 4px !important;
+    gap: 3px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button,
+  #greyson-toolbar .greyson-toolbar-external {
+    flex-basis: 43px !important;
+    height: 43px !important;
+    min-height: 43px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-external {
+    width: 43px !important;
+    min-width: 43px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button svg {
+    width: 25px !important;
+    height: 25px !important;
+    flex-basis: 25px !important;
+  }
+  .leaflet-control-greyson-gps {
+    right: calc(18px + env(safe-area-inset-right, 0px)) !important;
+  }
+}
+
+/* Very short displays: side-by-side GPS/recenter avoids vertical collision. */
+@media (orientation: landscape) and (pointer: coarse)
+       and (min-height: 320px) and (max-height: 365px) {
+  #greyson-toolbar {
+    top: calc(56px + env(safe-area-inset-top, 0px)) !important;
+  }
+  #greyson-toolbar .greyson-toolbar-button,
+  #greyson-toolbar .greyson-toolbar-external {
+    flex-basis: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+  #greyson-toolbar .greyson-toolbar-external {
+    width: 40px !important;
+    min-width: 40px !important;
+  }
+  .leaflet-control-greyson-gps .greyson-map-recenter {
+    bottom: 0 !important;
+    right: calc(100% + 7px) !important;
+  }
+  .greyson-active-day {
+    top: calc(65px + env(safe-area-inset-top, 0px)) !important;
+  }
+  .greyson-active-day-toggle {
+    height: 30px !important;
+    min-height: 30px !important;
+  }
+}
