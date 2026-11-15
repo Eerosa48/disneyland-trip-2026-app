@@ -208,11 +208,31 @@
           '<path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>' +
         '</svg>';
 
-      recenterButton.addEventListener('click', function () {
-        if (typeof focusInitialView === 'function') {
-          focusInitialView(true);
-        }
-      });
+		recenterButton.addEventListener('click', function () {
+		  if (typeof focusInitialView !== 'function') return;
+
+		  // Allow the current screen layout to settle.
+		  requestAnimationFrame(function () {
+
+			// Stop any unfinished map animations.
+			map.stop();
+
+			// Synchronize Leaflet with the current screen dimensions
+			// without changing the camera position.
+			map.invalidateSize({
+			  pan: false,
+			  animate: false
+			});
+
+			// Recalculate navigation boundaries for the current view.
+			if (typeof configureNavigationBounds === 'function') {
+			  configureNavigationBounds();
+			}
+
+			// Smoothly return to the configured default center.
+			focusInitialView(true);
+		  });
+		});
       toast = L.DomUtil.create('div', 'greyson-gps-toast', document.body);
       toast.setAttribute('role', 'status');
       toast.setAttribute('aria-live', 'polite');

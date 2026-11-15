@@ -308,6 +308,23 @@
       });
     }
     el("refresh").addEventListener("click",loadReport);el("logout").addEventListener("click",signOut);el("visitor-search").addEventListener("input",renderVisitors);
+	// Dismiss the visitor search keyboard when pressing Search/Enter.
+    const visitorSearch = el("visitor-search");
+
+    visitorSearch.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        visitorSearch.blur();
+      }
+    });
+
+    // Also dismiss the keyboard when tapping outside the search field.
+    document.addEventListener("pointerdown", function (event) {
+      if (document.activeElement === visitorSearch &&
+          event.target !== visitorSearch) {
+        visitorSearch.blur();
+      }
+    }, { capture: true });
     window.setInterval(()=>{if(!document.hidden&&state.session)loadReport()},60000);
     document.addEventListener("visibilitychange",()=>{if(!document.hidden&&state.session)loadReport()});
     // Restore an existing authorized session on repeat visits. A saved session
