@@ -137,7 +137,11 @@
     .visitor-select-symbol{flex:none;font-size:21px;line-height:1;color:#315e49}
     .visitor-linked-count{display:inline-block;font-size:11px;color:#40684e;font-weight:700;white-space:nowrap}
     .linked-identities{padding:12px 20px 17px;border-top:1px solid #dae8d7}
-    .linked-header{display:flex;justify-content:space-between;gap:9px;align-items:center;margin-bottom:9px}
+    .linked-header{display:flex;justify-content:space-between;gap:9px;align-items:center;list-style:none;cursor:pointer;padding:5px 0}
+    .linked-header::-webkit-details-marker{display:none}
+    .linked-header::marker{content:""}
+    .linked-header:focus-visible{outline:3px solid #a2cbaa;outline-offset:2px;border-radius:5px}
+    .linked-identities[open] .linked-header{margin-bottom:9px}
     .linked-header strong{font-size:14px}
     .linked-header span{color:var(--muted);font-size:11px}
     .linked-entry{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #e2ecdf}
@@ -221,11 +225,11 @@
           <div><dt>Observed access</dt><dd id="visitor-access">—</dd></div>
           <div><dt>Device / Platform</dt><dd id="visitor-device">—</dd></div>
         </dl>
-        <div class="linked-identities">
-          <div class="linked-header"><strong>Linked identities</strong><span id="linked-count">—</span></div>
+        <details class="linked-identities" id="linked-identities">
+          <summary class="linked-header"><strong>Linked identities</strong><span id="linked-count">—</span></summary>
           <div id="linked-list"></div>
-          <p class="linked-note">Separate an identity to give it its own visitor card. Only your administrator account can change these groupings.</p>
-        </div>
+          <p class="linked-note">Separate an identity to give it its own visitor card.</p>
+        </details>
       </section>
       <div class="previews">
         <button type="button" class="preview-card" id="open-sessions" aria-label="Show this visitor's sessions">
@@ -524,6 +528,8 @@
       if(!visitorById(visitorId))return;
       state.overviewScroll=window.scrollY;
       state.visitorId=visitorId;
+      // Start each newly opened visitor profile with identities collapsed.
+      el("linked-identities").open=false;
       setView("visitor");
       renderVisitorDetails();
     }
