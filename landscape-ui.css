@@ -239,9 +239,9 @@
   }
   .greyson-active-day {
     top: calc(68px + env(safe-area-inset-top, 0px)) !important;
-    width: 72px !important;
+    width: 68px !important;
     min-width: 0 !important;
-    max-width: 72px !important;
+    max-width: 68px !important;
     padding: 6px 5px !important;
     gap: 4px !important;
     border-radius: 16px !important;
@@ -266,7 +266,7 @@
     gap: 4px !important;
   }
   .greyson-active-day-toggle {
-    width: 60px !important;
+    width: 56px !important;
     height: 32px !important;
     min-height: 32px !important;
     padding: 4px 2px !important;
