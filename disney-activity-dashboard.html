@@ -115,8 +115,8 @@
 	  background: #315e49;
 	  color: #fff;
 	}
-	/* Prevent iOS automatic input zoom on iPhone */
-	@media (max-width: 650px) {
+	/* Prevent iOS automatic input zoom on touchscreen devices */
+	@media (pointer: coarse) {
 	  input,
 	  select,
 	  textarea {

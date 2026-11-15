@@ -118,3 +118,11 @@ a {
 .place-search-input::-webkit-search-cancel-button {
   display: none;
 }
+
+/* Prevent search and filter auto-zoom in both orientations */
+@media (pointer: coarse) {
+  .place-search-input,
+  .place-search-filters select {
+    font-size: 16px !important;
+  }
+}
