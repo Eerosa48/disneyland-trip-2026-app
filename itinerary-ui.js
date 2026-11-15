@@ -118,6 +118,47 @@
   bannerWalking.setAttribute('aria-label', 'Show walking route preview');
   bannerWalking.setAttribute('aria-pressed', 'false');
   bannerWalking.addEventListener('click', toggleWalking);
+  
+  // Persistent wait-time bubble toggle.
+  var waitsFeed = window.greysonWaitFeed;
+  var bannerWaits = make(
+    'button',
+    'greyson-active-day-toggle',
+    dayBannerControls,
+    'Waits'
+  );
+
+  bannerWaits.type = 'button';
+
+  function updateWaitsToggle() {
+    var available = waitsFeed &&
+      typeof waitsFeed.getBubblesEnabled === 'function' &&
+      typeof waitsFeed.setBubblesEnabled === 'function';
+
+    var enabled = available && waitsFeed.getBubblesEnabled();
+
+    bannerWaits.disabled = !available;
+    bannerWaits.classList.toggle('is-active', !!enabled);
+    bannerWaits.setAttribute('aria-pressed', String(!!enabled));
+
+    bannerWaits.setAttribute(
+      'aria-label',
+      enabled ? 'Hide wait-time bubbles' : 'Show wait-time bubbles'
+    );
+
+    bannerWaits.title = enabled
+      ? 'Hide wait times on map'
+      : 'Show wait times on map';
+  }
+
+  bannerWaits.addEventListener('click', function () {
+    if (bannerWaits.disabled) return;
+
+    waitsFeed.setBubblesEnabled(!waitsFeed.getBubblesEnabled());
+    updateWaitsToggle();
+  });
+
+  updateWaitsToggle();
 
   var panel = make('section', 'greyson-itinerary-panel', root);
   panel.id = 'greyson-itinerary-panel';

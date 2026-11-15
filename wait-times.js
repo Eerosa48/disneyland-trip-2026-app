@@ -12,8 +12,17 @@
     california: '832fcd51-ea19-4e77-85c7-75d5843b127c'
   };
   var REFRESH_MS = 1 * 60 * 1000;
-  var MIN_ZOOM = 17.50;
+  var MIN_ZOOM = 16.75;
   var markers = L.layerGroup();
+  // Persistent preference: bubbles are enabled by default.
+  var WAIT_BUBBLES_KEY = 'greyson-wait-bubbles-enabled-v1';
+  var bubblesEnabled = true;
+  
+  try {
+	bubblesEnabled = localStorage.getItem(WAIT_BUBBLES_KEY) !== 'false';
+  } catch (_) {
+	// Keep the default when browser storage is unavailable.
+  }
   var heading, note, places = [], latest = {}, lastCheck = 0;
   var pending = false, errors = 0;
   var waitItems = [], placesReady = false;
@@ -51,6 +60,21 @@
     },
     refreshIfStale: function () {
       if (!lastCheck || Date.now() - lastCheck >= REFRESH_MS) return refresh();
+	},
+	getBubblesEnabled: function () {
+	  return bubblesEnabled;
+	},
+	setBubblesEnabled: function (enabled) {
+	  bubblesEnabled = Boolean(enabled);
+	  
+	  try {
+		localStorage.setItem(WAIT_BUBBLES_KEY, String(bubblesEnabled));
+	  } catch (_) {
+		// The toggle still works if persistence is unavailable.
+	  }
+	  
+	  updateVisibility();
+	  return bubblesEnabled;
     }
   };
 
@@ -116,7 +140,7 @@
   }
 
   function updateVisibility() {
-    var shouldShow = navigator.onLine && map.getZoom() >= MIN_ZOOM;
+    var shouldShow = bubblesEnabled && navigator.onLine && map.getZoom() >= MIN_ZOOM;
 
     if (shouldShow && !map.hasLayer(markers)) {
       markers.addTo(map);
