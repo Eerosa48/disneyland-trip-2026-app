@@ -12,7 +12,7 @@
     california: '832fcd51-ea19-4e77-85c7-75d5843b127c'
   };
   var REFRESH_MS = 1 * 60 * 1000;
-  var MIN_ZOOM = 16.75;
+  var MIN_ZOOM = 17.00;
   var markers = L.layerGroup();
   // Persistent preference: bubbles are enabled by default.
   var WAIT_BUBBLES_KEY = 'greyson-wait-bubbles-enabled-v1';
