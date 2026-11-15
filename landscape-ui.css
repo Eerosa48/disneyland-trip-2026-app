@@ -239,9 +239,9 @@
   }
   .greyson-active-day {
     top: calc(68px + env(safe-area-inset-top, 0px)) !important;
-    width: 78px !important;
+    width: 72px !important;
     min-width: 0 !important;
-    max-width: 78px !important;
+    max-width: 72px !important;
     padding: 6px 5px !important;
     gap: 4px !important;
     border-radius: 16px !important;
@@ -266,7 +266,7 @@
     gap: 4px !important;
   }
   .greyson-active-day-toggle {
-    width: 66px !important;
+    width: 60px !important;
     height: 32px !important;
     min-height: 32px !important;
     padding: 4px 2px !important;
@@ -376,4 +376,13 @@
     height: 30px !important;
     min-height: 30px !important;
   }
+}
+
+/* Shell 78 — visual order only; keep DOM order and portrait interactions intact. */
+@media (orientation: landscape) and (pointer: coarse)
+       and (min-height: 320px) and (max-height: 560px) {
+  #greyson-toolbar .greyson-toolbar-external { order: 0; }
+  #greyson-toolbar .greyson-toolbar-button[data-tool="waits"] { order: 1; }
+  #greyson-toolbar .greyson-toolbar-button[data-tool="itinerary"] { order: 2; }
+  #greyson-toolbar .greyson-toolbar-button[data-tool="search"] { order: 3; }
 }
