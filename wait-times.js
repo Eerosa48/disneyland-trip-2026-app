@@ -12,7 +12,7 @@
     california: '832fcd51-ea19-4e77-85c7-75d5843b127c'
   };
   var REFRESH_MS = 1 * 60 * 1000;
-  var MIN_ZOOM = 18;
+  var MIN_ZOOM = 17.50;
   var markers = L.layerGroup();
   var heading, note, places = [], latest = {}, lastCheck = 0;
   var pending = false, errors = 0;
