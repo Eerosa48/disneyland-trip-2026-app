@@ -165,7 +165,7 @@
     </section>
     <div class="two">
       <section class="panel" aria-labelledby="sessions-title"><div class="panel-head"><div><h2 id="sessions-title">Recent sessions</h2><div class="meta">Latest 100 records</div></div></div><div class="table-scroll"><table><thead><tr><th>Visitor</th><th>Started</th><th>Mode</th><th>Last active</th></tr></thead><tbody id="sessions-body"></tbody></table></div><div id="sessions-empty" class="empty hidden">No sessions recorded yet.</div></section>
-      <section class="panel" aria-labelledby="events-title"><div class="panel-head"><div><h2 id="events-title">Feature activity</h2><div class="meta">Latest 100 records · no searches or GPS</div></div></div><div class="table-scroll"><table><thead><tr><th>Feature</th><th>Event</th><th>Time received</th></tr></thead><tbody id="events-body"></tbody></table></div><div id="events-empty" class="empty hidden">No feature activity recorded yet.</div></section>
+      <section class="panel" aria-labelledby="events-title"><div class="panel-head"><div><h2 id="events-title">Feature activity</h2><div class="meta">Latest 100 records · no searches or GPS</div></div></div><div class="table-scroll"><table><thead><tr><th>Visitor</th><th>Feature</th><th>Event</th><th>Time received</th></tr></thead><tbody id="events-body"></tbody></table></div><div id="events-empty" class="empty hidden">No feature activity recorded yet.</div></section>
     </div>
     <p class="foot">Counts are all-time totals. This dashboard refreshes every 60 seconds while the tab is visible.</p>
   </main>
@@ -295,7 +295,7 @@
       for(const s of sessions){const row=document.createElement("tr");textCell(row,nameMap.get(s.visitor_id)||"Unknown");textCell(row,dateTime(s.started_at));badgeCell(row,modeLabel(s.launch_mode),s.launch_mode==="standalone"?"gold":"");textCell(row,ago(s.last_active_at),s.ended_at?"Ended":"Open / unconfirmed");body.append(row)}
       el("sessions-empty").classList.toggle("hidden",sessions.length>0)}
     function renderEvents(report){const events=Array.isArray(report.events)?report.events:[];const body=el("events-body");body.replaceChildren();
-      for(const e of events){const row=document.createElement("tr");textCell(row,String(e.feature||"unknown").replaceAll("_"," "));textCell(row,String(e.event_type||"unknown").replaceAll("_"," "));textCell(row,dateTime(e.received_at));body.append(row)}
+      for(const e of events){const row=document.createElement("tr");textCell(row,e.visitor_name||"Unknown");textCell(row,String(e.feature||"unknown").replaceAll("_"," "));textCell(row,String(e.event_type||"unknown").replaceAll("_"," "));textCell(row,dateTime(e.received_at));body.append(row)}
       el("events-empty").classList.toggle("hidden",events.length>0)}
     function renderReport(report){const s=report.summary;el("stat-visitors").textContent=formatNumber(s.uniqueInstallations);el("stat-sessions").textContent=formatNumber(s.totalSessions);el("stat-active").textContent=formatNumber(s.currentlyActive);el("stat-standalone").textContent=formatNumber(s.standaloneLaunches);el("stat-browser").textContent=formatNumber(s.browserLaunches);el("stat-events").textContent=formatNumber(s.totalFeatureEvents);
       const names=new Map((report.visitors||[]).map(v=>[v.visitor_id,v.display_name]));renderVisitors();renderSessions(report,names);renderEvents(report);labelMobileRows()}
