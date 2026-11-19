@@ -121,32 +121,40 @@
     ],
     "2026-11-19": [
       {
-        "timelineIndex": 0,
-        "placeId": "cal-landmark-california-adventure-main-entrance"
-      },
-      {
         "timelineIndex": 1,
-        "placeId": "cal-landmark-cars-land"
-      },
-      {
-        "timelineIndex": 2,
-        "placeId": "dca-329"
-      },
-      {
-        "timelineIndex": 3,
-        "placeId": "cal-landmark-pixar-pier"
-      },
-      {
-        "timelineIndex": 5,
-        "placeId": "dca-313"
-      },
-      {
-        "timelineIndex": 7,
         "placeId": "dis-landmark-disneyland-park-main-entrance"
       },
       {
+        "timelineIndex": 2,
+        "placeId": "dis-dining-market-house"
+      },
+      {
+        "timelineIndex": 3,
+        "placeId": "dl-287"
+      },
+      {
+        "timelineIndex": 3,
+        "placeId": "dl-286"
+      },
+      {
+        "timelineIndex": 4,
+        "placeId": "dis-landmark-mickey-s-toontown"
+      },
+      {
+        "timelineIndex": 5,
+        "placeId": "dl-279"
+      },
+      {
+        "timelineIndex": 6,
+        "placeId": "dl-droid-depot"
+      },
+      {
+        "timelineIndex": 7,
+        "placeId": "dis-dining-docking-bay-7-food-and-cargo"
+      },
+      {
         "timelineIndex": 8,
-        "placeId": "dis-dining-bengal-barbecue"
+        "placeId": "dl-13958"
       },
       {
         "timelineIndex": 9,
@@ -154,18 +162,22 @@
       },
       {
         "timelineIndex": 10,
-        "placeId": "dis-dining-rancho-del-zocalo-restaurante"
+        "placeId": "cal-landmark-california-adventure-main-entrance"
       },
       {
         "timelineIndex": 11,
-        "placeId": "dis-landmark-main-street-u-s-a"
+        "placeId": "dca-302"
       },
       {
-        "timelineIndex": 14,
-        "placeId": "cal-experience-cars-land-sh-boom"
+        "timelineIndex": 12,
+        "placeId": "dca-293"
       },
       {
         "timelineIndex": 16,
+        "placeId": "cal-experience-cars-land-sh-boom"
+      },
+      {
+        "timelineIndex": 19,
         "placeId": "dow-dining-centrico"
       }
     ]
