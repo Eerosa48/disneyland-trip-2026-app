@@ -220,7 +220,7 @@
   }
 
   function routeStopsForDay(day) {
-    if (!day || !routeData || !routeData.routes) return [];
+    if (!day || day.routeable === false || !routeData || !routeData.routes) return [];
     var rows = routeData.routes[day.date] || [];
     return rows.map(function (item, i) {
       var p = placesById[item.placeId];
@@ -260,7 +260,7 @@
     bannerStops.setAttribute('aria-label', pressed
       ? 'Hide itinerary stops on map' : 'Show itinerary stops on map');
 
-    var walkingAvailable = WALKING_DATES.includes(day.date);
+    var walkingAvailable = day.routeable !== false && WALKING_DATES.includes(day.date);
     bannerWalking.disabled = !walkingAvailable || !!walkingFetch;
     bannerWalking.classList.toggle('is-active', walkingOn && walkingAvailable);
     bannerWalking.setAttribute('aria-pressed', String(walkingOn && walkingAvailable));
@@ -331,6 +331,7 @@
     if (map.hasLayer(walkingLayer)) map.removeLayer(walkingLayer);
     if (!walkingOn || !itinerary || !walkingData) return;
     var day = itinerary.days[dayIndex];
+    if (day.routeable === false) return; // Hide obsolete traced route for revised day.
     var entry = walkingData.routes && walkingData.routes[day.date];
     if (!entry || !Array.isArray(entry.segments)) return;
 
@@ -387,7 +388,7 @@
   }
 
   function toggleWalking() {
-    if (!itinerary || !WALKING_DATES.includes(itinerary.days[dayIndex].date)) return;
+    if (!itinerary || itinerary.days[dayIndex].routeable === false || !WALKING_DATES.includes(itinerary.days[dayIndex].date)) return;
     if (walkingOn) {
       walkingOn = false;
       renderWalking();
@@ -895,7 +896,7 @@ function updateScheduleFocus(scrollToActivity) {
         var savedIndex = itinerary.days.findIndex(function (d) { return d.date === saved.selectedDate; });
         if (savedIndex >= 0) dayIndex = savedIndex;
         routeOn = !!saved.stopsOn && routeStopsForDay(itinerary.days[dayIndex]).length > 0;
-        walkingOn = !!saved.walkingOn && WALKING_DATES.includes(itinerary.days[dayIndex].date);
+        walkingOn = !!saved.walkingOn && itinerary.days[dayIndex].routeable !== false && WALKING_DATES.includes(itinerary.days[dayIndex].date);
       }
       if (routeOn) renderRoute(); // Does not auto-fit on restoration.
       if (saved) restoreMapView(saved);
