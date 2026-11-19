@@ -1,9 +1,9 @@
 {
   "source": "2026 Disneyland Itinerary v5.docx",
-  "sourceVersion": "v5 + Nov 19 sunset and Céntrico amendment",
+  "sourceVersion": "v5 + November 19 family replan (November 18, 2026)",
   "dates": "2026-11-15 to 2026-11-20",
   "timeZone": "America/Los_Angeles",
-  "displayTimeRule": "Based on itinerary v5 DOCX, with November 19 afternoon and dinner adjusted for the Cars Land sunset lighting moment and 6:30 PM Céntrico reservation. Parade and lighting times are subject to operational changes.",
+  "displayTimeRule": "November 16–18 retain their original schedules. November 19 reflects the family's revised 8 AM hotel departure, breakfast, lunch, Disneyland-first route and flexible evening. The active 6:30 PM Céntrico booking must be canceled by 4:30 PM if skipping, per the family's two-hour cancellation policy; aim to decide at 4:00 PM. All attraction times are planning windows, not confirmed return times.",
   "atAGlance": [
     {
       "date": "Sun, Nov 15",
@@ -27,7 +27,7 @@
     },
     {
       "date": "Thu, Nov 19",
-      "plan": "Cars, Guardians, Pixar Pier, Indiana, 3:15 parade, Cars Land sunset lights; Céntrico 6:30 PM",
+      "plan": "Disneyland breakfast, Toontown and Droid Depot; DCA Grizzly/Redwood and Cars Land sunset; Céntrico flexible (cancel by 4:30 PM)",
       "people": "6 incl. Greyson"
     },
     {
@@ -60,7 +60,7 @@
     {
       "when": "Thu 11/19 • 6:30 PM",
       "reservation": "Céntrico",
-      "notes": "Downtown Disney • party of 6"
+      "notes": "Downtown Disney • party of 6 • ACTIVE reservation; optional attendance. Cancel by 4:30 PM if skipping to avoid stated penalty; 4:00 PM decision reminder."
     }
   ],
   "coffeeStops": [
@@ -86,13 +86,8 @@
     },
     {
       "day": "Thu 19",
-      "venue": "Bengal Barbecue • Adventureland",
-      "drink": "Vietnamese Iced Coffee"
-    },
-    {
-      "day": "Thu 19",
-      "venue": "Rancho del Zocalo • Frontierland",
-      "drink": "Hot Chocolate Cafe"
+      "venue": "Market House • Disneyland / Main Street, U.S.A.",
+      "drink": "Coffee and breakfast on arrival"
     }
   ],
   "coffeeOrderingNote": "Check locations and available pickup windows in the Disneyland app 20–30 minutes ahead. It is completely fine to skip a drink if no one wants it.",
@@ -668,128 +663,138 @@
     {
       "date": "2026-11-19",
       "day": "Thu 19",
-      "title": "Pixar, parade & a last wish",
-      "subtitle": "Starting park: California Adventure  •  Family of 6  •  Céntrico at 6:30 PM",
-      "priority": "Revisit Cars Land and Pixar Pier, ride Guardians, then park hop for Indiana Jones, two coffees and the 3:15 PM Christmas Fantasy Parade. Return to California Adventure for the Cars Land neon-lighting moment (arrive 4:30 PM), before 6:30 PM Céntrico. Indiana is adult-only (46-inch minimum); protect the afternoon departure.",
+      "title": "Last-day favorites & Cars Land lights",
+      "subtitle": "Disneyland first • Hotel departure 8:00 AM • Family of 6 • Céntrico 6:30 PM active booking (cancel by 4:30 if skipping)",
+      "priority": "IMPORTANT: CÉNTRICO RESERVATION IS STILL ACTIVE. Decide at 4:00 PM and CANCEL BY 4:30 PM if skipping to avoid the stated penalty. Start at Disneyland with breakfast, visit Toontown and Droid Depot, have lunch near noon, then park hop to DCA for Grizzly River Run, Redwood Creek and Cars Land neon lighting (arrive by 4:30 PM). Optional rides remain flexible.",
       "timeline": [
         {
-          "time": "6:45–8:00",
-          "activity": "Leave hotel, security, enter California Adventure",
-          "notes": "First Lightning Lane as soon as scanned in.",
-          "mapIds": [
-            "cal-landmark-california-adventure-main-entrance"
-          ]
+          "time": "8:00–8:30",
+          "activity": "Leave hotel; 30-minute walk to Disneyland",
+          "notes": "Leave around 8:00 AM; plan about 30 minutes for the hotel-to-entrance walk with the stroller.",
+          "mapIds": []
         },
         {
-          "time": "8:00–9:00",
-          "activity": "Cars Land: favorite ride, McQueen/Mater and photos",
-          "notes": "Follow Greyson’s lead; shorter revisit to protect afternoon.",
-          "mapIds": [
-            "cal-landmark-cars-land"
-          ]
-        },
-        {
-          "time": "9:00–10:05",
-          "activity": "Guardians of the Galaxy – Mission: BREAKOUT!",
-          "notes": "Adult Lightning Lane + Rider Switch; Greyson stays with one adult.",
-          "mapIds": [
-            "dca-329"
-          ]
-        },
-        {
-          "time": "10:05–10:45",
-          "activity": "Walk to Pixar Pier; snack, character check",
-          "notes": "Allow transition and a short stroller break.",
-          "mapIds": [
-            "cal-landmark-pixar-pier"
-          ]
-        },
-        {
-          "time": "10:45–11:05",
-          "activity": "Optional Green Army Patrol performance",
-          "notes": "If offered; can skip for a better Toy Story greeting.",
-          "mapIds": [
-            "cal-landmark-pixar-pier"
-          ]
-        },
-        {
-          "time": "11:05–11:40",
-          "activity": "Toy Story Midway Mania",
-          "notes": "Lightning Lane if possible; standby if Lightning Lane reserved for Indiana.",
-          "mapIds": [
-            "dca-313"
-          ]
-        },
-        {
-          "time": "11:40–12:05",
-          "activity": "Toy Story characters OR Jessie’s carousel",
-          "notes": "Select one, not both, if time is limited.",
-          "mapIds": [
-            "cal-experience-meet-pixar-pals-at-pixar-pier",
-            "dca-310"
-          ]
-        },
-        {
-          "time": "12:05–12:50",
-          "activity": "Walk to gate; hop into Disneyland",
-          "notes": "Early hop is important for Indiana Jones.",
+          "time": "8:30–9:00",
+          "activity": "Security and enter Disneyland Park",
+          "notes": "Allow flexibility for security queues and getting the group organized.",
           "mapIds": [
             "dis-landmark-disneyland-park-main-entrance"
           ]
         },
         {
-          "time": "12:50–1:05",
-          "activity": "Bengal Barbecue coffee #5",
-          "notes": "Vietnamese Iced Coffee; mobile order if offered.",
+          "time": "9:00–9:30",
+          "activity": "Market House — coffee and breakfast",
+          "notes": "First park stop: coffee, pastries/breakfast sandwiches and water before rides.",
           "mapIds": [
-            "dis-dining-bengal-barbecue"
+            "dis-dining-market-house"
           ]
         },
         {
-          "time": "1:05–2:10",
-          "activity": "Indiana Jones Adventure • adults only",
-          "notes": "46 in. minimum; Lightning Lane + Rider Switch; 65 min target.",
+          "time": "9:30–10:15",
+          "activity": "Tomorrowland — Astro Orbitor + Star Tours",
+          "notes": "Rockets first with Greyson; Star Tours for eligible riders (40 in. minimum), potentially with Lightning Lane or Rider Switch.",
+          "mapIds": [
+            "dl-287",
+            "dl-286"
+          ]
+        },
+        {
+          "time": "10:15–11:00",
+          "activity": "Mickey's Toontown — Greyson playtime",
+          "notes": "Play areas for Greyson, bathroom/water break and a snack as needed.",
+          "mapIds": [
+            "dis-landmark-mickey-s-toontown"
+          ]
+        },
+        {
+          "time": "11:00–11:30",
+          "activity": "OPTIONAL — Matterhorn Bobsleds",
+          "notes": "42 in. minimum; Lightning Lane if available. Skip if waits threaten Droid Depot or lunch.",
+          "mapIds": [
+            "dl-279"
+          ]
+        },
+        {
+          "time": "11:30–12:15",
+          "activity": "Droid Depot — custom droid building",
+          "notes": "Around 45 minutes reserved in the plan; queues and availability may vary.",
+          "mapIds": [
+            "dl-droid-depot"
+          ]
+        },
+        {
+          "time": "12:15–1:00",
+          "activity": "Lunch at Docking Bay 7",
+          "notes": "Protected lunch near Galaxy's Edge; stroller nap can begin when Greyson is ready.",
+          "mapIds": [
+            "dis-dining-docking-bay-7-food-and-cargo"
+          ]
+        },
+        {
+          "time": "1:00–1:40",
+          "activity": "Haunted Mansion Holiday",
+          "notes": "Lightning Lane if convenient; no height minimum but dark/spooky scenes. Let Greyson sleep if napping.",
+          "mapIds": [
+            "dl-13958"
+          ]
+        },
+        {
+          "time": "1:40–2:25",
+          "activity": "Indiana Jones Adventure — adults/eligible riders",
+          "notes": "46 in. minimum; Lightning Lane and Rider Switch if available. Greyson's stroller nap can continue during this block.",
           "mapIds": [
             "dl-326"
           ]
         },
         {
-          "time": "2:10–2:30",
-          "activity": "Rancho del Zocalo coffee #6",
-          "notes": "Hot Chocolate Cafe; short sit-down if possible.",
+          "time": "2:25–3:05",
+          "activity": "Park hop — Disneyland to California Adventure",
+          "notes": "Exit Disneyland, cross the Esplanade and enter DCA with a group/stroller buffer.",
           "mapIds": [
-            "dis-dining-rancho-del-zocalo-restaurante"
+            "dis-landmark-disneyland-park-main-entrance",
+            "cal-landmark-california-adventure-main-entrance"
           ]
         },
         {
-          "time": "2:30–3:15",
-          "activity": "Move to Main Street parade location",
-          "notes": "Check route direction and stroller viewing space.",
+          "time": "3:05–3:35",
+          "activity": "Grizzly River Run",
+          "notes": "42 in. minimum; ride if standby/Lightning Lane is workable. Expect to get wet.",
           "mapIds": [
-            "dis-landmark-main-street-u-s-a"
+            "dca-302"
           ]
         },
         {
-          "time": "3:15–3:55",
-          "activity": "A Christmas Fantasy Parade (subject to schedule)",
-          "notes": "3:15 PM advertised start; Disney lists about 40 minutes. Watch near an exit-friendly Main Street/Town Square position. Aim to depart by 3:55 PM to make Cars Land by 4:30; the parade may arrive or finish later at your specific position.",
+          "time": "3:35–4:00",
+          "activity": "Redwood Creek Challenge Trail + afternoon snack",
+          "notes": "Give Greyson another play break. Leave on time so Cars Land sunset is not rushed.",
           "mapIds": [
-            "dis-landmark-main-street-u-s-a"
+            "dca-293"
           ]
         },
         {
-          "time": "3:55–4:30",
-          "activity": "Exit Disneyland; park hop back to California Adventure; reach Cars Land",
-          "notes": "Time-sensitive transfer with stroller/group: leave Main Street promptly, cross the Esplanade, reenter California Adventure and head directly to Route 66. 35 minutes is a goal, not a guaranteed walking time.",
+          "time": "4:00–4:05",
+          "activity": "IMPORTANT — CÉNTRICO DINNER DECISION",
+          "notes": "6:30 PM reservation for six is still ACTIVE. If skipping, CANCEL NOW and verify confirmation. User-provided no-penalty cutoff: 4:30 PM. Set a separate phone alarm; this schedule cannot send push notifications.",
+          "mapIds": []
+        },
+        {
+          "time": "4:05–4:25",
+          "activity": "Walk to Cars Land; find sunset viewing spot",
+          "notes": "Do not squeeze in an extra ride. Aim to be on Route 66 with the group before 4:30.",
           "mapIds": [
-            "cal-landmark-california-adventure-main-entrance",
-            "cal-experience-cars-land-sh-boom"
+            "cal-landmark-cars-land"
           ]
+        },
+        {
+          "time": "4:25–4:30",
+          "activity": "FINAL CHECK — CÉNTRICO CANCELLATION DEADLINE",
+          "notes": "If not attending, confirm cancellation BEFORE 4:30 PM to avoid the stated late-cancellation penalty. Do not wait until sunset.",
+          "mapIds": []
         },
         {
           "time": "4:30–5:05",
-          "activity": "Cars Land “Sh-Boom” sunset neon-lighting moment",
-          "notes": "Be in position by 4:30 PM along Route 66 between Flo's V8 Cafe and Cozy Cone Motel. Sunset is about 4:46–4:48 PM; neon lighting often occurs around sunset or a few minutes later (~4:42–4:53, not a posted showtime). The moment lasts a few minutes. Holiday-season music may differ from Sh-Boom; stay for neon photos.",
+          "activity": "Cars Land sunset neon lighting + photos",
+          "notes": "Arrive by 4:30 PM. Sunset is expected about 4:46 PM, but the lighting moment and seasonal music are not fixed showtimes.",
           "mapIds": [
             "cal-experience-cars-land-sh-boom",
             "cal-dining-flo-s-v8-cafe",
@@ -797,123 +802,142 @@
           ]
         },
         {
-          "time": "5:05–6:15",
-          "activity": "Leave Cars Land; exit California Adventure; walk to Céntrico",
-          "notes": "Allow comfortable time to leave the park and walk through Downtown Disney, with stroller, rest and reservation check-in buffer. Enjoy the district if early.",
+          "time": "5:05–5:35",
+          "activity": "OPTIONAL — Toy Story Midway Mania! OR WEB SLINGERS",
+          "notes": "Choose one only if wait/Lightning Lane is short enough; the 30-minute window is optimistic and both are optional. Otherwise relax or snack.",
           "mapIds": [
+            "dca-313",
+            "dca-8843"
+          ]
+        },
+        {
+          "time": "5:35–6:15",
+          "activity": "If keeping Céntrico, leave DCA for Downtown Disney",
+          "notes": "Aim to reach the restaurant early for 6:30 PM. If canceled in time, this period is open for more DCA or hotel time.",
+          "mapIds": [
+            "cal-landmark-california-adventure-main-entrance",
             "dow-dining-centrico"
           ]
         },
         {
           "time": "6:30–7:45",
-          "activity": "Céntrico dinner",
-          "notes": "Confirmed reservation update: 6:30 PM, party of 6.",
+          "activity": "Dinner — Céntrico if kept; otherwise flexible",
+          "notes": "Active 6:30 PM Downtown Disney reservation for six IF retained. Otherwise eat in DCA, at the hotel or wherever convenient.",
           "mapIds": [
             "dow-dining-centrico"
           ]
         },
         {
           "time": "After 7:45",
-          "activity": "Optional Downtown Disney stroll / return to hotel",
-          "notes": "The Cars Land neon moment has already been planned before dinner, so no extra park reentry is necessary.",
+          "activity": "Optional evening — park, hotel or fireworks",
+          "notes": "Relax, keep exploring, or check whether Disneyland fireworks are running later; follow Greyson's energy.",
           "mapIds": []
         }
       ],
       "lightningLane": [
         {
-          "time": "8:00 AM",
-          "activity": "1 · Guardians of the Galaxy",
-          "notes": "Target 9:00–10:05 AM. Book participating adults and plan Rider Switch while Greyson stays with an adult."
+          "time": "~9:00 AM",
+          "activity": "Morning check: Star Tours / Matterhorn",
+          "notes": "Look for usable returns inside the morning schedule; do not assume availability or confirmed windows."
         },
         {
-          "time": "~9:15–10 AM",
-          "activity": "2 · Indiana Jones Adventure",
-          "notes": "Book after eligible Guardians redemption, or at 10:00 after an unredeemed 8:00 booking. Target 1:05–2:10 PM after park hop."
+          "time": "~10:00–11:00 AM",
+          "activity": "Check Haunted Mansion Holiday",
+          "notes": "If eligible, target around 1:00–1:40 PM. Protect lunch and Droid Depot."
         },
         {
-          "time": "~10:30 AM",
-          "activity": "Check Toy Story entertainment",
-          "notes": "Not a Lightning Lane: confirm Green Army Patrol and character times before committing to the next ride."
+          "time": "~11:00 AM–noon",
+          "activity": "Check Indiana Jones Adventure",
+          "notes": "If eligible, target around 1:40–2:25 PM; coordinate adult riders and ask about Rider Switch."
         },
         {
-          "time": "~11 AM–noon",
-          "activity": "3 · OPTIONAL Toy Story Midway Mania!",
-          "notes": "Only if eligible and an immediate return fits roughly 11:05–11:40 AM. Otherwise try standby; do not lose Indiana Jones."
+          "time": "~1:00–2:25 PM",
+          "activity": "Redeem or adjust Disneyland selections",
+          "notes": "Return windows may shift; aim to begin the park hop around 2:25 PM."
         },
         {
-          "time": "12:05 PM",
-          "activity": "Park hop / Indiana confirmation",
-          "notes": "Leave California Adventure. Check actual Indiana window and synchronize all adult riders."
+          "time": "~3:00 PM",
+          "activity": "Check Grizzly River Run",
+          "notes": "Use a convenient Lightning Lane or standby line around 3:05–3:35 PM; getting wet is likely."
         },
         {
-          "time": "1:00 PM",
-          "activity": "Indiana Rider Switch check",
-          "notes": "Talk to a Cast Member before splitting up. Try to finish by 2:10 for coffee and parade positioning."
-        },
-        {
-          "time": "By 2:30 PM",
-          "activity": "Stop conflicting bookings",
-          "notes": "Protect the 3:15 PM parade, the 4:30 PM Cars Land arrival for sunset neon lighting, and the 6:30 PM Céntrico reservation; no late detours."
+          "time": "After 5:05 PM",
+          "activity": "OPTIONAL — Toy Story Midway Mania! or WEB SLINGERS",
+          "notes": "One attraction if there is a convenient return and no conflict with dinner; otherwise skip."
         }
       ],
-      "walking": "Walking blocks: Cars Land→Guardians 7–12 min; Guardians→Pixar Pier 12–18 min; Pixar Pier→DCA exit 12–18 min; DCA→Disneyland hop 10–20 min; Disneyland entry→Bengal 10–15 min; Bengal→Indiana 2–5 min; Indiana→Rancho 5–8 min; Rancho→Town Square 8–15 min. NEW: Main Street→Cars Land via park hop 3:55–4:30 target (allow for queues/crowds); Cars Land→Céntrico via DCA exit and Downtown Disney after the neon lighting. These are planning buffers, not navigation ETAs.",
+      "walking": "Revised sequence: hotel walk (~30 min) → Disneyland gate → Market House → Astro Orbitor/Star Tours → Toontown → optional Matterhorn → Droid Depot/Docking Bay 7 → Haunted Mansion → Indiana Jones → DCA park hop → Grizzly River Run → Redwood Creek → Cars Land neon lighting → optional Toy Story/WEB SLINGERS → optional Céntrico. These are planning locations, not measured navigation ETAs. Existing November 19 numbered Stops and walking Route overlays are temporarily disabled pending a new trace.",
       "ridePlanning": [
         {
-          "item": "Mater’s Jingle Jamboree",
-          "detail": "Yes • 32 in. min.",
-          "plan": "5–25 min standby"
+          "item": "Astro Orbitor / Star Tours",
+          "detail": "Star Tours: 40 in. minimum",
+          "plan": "9:30–10:15 AM target"
         },
         {
-          "item": "Luigi’s Joy to the Whirl",
-          "detail": "Yes • 32 in. min.",
-          "plan": "10–30 min standby"
+          "item": "Toontown play area",
+          "detail": "Greyson-friendly playtime",
+          "plan": "10:15–11:00 AM target"
         },
         {
-          "item": "Guardians – Mission: BREAKOUT!",
-          "detail": "No • 40 in. min.",
-          "plan": "40–65 min Lightning Lane  + Rider Switch total"
+          "item": "Matterhorn Bobsleds",
+          "detail": "42 in. minimum • optional",
+          "plan": "11:00–11:30 AM only if feasible"
         },
         {
-          "item": "Toy Story Midway Mania",
-          "detail": "Yes • no minimum",
-          "plan": "15–30 min Lightning Lane; 25–60+ standby"
+          "item": "Droid Depot",
+          "detail": "Custom droid building",
+          "plan": "11:30 AM–12:15 PM target; subject to availability"
         },
         {
-          "item": "Jessie’s Critter Carousel",
-          "detail": "Yes • no minimum",
-          "plan": "5–20 min standby"
+          "item": "Haunted Mansion Holiday",
+          "detail": "Any height • can be scary",
+          "plan": "1:00–1:40 PM target"
         },
         {
           "item": "Indiana Jones Adventure",
-          "detail": "No • 46 in. minimum",
-          "plan": "45–70 min Lightning Lane + Rider Switch"
+          "detail": "46 in. minimum • Rider Switch if available",
+          "plan": "1:40–2:25 PM target"
+        },
+        {
+          "item": "Grizzly River Run",
+          "detail": "42 in. minimum • wet ride",
+          "plan": "3:05–3:35 PM target"
+        },
+        {
+          "item": "Redwood Creek Challenge Trail",
+          "detail": "Play area • check operating status",
+          "plan": "3:35–4:00 PM target"
+        },
+        {
+          "item": "Toy Story Midway Mania! / WEB SLINGERS",
+          "detail": "Both any height • optional",
+          "plan": "After 5:05 PM only if convenient"
         }
       ],
-      "skipFirst": "Skip optional Toy Story character lines, Green Army Patrol, or extra rides if afternoon timing slips. Prioritize the 3:15 parade, returning to Cars Land by 4:30 for the neon moment, and the 6:30 dinner. The parade may not finish at your viewing spot by 3:55; be ready to leave early if the lighting moment is the priority.",
+      "skipFirst": "Skip Matterhorn or shorten extra Toontown time if needed. Later skip Toy Story/WEB SLINGERS before delaying Cars Land. Keep breakfast, noon lunch, Droid Depot, the 4:00 PM Céntrico cancellation decision (hard deadline 4:30 PM), and the Cars Land sunset moment.",
       "extraNotes": [
-        "Cars Land's sunset neon lighting is now a planned Thursday stop, not an after-dinner option. The music may be seasonal during the holidays. Check sunset and ask a Cars Land Cast Member about timing; the moment is not a fixed advertised show."
+        "CÉNTRICO: The confirmed 6:30 PM reservation for six stays ACTIVE unless canceled. Per the family's stated policy, cancel BEFORE 4:30 PM if skipping to avoid a penalty; make the decision at 4:00 PM and confirm successful cancellation.",
+        "NOW/UP NEXT highlights are not scheduled alarms or push notifications. Set a separate iPhone alarm for 4:00 PM.",
+        "Greyson often naps around midday; allow him to sleep through Haunted Mansion and Indiana if needed, with adult ride coordination and Rider Switch as appropriate.",
+        "Cars Land sunset neon lighting is around sunset, not a guaranteed start time. Arrive by 4:30 PM and check with a Cast Member if needed.",
+        "November 19's prior Stops and traced Route overlays are temporarily unavailable until redrawn for this new schedule. Other days are unaffected."
       ],
-      "routeable": true,
+      "routeable": false,
       "coffeeStops": [
         {
           "day": "Thu 19",
-          "venue": "Bengal Barbecue • Adventureland",
-          "drink": "Vietnamese Iced Coffee"
-        },
-        {
-          "day": "Thu 19",
-          "venue": "Rancho del Zocalo • Frontierland",
-          "drink": "Hot Chocolate Cafe"
+          "venue": "Market House • Disneyland / Main Street, U.S.A.",
+          "drink": "Coffee and breakfast at approximately 9:00 AM"
         }
       ],
       "mealReservations": [
         {
           "when": "Thu 11/19 • 6:30 PM",
           "reservation": "Céntrico",
-          "notes": "Downtown Disney • party of 6"
+          "notes": "Downtown Disney • party of 6 • ACTIVE reservation. Attendance flexible. If skipping, cancel before 4:30 PM to avoid stated fee; decide 4:00 PM."
         }
       ],
-      "lightningLaneBookingRule": "BOOKING RULE  Check the app after redeeming a selection or 2 hours after booking; actual return windows vary. The times above are reminders to check, not confirmed bookings."
+      "lightningLaneBookingRule": "These are planning/eligibility reminders only, NOT confirmed bookings. Check actual return windows in the official Disneyland app."
     },
     {
       "date": "2026-11-20",
