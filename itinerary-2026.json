@@ -866,7 +866,7 @@
           "notes": "One attraction if there is a convenient return and no conflict with dinner; otherwise skip."
         }
       ],
-      "walking": "Revised sequence: hotel walk (~30 min) → Disneyland gate → Market House → Astro Orbitor/Star Tours → Toontown → optional Matterhorn → Droid Depot/Docking Bay 7 → Haunted Mansion → Indiana Jones → DCA park hop → Grizzly River Run → Redwood Creek → Cars Land neon lighting → optional Toy Story/WEB SLINGERS → optional Céntrico. These are planning locations, not measured navigation ETAs. Existing November 19 numbered Stops and walking Route overlays are temporarily disabled pending a new trace.",
+      "walking": "Revised sequence: hotel walk (~30 min) → Disneyland gate → Market House → Astro Orbitor/Star Tours → Toontown → optional Matterhorn → Droid Depot/Docking Bay 7 → Haunted Mansion → Indiana Jones → DCA park hop → Grizzly River Run → Redwood Creek → Cars Land neon lighting → optional Toy Story/WEB SLINGERS → optional Céntrico. These are planning locations, not measured navigation ETAs. November 19 numbered Stops and the manually traced visual walking Route are now available.",
       "ridePlanning": [
         {
           "item": "Astro Orbitor / Star Tours",
@@ -920,9 +920,9 @@
         "NOW/UP NEXT highlights are not scheduled alarms or push notifications. Set a separate iPhone alarm for 4:00 PM.",
         "Greyson often naps around midday; allow him to sleep through Haunted Mansion and Indiana if needed, with adult ride coordination and Rider Switch as appropriate.",
         "Cars Land sunset neon lighting is around sunset, not a guaranteed start time. Arrive by 4:30 PM and check with a Cast Member if needed.",
-        "November 19's prior Stops and traced Route overlays are temporarily unavailable until redrawn for this new schedule. Other days are unaffected."
+        "November 19's 15 numbered Stops and the completed manually traced Route are enabled; other days are unchanged. Route lines are visual planning overlays, not real-time turn-by-turn navigation."
       ],
-      "routeable": false,
+      "routeable": true,
       "coffeeStops": [
         {
           "day": "Thu 19",
